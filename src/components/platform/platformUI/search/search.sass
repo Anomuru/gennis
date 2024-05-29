@@ -1,0 +1,59 @@
+@import "styles/abstracts/variables"
+
+.search
+  width: fit-content
+  height: fit-content
+  border-radius: 15px
+  border: 1.5px solid $color-grey-dark
+  padding: 1rem
+  display: flex
+  align-items: center
+  justify-content: space-between
+  transition: all .2s
+
+  &:focus-within
+    border: 1.5px solid $color-main-light
+    box-shadow: 0 0 7px 1px $color-main-light
+
+  input
+    width: 30rem
+    height: 2.4rem
+    border: none
+    font-size: 1.8rem
+    &:focus
+      outline: none
+
+  span
+    margin: 0 1rem
+
+  i
+    font-size: 2rem
+    color: $color-grey-dark
+  .inActiveClear
+    visibility: hidden
+  .activeClear
+    visibility: visible
+
+
+@media (max-width: 768px)
+  .search
+    input
+      width: 40rem
+      height: 3rem
+      border: none
+      font-size: 2.2rem
+
+
+@media (max-width: 475px)
+  .search
+    width: 100%
+    input
+      width: 100%
+      height: 6rem
+      border: none
+      font-size: 3rem
+    i
+      font-size: 3rem
+    span
+      i
+        font-size: 3.2rem

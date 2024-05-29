@@ -1,0 +1,224 @@
+.advantages
+  width: 100%
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  justify-content: center
+  gap: 50px
+  padding: 50px
+  background-color: #EEEEEE
+  overflow: hidden
+
+  &__modal
+    width: fit-content
+    height: fit-content
+    padding: 2rem
+    background-color: white
+    border-radius: 10px
+    gap: 2rem
+
+    .wrapper
+      display: flex
+      flex-direction: column
+      gap: 2rem
+
+      &__container
+        display: flex
+        gap: 2rem
+
+        &_item
+          width: 450px
+          height: 400px
+          display: flex
+          flex-direction: column
+          justify-content: space-around
+          align-items: center
+
+          textarea
+            resize: none
+            height: 250px
+            border: 2px solid #626262
+
+          &:nth-child(2)
+            border: 1px solid black
+
+            img
+              width: 100%
+              height: 100%
+
+            .image
+              gap: 2rem
+              display: flex
+              flex-direction: column
+              justify-content: space-evenly
+              align-items: center
+
+              i
+
+                color: black
+
+  &_box
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 20px
+    position: relative
+
+    .icon
+      position: absolute
+      font-size: 22px
+      color: rgba(0, 0, 0, 0.4)
+      right: 1.5rem
+      top: 8rem
+
+      &.top
+        top: 12rem
+
+    h1
+      color: #0098DA
+      font-size: 35px
+
+    .box
+      width: 558px
+      height: 450px
+      border: 3px solid #0098DA
+      border-radius: 10px
+      display: flex
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      gap: 20px
+      padding: 20px
+      color: #686868
+      background-color: #FFFFFF
+      img
+        width: 362px
+        height: 179px
+        object-fit: contain
+
+    .info
+      font-size: 1.8rem
+
+@media (max-width: 1440px)
+  .advantages
+    &_box
+      width: 410px
+
+      .box
+        width: 402px
+
+        img
+          width: 261px
+          height: 129px
+
+@media (max-width: 1024px)
+  .advantages
+    height: 700px
+    padding: 20px
+    display: flex
+    gap: 5px
+
+    &__modal
+      .wrapper
+        width: 800px
+
+      &__container
+        &_item
+          width: 350px
+          height: 300px
+
+    &_box
+      width: 310px
+
+      .icon
+        top: 7rem
+        right: 2rem
+
+      h1
+        font-size: 19px
+
+      .box
+        width: 300px
+        height: 270px
+        font-size: 12px
+        color: #686868
+        font-weight: 700
+
+
+        img
+          width: 194px
+          height: 96px
+
+@media (max-width: 768px)
+  .advantages
+    height: 800px
+    padding: 20px
+    display: flex
+    gap: 20px
+    align-items: normal
+
+    &__modal
+      h1
+        font-size: 3.7rem
+
+    .wrapper
+      width: 600px
+      height: 350px
+
+      &__container
+        width: 100%
+        height: 100%
+
+        &_item
+          width: 50%
+          height: 90%
+
+    &_box
+      width: 300px
+
+      .icon
+        top: 10rem
+        right: 2rem
+
+      h1
+        font-size: 19px
+
+      .box
+        width: 300px
+        height: 200px
+        font-size: 12px
+        color: #686868
+        font-weight: 700
+        text-align: center
+
+        img
+          width: 145px
+          height: 60px
+
+    .reverse
+      flex-direction: column-reverse
+
+@media (max-width: 430px)
+  .advantages
+    height: 1390px
+
+    &_box
+      .icon
+        top: 12rem
+        right: 3rem
+
+    &__modal
+      h1
+        font-size: 3.7rem
+
+    .wrapper
+      width: 220px
+      height: 350px
+
+      &__container
+        display: flex
+        flex-direction: column
+
+        &_item
+          width: 100%
+          gap: 10px

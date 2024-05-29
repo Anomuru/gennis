@@ -1,0 +1,180 @@
+.teacher
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  height: 1024px
+  background-color: #EEEEEE
+  overflow: hidden
+
+  &_side
+    width: 100%
+    height: 230px
+    background-color: #0098DA
+
+  &_main
+    width: 1720px
+    height: 700px
+    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.2)
+    border-radius: 10px
+    display: flex
+    justify-content: space-around
+    flex-wrap: wrap
+    background-color: #FFFFFF
+    position: absolute
+    overflow: hidden
+
+    &.wrap
+      flex-wrap: wrap
+
+    &_inner
+      display: flex
+      gap: 30px
+
+    .box
+      width: 770px
+      height: 340px
+      display: flex
+      gap: 20px
+      align-items: center
+      padding: 20px
+
+      img
+        width: 100%
+        height: 100%
+        border: 2px solid #0098DA
+        border-radius: 10px
+        object-fit: cover
+
+      .texts
+        width: 460px
+        display: flex
+        flex-direction: column
+        gap: 20px
+        font-size: 1.6rem
+
+        h2
+          color: #686868
+          font-size: 32px
+
+        h4
+          color: #0098DA
+          font-size: 24px
+
+      .icons
+        display: flex
+        gap: 20px
+
+        i
+          color: #686868
+          font-size: 20px
+
+@media (max-width: 1440px)
+  .teacher
+    &_main
+      width: 1240px
+      height: 577px
+
+      .box
+        width: 590px
+        height: 290px
+
+        img
+          width: 100%
+          height: 100%
+
+        .texts
+          gap: 10px
+
+          h2
+            font-size: 23px
+
+          h4
+            font-size: 17px
+
+        .icons
+          font-size: 21px
+
+@media (max-width: 1024px)
+  .teacher
+    height: 670px
+
+    &_main
+      width: 924px
+      height: 415px
+
+      .box
+        width: 400px
+        height: 200px
+
+        img
+          width: 100%
+          height: 100%
+
+        .texts
+          width: 200px
+          font-size: 11px
+
+          h2
+            font-size: 18px
+
+          h4
+            font-size: 12px
+
+          i
+            font-size: 16px
+
+@media (max-width: 768px)
+  .teacher
+    height: 670px
+    &_main
+      width: 100%
+      display: flex
+      flex-wrap: nowrap
+      align-items: center
+      padding: 30px
+
+      &_inner
+        cursor: w-resize
+        gap: 50px
+
+      .box
+        width: 250px
+        height: 360px
+        display: flex
+        flex-direction: column
+        gap: 10px
+        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1)
+        background-color: #FFFFFF
+        border-radius: 10px
+
+        img
+          border-radius: 10px 10px 0 0
+          width: 100%
+
+        .texts
+          width: 200px
+          font-size: 2.5rem
+
+          h2
+            font-size: 3rem
+
+          h4
+            font-size: 2.5rem
+
+          i
+            font-size: 3rem
+
+@media (max-width: 430px)
+  .teacher
+    height: 460px
+
+    &_main
+      box-shadow: none
+
+      .box
+        .icons
+          i
+            font-size: 4rem
+
+@media (max-width: 375px)

@@ -1,0 +1,33 @@
+@import "styles/abstracts/variables"
+
+
+
+.listAtt
+  padding: 5rem
+  header
+    padding: 2rem
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
+    &>div
+      display: flex
+      align-items: center
+
+  table
+    overflow-x: auto
+    th,td
+      padding: 0 2rem
+    td
+      &:nth-child(1)
+        width: auto
+      &:not(.date)
+        min-width: 10rem
+        max-width: 20rem
+  main
+    h1
+      text-align: center
+      color: #fc5757
+
+
+

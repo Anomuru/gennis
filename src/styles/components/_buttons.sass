@@ -1,0 +1,132 @@
+@import "../abstracts/variables"
+
+.btn
+  &:link
+    text-decoration: none
+    padding: 1.5rem 4rem
+    display: inline-block
+    border-radius: 15px
+    transition: all .2s
+    position: relative
+    font-size: $font-size
+
+  &:visited
+
+    text-decoration: none
+    padding: 1.5rem 4rem
+    display: inline-block
+    border-radius: 15px
+    transition: all .2s
+    position: relative
+    font-size: 1.6rem
+
+  &:hover
+    transform: translateY(-0.3rem)!important
+    box-shadow: 0 1rem 2rem rgba($color-black,.2)
+    &::after
+        transform: scaleX(1.4) scaleY(1.6)
+        opacity: 0
+
+
+  &:active
+    transform: translateY(-0.1rem)!important
+    box-shadow: 0 0.5rem 1rem rgba($color-black,.2)
+
+  &::after
+    content: ""
+    display: inline-block
+    height: 100%
+    width: 100%
+    border-radius: 15px
+    position: absolute
+    top: 0
+    left: 0
+    z-index: -1
+    transition: all .4s
+
+  &__animated
+    animation-name: animateBtn
+    animation-duration: 0.8s
+    animation-timing-function: ease
+
+
+  &__white
+    background-color: $color-white
+    color: $color-grey-dark
+    &::after
+        background-color: $color-white
+  &__dark
+    background-color: $color-main-dark
+    color: $color-white
+    &::after
+        background-color: $color-main-dark
+  &__contact
+    font-size: 1.5rem !important
+    padding: 1.2rem 3.5rem !important
+
+
+.backBtn
+  width: fit-content
+  height: fit-content
+  padding: .7rem 2rem
+  font-size: 1.6rem
+  color: white
+  background-color: $color-grey-dark
+  border-radius: 15px
+  cursor: pointer
+  user-select: none
+  transition: all .6s
+  display: flex
+  align-items: center
+  justify-content: center
+  i
+    font-size: 1.8rem
+    color: white
+    margin-right: 1rem
+  &:hover
+    background-color: $color-main-dark
+    box-shadow: 0 0 7px 1px $color-main-light
+  &:active
+    transform: scale(.9)
+
+
+@keyframes animateBtn
+  from
+    opacity: 0
+    transform: scale(0.5)
+  to
+    opacity: 1
+    transform: scale(1)
+
+
+@media (max-width: 770px)
+  .btn
+    &:link
+      font-size: 2.4rem
+
+    &:visited
+      font-size: 2.4rem
+    &__contact
+      font-size: 2rem !important
+      padding: 1.2rem 3.5rem !important
+
+  .backBtn
+    font-size: 2rem
+    i
+      font-size: 2.7rem
+
+@media (max-width: 500px)
+  .btn
+    &:link
+      padding: 1.7rem 5rem
+      font-size: 3rem
+
+    &:visited
+      padding: 1.7rem 5rem
+      font-size: 3rem
+
+  .backBtn
+    padding: 1rem 2rem
+    font-size: 2.7rem
+    i
+      font-size: 2.7rem

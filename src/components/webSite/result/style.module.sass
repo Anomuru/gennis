@@ -1,0 +1,222 @@
+.result
+  width: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+  gap: 30px
+  height: 800px
+  overflow: hidden
+
+  .imageModal
+    width: fit-content
+    height: fit-content
+    background-color: white
+    padding: 20px
+    border-radius: 10px
+
+    &__container
+      width: 500px
+      height: 600px
+      display: flex
+      justify-content: center
+      align-items: center
+
+      &_inner
+        width: 90%
+        height: 100%
+
+        img
+          object-fit: contain
+          width: 100%
+          height: 100%
+
+  .splide
+    width: 100%
+    height: 600px
+    display: flex
+    flex-direction: column
+    justify-content: space-around
+
+    &_slider
+      height: 100px
+      display: flex
+      justify-content: center
+      align-items: flex-end
+
+      &_progress
+        width: 200px
+        height: 5px
+        background-color: gray
+        border-radius: 5px
+
+        &_bar
+          width: 25%
+          height: 100%
+          background-color: #00C2FF
+          border-radius: 5px 0 0 5px
+
+    &__track
+      display: flex
+      justify-content: space-around
+
+    .splide__list
+      width: 100%
+      display: flex
+      justify-content: space-around
+      gap: 30px
+
+  .result_box
+    width: 415px
+    height: 404px
+    border-radius: 10px
+    display: flex
+    flex-direction: column
+    gap: 90px
+    position: relative
+    box-shadow: 0 0 15px 0 #B5B5B5
+
+    .background
+      width: 100%
+      height: 169px
+      background-image: linear-gradient(to right, #A1E3FF, #349CCA)
+      border-radius: 10px 10px 0 0
+      display: flex
+      flex-direction: column
+
+
+      .info
+        width: 115px
+        height: 45px
+        background-color: #FFF500
+        font-size: 18px
+        align-self: flex-end
+        margin: 20px
+        border-radius: 3px
+        padding: 10px
+        text-align: center
+
+
+    .image
+      width: 375px
+      position: absolute
+      display: flex
+      align-items: center
+      justify-content: space-between
+      padding: 20px
+      top: 60px
+
+      img
+        width: 165px
+        height: 165px
+
+      &__item
+        width: 71px
+        height: 71px
+        display: flex
+        align-items: center
+        justify-content: center
+        background-color: #FFFFFF
+        box-shadow: 0 0 5px 0 #B5B5B5
+        border-radius: 10px
+        overflow: hidden
+
+        img
+          width: 100%
+          height: 100%
+
+    .teacher_name
+      display: flex
+      flex-direction: column
+      align-items: flex-start
+      gap: 10px
+      padding: 20px
+
+    .name
+      display: flex
+      align-items: center
+      gap: 20px
+
+      i
+        color: black
+        font-size: 2.4rem
+
+    .first
+      color: #0098DA
+
+      i
+        color: #0098DA
+
+@media (max-width: 1024px)
+  .result
+    height: 670px
+
+    .splide
+      .result_box
+        max-width: 298px
+        height: 290px
+        display: flex
+        flex-direction: column
+        gap: 50px
+
+        .background
+          width: 100%
+          height: 131px
+          .info
+            width: 82px
+            height: 30px
+            background-color: #FFF500
+            font-size: 16px
+            padding: 5px
+
+        .image
+          width: 298px
+          top: 20px
+
+          img
+            width: 123px
+            height: 123px
+
+          &__item
+            width: 64px
+            height: 64px
+
+            img
+              width: 100%
+              height: 100%
+
+        .teacher_name
+          .name
+            h2
+              margin-left: 10px
+              font-size: 16px
+
+@media (max-width: 768px)
+  .result
+    height: 490px
+
+@media (max-width: 430px)
+  .result
+    height: 440px
+    padding: 30px
+
+    .imageModal
+      &__container
+        width: 300px
+        height: 400px
+
+    .splide
+      .result_box
+        min-width: 298px
+
+@media (max-width: 375px)
+  .result
+    .imageModal
+      &__container
+        width: 90%
+        height: 400px
+    .splide
+      .result_box
+        .image
+          gap: 2rem
+          top: 35px

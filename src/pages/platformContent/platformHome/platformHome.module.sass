@@ -1,0 +1,270 @@
+@import "styles/abstracts/variables"
+@import "styles/abstracts/mixins"
+
+
+.platformHome
+  width: 100%
+  display: flex
+  flex-direction: column
+  padding: 5rem
+  &__item
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    justify-content: center
+    padding: 2.5rem
+    background-color: $color-grey-light
+    border-radius: 15px
+    margin: 1rem 0
+    .header
+      width: 100%
+      display: flex
+      align-items: center
+      justify-content: space-between
+      .add
+        width: 4rem
+        height: 4rem
+        border-radius: 100%
+        background-color: $color-grey-dark
+        display: flex
+        align-items: center
+        justify-content: center
+        transition: all .1s
+        @include btn-active
+        i
+          font-size: 1.6rem
+
+    .title
+      font-size: 2rem
+    .wrapper
+      width: 100%
+      margin-top: 2rem
+      display: flex
+      align-items: center
+      justify-content: flex-start
+      overflow: hidden
+      padding: 1rem 0
+    .carousel
+      display: flex
+    .events
+      .event
+        min-width: 30rem
+        max-width: 30rem
+        min-height: 20rem
+        border-radius: 15px
+        position: relative
+        overflow: hidden
+        margin-right: 1.5rem
+        img
+          width: 100%
+          height: 100%
+          object-fit: cover
+
+        h3
+          display: flex
+          align-items: flex-end
+          width: 100%
+          height: 100%
+          position: absolute
+          bottom: 0
+          left: 0
+          color: white
+          background-image: linear-gradient(rgba(255, 255, 255, 0.02),black)
+          padding: 1rem
+          font-size: 1.8rem
+    .grades
+      padding: 1.5rem
+      .grade
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: center
+        margin-right: 3rem
+        &__title
+          font-size: 1.7rem
+          color: $color-grey-dark
+          margin-bottom: 1rem
+        &__circle
+          width: 10rem
+          height: 10rem
+          border-radius: 50%
+          border: 3px solid
+          display: flex
+          justify-content: center
+          align-items: center
+          font-size: 1.8rem
+          font-weight: bolder
+          box-shadow: 0 0 10px 3px
+          background-color: white
+        .green
+          border: 2px solid #71f541
+          box-shadow:  0 0 13px 3px #71f541
+        .yellow
+          border: 2px solid #f5cb41
+          box-shadow:  0 0 13px 3px #f5cb41
+        .red
+          border: 2px solid #f54141
+          box-shadow:  0 0 13px 3px #f54141
+    .comments
+      .comment
+        min-width: 300px
+        max-width: 300px
+        border-radius: 15px
+        background-color: $color-white
+        padding: 1.5rem
+        display: flex
+        flex-direction: column
+        align-items: flex-start
+        margin-right: 1.5rem
+        position: relative
+        &__userInfo
+          display: flex
+          align-items: center
+          justify-content: flex-start
+          width: 100%
+          img
+            width: 4.5rem
+            height: 4.5rem
+            object-fit: cover
+            border-radius: 50%
+          &>div
+            margin-left: 1rem
+            h3
+              margin: 0.5rem 0
+              font-size: 1.7rem
+              color: $color-grey-dark
+        &__desc
+          font-size: 1.6rem
+          color: $color-grey-dark
+          margin: 1rem 0
+        &__like
+          width: 100%
+          display: flex
+          align-items: center
+          justify-content: flex-end
+          span
+            font-size: 1.8rem
+            color: $color-grey-dark
+            margin-right: .5rem
+          i
+            font-size: 1.8rem
+            color: #afafaf
+          .like
+            color: red
+
+    .addComment
+      width: 100%
+      border-radius: 15px
+      background-color: white
+      margin-top: 2rem
+      align-items: flex-start
+      box-shadow: 0 0
+      padding: 2rem
+
+
+
+@media (max-width: 768px)
+  .platformHome
+    padding: 3rem
+    &__item
+      .title
+        font-size: 2.7rem
+
+      .carousel
+        display: flex
+      .events
+        .event
+          min-width: 35rem
+          max-width: 35rem
+          min-height: 25rem
+          h3
+            font-size: 2.2rem
+            padding: 2rem
+      .grades
+        .grade
+          &__title
+            font-size: 2.7rem
+            margin-bottom: 2rem
+          &__circle
+            width: 14rem
+            height: 14rem
+            font-size: 2.3rem
+            box-shadow: 0 0 8px 3px
+      .comments
+        .comment
+          min-width: 40rem
+          max-width: 40rem
+          padding: 2rem
+          &__userInfo
+            img
+              width: 5rem
+            &>div
+              h3
+                font-size: 2rem
+          &__desc
+            font-size: 2.1rem
+          &__like
+            width: 100%
+            display: flex
+            align-items: center
+            justify-content: flex-end
+            span
+              font-size: 2.5rem
+            i
+              font-size: 2.5rem
+
+@media (max-width: 425px)
+  .platformHome
+    padding: 2rem
+    &__item
+      padding: 3rem
+      .title
+        font-size: 3rem
+
+      .carousel
+        display: flex
+      .events
+        .event
+          min-width: 45rem
+          max-width: 45rem
+          min-height: 27rem
+          h3
+            font-size: 2.5rem
+            padding: 2.5rem
+      .grades
+        .grade
+          margin-right: 3rem
+          &__title
+            font-size: 3rem
+            margin-bottom: 2rem
+          &__circle
+            width: 17rem
+            height: 17rem
+            font-size: 2.8rem
+
+      .comments
+        .comment
+          min-width: 50rem
+          max-width: 50rem
+          padding: 2.5rem
+          &__userInfo
+            img
+              width: 6rem
+            &>div
+              h3
+                font-size: 2.5rem
+          &__desc
+            font-size: 2.5rem
+          &__like
+            width: 100%
+            display: flex
+            align-items: center
+            justify-content: flex-end
+            span
+              font-size: 3.3rem
+            i
+              font-size: 3.3rem
+      .addComment
+        padding: 3rem
+        label
+          width: 100%

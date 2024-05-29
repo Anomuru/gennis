@@ -1,0 +1,24 @@
+@import "styles/abstracts/variables"
+
+
+.fromToForm
+  align-items: flex-start
+  padding: 0 1rem
+  &>div
+    width: 50%
+    display: flex
+  label
+    margin-right: 1rem
+
+@media (max-width: 768px)
+  .fromToForm
+    &>div
+      width: 70%
+      display: flex
+
+
+@media (max-width: 475px)
+  .fromToForm
+    &>div
+      width: 100%
+      display: flex

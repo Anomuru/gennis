@@ -1,0 +1,424 @@
+@import "styles/abstracts/variables"
+
+.overlay
+  width: 100%
+  height: 100vh
+  background-color: rgba(0, 0, 0, 0.4)
+  position: fixed
+  top: 0
+  overflow: hidden
+  z-index: 500
+
+.home
+  width: 100%
+  height: 1024px
+  display: flex
+  flex-direction: column
+  position: relative
+  background-size: cover
+
+  &__hamburger
+    position: fixed
+    width: 65px
+    height: 65px
+    background-color: white
+    border-radius: 50%
+    z-index: 300
+    display: flex
+    justify-content: center
+    align-items: center
+    bottom: 35px
+    left: 20px
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4)
+
+    &_inner
+      color: black
+      font-size: 5rem
+
+
+  &__back
+    width: 100%
+    height: 100%
+    position: absolute
+    z-index: 2
+    background-image: linear-gradient(rgba(0, 152, 218, 0.66), rgba(0, 152, 218, 0.66))
+
+  &__modal
+    width: fit-content
+    height: fit-content
+    padding: 2rem
+    background-color: white
+    border-radius: 10px
+
+    h1
+      margin-bottom: 2rem
+      font-size: 2.4rem
+
+    .wrapper
+      gap: 2rem
+      display: flex
+      justify-content: space-around
+      align-items: center
+
+    &_img
+      width: 450px
+      height: 400px
+      background-color: rgba(0, 0, 0, 0.4)
+      border-radius: 10px
+      display: flex
+      justify-content: center
+      align-items: center
+      font-size: 100px
+
+      img
+        width: 100%
+        height: 100%
+
+    &_text
+      width: 450px
+      height: 400px
+      display: flex
+      flex-direction: column
+      justify-content: space-around
+      align-items: center
+
+      textarea
+        padding: 10px
+        font-size: 18px
+        resize: none
+
+
+  &_information
+    width: 100%
+    height: 100%
+    display: flex
+    align-items: center
+    //justify-content: center
+    position: absolute
+    z-index: 3
+    gap: 100px
+    background-color: rgba(0, 152, 218, 0.66)
+    overflow: hidden
+    padding: 0 100px
+
+    .login_btn
+      width: 100%
+      height: 100%
+      background-color: #FFFFFF
+      color: #0098DA
+      font-weight: 700
+      display: flex
+      align-items: center
+      justify-content: center
+      border: none
+      border-radius: 8px
+
+
+    .icon
+      position: absolute
+      width: 75px
+      height: 75px
+      font-size: 25px
+      border-radius: 5px
+      background-color: gray
+      display: flex
+      justify-content: center
+      align-items: center
+      color: white
+      left: 70px
+      top: 150px
+
+
+    .information_about
+      display: flex
+      flex-direction: column
+      gap: 30px
+      font-size: 24px
+      color: #FFFFFF
+
+
+      h1
+        font-size: 80px
+
+    .register
+      width: 562px
+      height: 558px
+      background-color: rgba(255, 255, 255, 0.88)
+      display: flex
+      align-items: center
+      justify-content: center
+      padding: 50px
+      border-radius: 10px
+
+      form
+        height: 100%
+        display: flex
+        flex-direction: column
+        justify-content: space-around
+        align-items: center
+        overflow: hidden
+
+        h1
+          font-size: 40px
+          font-weight: 700
+          color: #0098DA
+
+        input, select
+          font-size: 18px
+          width: 400px
+          height: 50px
+          border-radius: 10px
+          outline: none
+          border: 1px solid #686868
+          padding: 0 10px
+
+          &::placeholder
+            color: #686868
+
+        input:focus
+          border: 1px solid #0098DA
+
+@media (max-width: 1440px)
+  .home
+    .information_about
+      width: 742px
+      font-size: 18px
+
+      h1
+        font-size: 57px
+        font-weight: 600
+
+    .register
+      width: 406px
+      height: 402px
+
+      form
+        h1
+          font-size: 34px
+
+        input, select
+          width: 289px
+          height: 36px
+
+@media (max-width: 1024px)
+  .home
+    height: 595px
+
+    .wrapper
+      width: 800px
+
+    &__modal
+      &_img
+        width: 37%
+
+      &_text
+        width: 37%
+
+        textarea
+          width: 100%
+          height: 200px
+          max-height: none
+
+    &_information
+      padding: 25px
+      display: flex
+      gap: 50px
+
+      .icon
+        top: 90px
+        left: 30px
+        width: 65px
+        height: 65px
+        font-size: 25px
+
+      .information_about
+        h1
+          font-size: 42px
+
+      .register
+        padding: 35px
+        width: 350px
+        height: 310px
+
+        form
+          display: flex
+          gap: 15px
+
+          h1
+            font-size: 25px
+
+          input, select
+            width: 214px
+            height: 26px
+            border-radius: 5px
+
+@media (max-width: 768px)
+  .home
+    display: flex
+    flex-direction: column
+    height: 460px
+
+    &__modal
+      h1
+        font-size: 3.7rem
+
+    &__hamburger
+      &_inner
+        color: black
+        font-size: 5rem
+
+    .wrapper
+      width: 600px
+      height: 350px
+
+    &__modal
+      &_text
+        width: 50%
+        height: 90%
+
+      &_img
+        width: 50%
+        height: 90%
+
+
+    &_information
+      padding: 25px
+      display: flex
+      align-items: center
+      gap: 30px
+
+      .icon
+        top: 40px
+        width: 55px
+        height: 55px
+        font-size: 20px
+
+      .information_about
+        width: 420px
+
+        h1
+          font-size: 32px
+
+      .register
+        width: 261px
+        height: 265px
+        padding: 10px
+
+        form
+          display: flex
+          gap: 0
+
+          h1
+            font-size: 22px
+
+          input, select
+            width: 210px
+            height: 35px
+            border-radius: 5px
+
+@media (max-width: 430px)
+  .home
+    height: 737px
+
+    .wrapper
+      width: 220px
+      height: 375px
+      display: flex
+      flex-direction: column
+
+    &__modal
+      width: 240px
+      flex-direction: column
+
+      h1
+        font-size: 3.7rem
+
+      &_img
+        width: 100%
+        height: 200px
+
+      &_text
+        width: 100%
+        height: 100%
+        justify-content: space-between
+
+        textarea
+          width: 240px
+          height: 151px
+
+
+    &_information
+      display: flex
+      flex-direction: column
+      font-size: 15px
+      text-align: center
+
+      .register
+        width: 300px
+        height: 310px
+
+        form
+          input, select
+            width: 250px
+            height: 50px
+            border-radius: 10px
+
+          button
+            width: 150px
+            height: 35px
+            font-size: 18px
+
+      .information_about
+        padding: 20px
+        align-items: center
+
+
+
+@media (max-width: 412px)
+  .home
+    height: 914px
+
+    &__modal
+      flex-direction: column
+
+
+    &_information
+      height: 914px
+
+@media (max-width: 375px)
+  .home
+    height: 599px
+
+    &_information
+      gap: 20px
+      height: 599px
+
+      .icon
+        width: 50px
+        height: 50px
+        font-size: 22px
+        top: 20px
+        left: 15px
+
+      .information_about
+        width: 360px
+        padding: 10px
+
+      .login_btn
+        height: 29px
+        width: 130px
+
+      .register
+        width: 230px
+        height: 233px
+
+        form
+          input, select
+            width: 167px
+            height: 35px
+            font-size: 2.4rem
+
+          button
+            width: 120px
+            height: 30px
+            font-size: 2.4rem

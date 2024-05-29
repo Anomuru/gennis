@@ -1,0 +1,62 @@
+@import "styles/abstracts/variables"
+
+
+
+.contract
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  &_create
+    width: 50rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    margin-bottom: 2rem
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.12) ,0 4px 8px rgba(0,0,0,0.12) ,0 8px 16px rgba(0,0,0,0.12) ,0 16px 32px rgba(0,0,0,0.12)
+    padding: 2rem
+    border-radius: 15px
+    form
+      width: 100%
+      margin-bottom: 4rem
+      label
+        margin-top: 3rem
+        align-items: flex-start
+
+      h1
+        margin-bottom: 1rem
+  &_open
+    width: 50rem
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.12) ,0 4px 8px rgba(0,0,0,0.12) ,0 8px 16px rgba(0,0,0,0.12) ,0 16px 32px rgba(0,0,0,0.12)
+    padding: 3rem
+    border-radius: 15px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    margin-top: 2rem
+    &-change
+      width: 100%
+      padding: 1rem
+      display: flex
+      justify-content: center
+    &-item
+      width: 100%
+      min-height: 10rem
+      border: 2px dotted $color-grey-dark
+      margin-top: 1rem
+      display: flex
+      align-items: center
+      justify-content: center
+      font-size: 1.8rem
+      cursor: pointer
+      padding: 2rem
+
+      input
+        display: none
+    &>div
+      margin-top: 2rem
+
+
+

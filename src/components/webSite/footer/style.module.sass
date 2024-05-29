@@ -1,0 +1,657 @@
+.overlay
+  width: 100%
+  height: 100vh
+  background-color: rgba(0, 0, 0, 0.4)
+  position: fixed
+  top: 0
+  overflow: hidden
+  z-index: 500
+
+.footer
+  width: 100%
+  height: 1024px
+  display: flex
+
+  &__modalLoc
+    width: fit-content
+    height: fit-content
+    background-color: white
+    border-radius: 10px
+
+    &_inner
+      width: 350px
+      height: 450px
+      padding: 20px
+      display: flex
+      flex-direction: column
+      align-items: center
+      font-size: 1.6rem
+
+      h2
+        align-self: flex-start
+
+      .wrapperLoc
+        width: 80%
+        height: 90%
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        align-items: center
+        font-size: 1.5rem
+
+        h1
+          margin-top: 20px
+
+  &__wrapper
+    width: 65%
+    display: flex
+
+  &__modal
+    width: fit-content
+    height: fit-content
+    padding: 2rem
+    background-color: white
+    border-radius: 10px
+    gap: 2rem
+
+    .wrapper
+      &__container
+        gap: 2rem
+
+        &_img
+          width: 250px
+          height: 200px
+          border: 1px solid black
+          margin-top: 2rem
+
+          img
+            width: 100%
+            height: 100%
+
+  &_branches
+    width: 208px
+    height: 100%
+    box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.1)
+    display: flex
+    flex-direction: column
+    gap: 20px
+    padding: 10px
+    color: #686868
+    font-size: 20px
+    font-weight: 700
+
+    .location
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: 10px
+      color: #0098DA
+      height: 100px
+      border-bottom: 1px solid #0098DA
+
+      h2
+        font-size: 32px
+
+    .branch
+      display: flex
+      flex-direction: column
+      gap: 15px
+      padding: 20px
+
+      &_inner
+        display: flex
+        align-items: center
+        cursor: pointer
+        gap: 10px
+
+        &.active
+          color: #00c2ff
+
+        i
+          color: rgba(0, 0, 0, 0.4)
+          font-size: 1.6rem
+
+  &_main
+    width: 1000px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    gap: 50px
+    position: relative
+
+    h1
+      color: #686868
+      font-size: 48px
+
+    .connect
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: inherit
+
+      .connects
+        display: flex
+        align-items: center
+        gap: 30px
+
+        .links
+          display: flex
+          flex-direction: column
+          align-items: center
+          gap: 10px
+          color: #0098DA
+          position: relative
+
+          .bigIcon
+            &.red
+              color: red
+
+          .change
+            position: absolute
+            top: -5px
+            left: -5px
+            color: rgba(0, 0, 0, 0.4)
+            font-size: 1.8rem
+
+          .icons
+            color: #0098DA
+
+          .icon
+            color: black
+            font-size: 18px
+            position: absolute
+            left: 5px
+
+          i
+            font-size: 40px
+
+          a
+            text-decoration: none
+            color: #686868
+
+    .box
+      width: 400px
+      height: 90px
+      align-items: center
+      gap: 20px
+      display: flex
+      position: absolute
+      background: #FFFFFF
+      padding: 20px
+      right: 10px
+      border-radius: 5px
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1)
+      font-size: 1.5rem
+      justify-content: space-around
+
+      .number
+        padding: 5px
+        display: flex
+        flex-direction: column
+        gap: 10px
+        color: #0098DA
+
+        h2
+          color: #686868
+
+        .phone
+          display: flex
+          gap: 5px
+
+          i
+            color: #0098DA
+            font-size: 1.6rem
+
+    iframe
+      width: 100%
+      height: 100%
+
+  &_register
+    width: 712px
+    box-shadow: 2px 10px 22px 0 rgba(0, 0, 0, 0.1)
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    gap: 100px
+
+    .logo
+      width: 262px
+      height: 266px
+
+      img
+        width: 100%
+        height: 100%
+
+    form
+      width: 90%
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: 20px
+
+      input, select
+        width: 625px
+        height: 50px
+        padding: 10px
+        border-radius: 5px
+        border: 1px solid #C8C8C8
+        outline: none
+        font-size: 20px
+        box-shadow: 0 2px 5px 0 #C8C8C8
+        resize: none
+
+        &::placeholder
+          color: #686868
+
+        &:focus
+          border: 1px solid #0098DA
+          color: #0098DA
+
+      textarea
+        height: 163px
+        resize: none
+
+@media (max-width: 1440px)
+  .footer
+    &__wrapper
+      width: 67%
+
+    &_branches
+      .location
+      h2
+        font-size: 24px
+
+    &_main
+      width: 780px
+
+      .connects
+        display: flex
+        gap: 20px
+        padding: 20px
+
+        .links
+          i
+            font-size: 30px
+
+          h2
+            font-size: 17px
+
+          a
+            font-size: 16px
+
+    &_register
+      width: 435px
+
+      .logo
+        width: 196px
+        height: 199px
+
+      form
+        input, select
+          width: 391px
+          height: 36px
+
+      iframe
+        height: 417px
+
+@media (max-width: 1024px)
+  .footer
+    height: 600px
+
+    &__modalLoc
+      &_inner
+        height: 400px
+
+    &_branches
+      width: 110px
+      font-size: 17px
+
+      .branch
+        padding: 10px
+
+        &_inner
+          font-size: 1.5rem
+
+      .location
+        height: 50px
+
+        h2
+          font-size: 17px
+
+    &_main
+      width: 535px
+      gap: 10px
+
+      h1
+        font-size: 25px
+        padding: 15px
+
+      .connect
+        .connects
+          gap: 10px
+
+          .links
+            i
+              font-size: 25px
+
+            .change
+              left: 5px
+
+            h2, a
+              font-size: 12px
+
+      .box
+        width: 300px
+        height: 66px
+        padding: 15px
+        font-size: 15px
+
+        .number
+          gap: 5px
+
+          h2
+            font-size: 16px
+
+    &_register
+      width: 379px
+
+      .logo
+        width: 139px
+        height: 141px
+
+      form
+        input, select
+          width: 303px
+          height: 26px
+          font-size: 12px
+
+@media (max-width: 768px)
+  .footer_reg
+    width: 100%
+    height: 614px
+    display: flex
+    justify-content: center
+    align-items: center
+
+    .background
+      width: 100%
+      height: 129px
+      background-color: #0098DA
+
+    .footer_register
+      position: absolute
+      background-color: #FFFFFF
+      height: 570px
+  .footer
+    height: 1060px
+    flex-direction: column-reverse
+    justify-content: space-between
+    align-items: center
+
+    .wrapper
+      h1
+        font-size: 3.7rem
+
+    &__wrapper
+      width: 100%
+      height: 500px
+
+    &_branches
+      width: 139px
+      font-size: 17px
+
+      .location
+        height: 50px
+
+        h2
+          font-size: 17px
+
+    &_main
+      width: 629px
+      gap: 10px
+      background-color: #EEEEEE
+
+      h1
+        font-size: 25px
+        padding: 15px
+
+      .connects
+        display: flex
+        gap: 10px
+
+        .links
+          i
+            font-size: 25px
+
+          h2, a
+            font-size: 12px
+
+      .box
+        width: 280px
+
+        .number
+          font-size: 1.6rem
+
+    &_register
+      display: flex
+      width: 379px
+      margin-top: 20px
+
+      .logo
+        width: 139px
+        height: 141px
+
+      form
+        input, select
+          width: 343px
+          height: 35px
+          font-size: 12px
+
+        button
+          margin-bottom: 20px
+
+@media (max-width: 430px)
+  .footer
+    height: 1050px
+    display: flex
+    flex-direction: column-reverse
+    align-items: center
+    justify-content: space-between
+
+    &__modalLoc
+      &_inner
+        h1
+          font-size: 3.7rem
+
+    .connect
+      width: 100%
+      height: 350px
+      display: flex
+      flex-direction: column
+      justify-content: space-around
+      align-items: center
+      font-size: 1.5rem
+
+      .connects
+        width: 90%
+        height: 82%
+        display: flex
+        justify-content: space-around
+        align-items: center
+        flex-wrap: wrap
+
+        .links
+          width: 150px
+          height: 95px
+          display: flex
+          flex-direction: column
+          justify-content: space-around
+          align-items: center
+          position: relative
+
+          .icons
+            color: #0098DA
+
+          .change
+            color: black
+            font-size: 2.8rem
+            position: absolute
+            top: 0
+            left: 20px
+
+    .wrapper
+      h1
+        font-size: 3.7rem
+
+    &__wrapper
+      width: 100%
+      display: flex
+
+    &_branches
+      width: 133px
+      font-size: 16px
+
+      .branch
+        &_inner
+          font-size: 2rem
+
+    &_main
+      width: 380px
+
+      .box
+        width: 260px
+        top: 50px
+        font-size: 12px
+
+      h2
+        font-size: 14px
+
+    .connect_none
+      display: none
+  .footer_connect
+    height: 350px
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    background-color: #EEEEEE
+
+    .connect
+      display: flex
+      flex-direction: column
+      align-items: center
+      gap: 30px
+
+      h1
+        color: #686868
+        font-size: 19px
+
+      .connects
+        display: flex
+        align-items: center
+        justify-content: center
+        flex-wrap: wrap
+        gap: 50px
+
+        .links
+          display: flex
+          flex-direction: column
+          align-items: center
+          gap: 10px
+          color: #0098DA
+          font-size: 12px
+
+          i
+            font-size: 25px
+
+          a
+            text-decoration: none
+            color: #686868
+            font-size: 12px
+
+  .none_footer
+    display: flex
+    margin-top: 20px
+
+  .footer_reg
+    height: 540px
+
+  .footer_register
+    width: 320px
+    height: 470px
+    gap: 50px
+
+    form
+      margin-bottom: 20px
+
+    .logo
+      margin-top: 20px
+
+    form
+      input, select
+        width: 290px
+        height: 50px
+
+@media (max-width: 375px)
+  .footer
+    height: 1100px
+    align-items: center
+
+    &__wrapper
+      height: 400px
+
+    .wrapper
+      &__container
+        &_img
+          width: 200px
+          height: 150px
+
+    &_main
+      width: 100%
+      height: 100%
+
+      .box
+        height: 50px
+        font-size: 10px
+        top: 60px
+        width: 220px
+
+        .number
+          font-size: 2rem
+
+          h2
+            font-size: 1.6rem
+  .footer_reg
+    height: 477px
+
+  .footer_register
+    width: 288px
+    height: 413px
+
+    form
+      margin-bottom: 10px
+      gap: 10px
+
+      input, select
+        width: 260px
+        height: 35px
+  .footer_connect
+    height: 320px
+
+    .connect
+      gap: 20px
+
+      .connects
+        gap: 30px
+  .footer_branches
+    font-size: 14px
+    gap: 10px
+
+@media (max-width: 320px)
+  .footer
+    .connect
+      .connects
+        .links
+          width: 120px

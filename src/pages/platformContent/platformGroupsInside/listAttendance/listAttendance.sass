@@ -1,0 +1,210 @@
+@import "styles/abstracts/variables"
+
+
+
+.listAtt
+  padding: 5rem
+  header
+    padding: 2rem
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
+    &>div
+      display: flex
+      align-items: center
+  .add
+    margin: 0 15px
+    i
+      font-size: 2.5rem
+      color: $color-grey-dark
+  table
+    overflow-x: auto
+    th,td
+      padding: 0 2rem
+    td
+      &:not(.date)
+        min-width: 10rem
+        max-width: 20rem
+  main
+    h1
+      text-align: center
+      color: #fc5757
+
+
+.subAttendance
+  width: 100%
+  height: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  &__wrapper
+    width: 60rem
+    max-height: 50rem
+    background-color: white
+    border-radius: 15px
+    padding: 3rem
+  &__header
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-bottom: 2rem
+  &__content
+    overflow: auto
+    min-height: fit-content
+    //height: 80%
+    max-height: 35rem
+  &__item
+    display: flex
+    flex-direction: column
+    align-items: center
+    border-bottom: 1px solid $color-grey-dark
+    padding: 1rem
+    //border-radius: 15px
+    .info
+      display: flex
+      align-items: center
+      justify-content: center
+      h1
+        margin: 0 1rem
+    .money
+      padding: 0.5rem 1.5rem
+      border: 2px solid #fc5757
+      color: #fc5757
+      font-size: 1.7rem
+      margin-top: 1rem
+      border-radius: 5px
+    .check
+      display: flex
+      align-items: center
+      justify-content: center
+      margin-top: 1rem
+      &__btn
+        padding: 0.7rem 1.5rem
+        border-radius: 10px
+        cursor: pointer
+        margin: 0 1rem
+        i
+          font-size: 1.6rem
+      .yes
+        border: 2px solid #65ec65
+        &:active
+          background-color: #65ec65
+          i
+            color: white
+        i
+          color: #65ec65
+      .no
+        border: 2px solid #fc5757
+        &:active
+          background-color: #fc5757
+          i
+            color: white
+        i
+          color: #fc5757
+  .absent
+    display: flex
+    align-items: center
+    justify-content: center
+    form
+      width: 50rem
+      background-color: white
+      border-radius: 15px
+      padding: 2rem
+      display: flex
+      justify-content: flex-start
+  .checked
+    display: flex
+    align-items: center
+    justify-content: center
+    form
+      width: 50rem
+      max-height: 50rem
+      background-color: white
+      padding: 2rem
+      border-radius: 10px
+
+  .checkedStudents
+    min-width: fit-content
+    max-width: 60rem
+    min-height: fit-content
+    max-height: 40rem
+    margin: 0 auto
+    //background-color: white
+    border-radius: 15px
+    overflow: auto
+    display: flex
+    flex-direction: column
+    h1
+      margin-top: 1rem
+      text-align: center
+      color: red
+    &__container
+      width: 100%
+      max-height: 50rem
+      overflow: auto
+      overflow-x: hidden
+    &__form
+      width: 100%
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+    &__item
+      width: 100%
+      display: flex
+      flex-direction: column
+      align-items: center
+      border-bottom: 1px solid black
+      padding: 1rem
+      cursor: pointer
+      .infoStudent
+        width: 100%
+        display: flex
+        align-items: center
+      .reason
+        margin-top: 1rem
+        font-size: 1.4rem
+        font-weight: 200
+        width: 100%
+        text-align: left
+      .error
+        text-align: center
+        display: none
+        width: 100%
+        padding: 1rem
+        font-size: 1.8rem
+        border: 2px solid red
+        margin-top: 10px
+        color: red
+        border-radius: 10px
+      .errorActive
+        display: block
+      img
+        width: 5rem
+        height: 5rem
+        border-radius: 50%
+      .info
+        font-size: 1.7rem
+        span
+          margin: 0 1rem
+      .money
+        padding: .5rem 1.5rem
+        border-radius: 15px
+        border: 1px solid $color-grey-dark
+        font-size: 1.6rem
+        margin-left: 1rem
+
+      .typeChecked
+        margin-left: 2rem
+        padding: 0 1rem
+        display: flex
+        align-items: center
+        justify-content: center
+        i
+          font-size: 3.5rem
+        .green
+          color: #65ec65
+        .red
+          color: #fc5757

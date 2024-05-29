@@ -1,0 +1,709 @@
+.main
+  width: 100%
+  height: 100vh
+  display: flex
+  flex-direction: column
+  padding: 0 40px 25px 40px
+
+  i
+    color: black
+    font-size: 1.8rem
+
+  .items
+    display: flex
+    //justify-content: space-between
+    align-items: center
+    gap: 20px
+
+  &__container
+    width: 100%
+    height: 50%
+    display: flex
+    align-items: center
+
+    .imageModal
+      width: fit-content
+      height: fit-content
+      background-color: white
+      padding: 20px
+      border-radius: 10px
+
+      &__container
+        width: 400px
+        height: 600px
+        display: flex
+        justify-content: center
+        align-items: center
+
+        &_inner
+          width: 90%
+          height: 100%
+
+          img
+            width: 100%
+            height: 100%
+
+    .modal
+      width: fit-content
+      height: fit-content
+      padding: 20px 0
+      background-color: white
+
+      &__wrapper
+        display: flex
+        flex-direction: column
+        align-items: center
+
+        h2
+          align-self: flex-start
+          margin-left: 20px
+
+      .wrapper
+        width: 850px
+        height: 350px
+        display: flex
+        flex-direction: column
+        justify-content: space-around
+        align-items: center
+
+      button
+        width: 225px
+        height: 50px
+        background-color: #00C2FF
+        border-radius: 10px
+        display: flex
+        justify-content: center
+        align-items: center
+        color: white
+        font-size: 25px
+
+      &__container
+        width: 850px
+        height: 215px
+        display: flex
+        justify-content: space-around
+        align-items: center
+
+        .modalAdd
+          width: 490px
+
+        &_image
+          width: 230px
+          height: 215px
+          border-radius: 10px
+          background-color: #D9D9D9
+          display: flex
+          justify-content: center
+          align-items: center
+
+          img
+            width: 100%
+            height: 100%
+
+          .helper
+            display: flex
+            flex-direction: column
+            justify-content: space-between
+            align-items: center
+
+            i
+              font-size: 80px
+
+        &_text
+          width: 420px
+          height: 100%
+          display: flex
+          flex-direction: column
+          justify-content: space-evenly
+          align-items: center
+
+          textarea
+            height: 150px
+            padding: 10px
+            font-size: 22px
+            resize: none
+
+          .items
+            input
+              width: 150px
+              height: 35px
+              border-radius: 10px
+              border: 1px solid #B2B2B2
+              padding: 0 10px
+              font-size: 18px
+
+          select
+            width: 420px
+            height: 45px
+            font-size: 20px
+            padding: 0 20px
+            border-radius: 10px
+            border: 2px solid #626262
+            color: #626262
+
+          label
+            margin-top: 0
+
+    &:nth-child(2)
+      flex-direction: column
+      align-items: flex-start
+      padding: 0 20px
+      position: relative
+
+      .plus
+        position: fixed
+        right: 30px
+        bottom: 20px
+        width: 75px
+        height: 75px
+        border-radius: 50%
+        font-size: 45px
+        background-color: #00C2FF
+        color: white
+        text-align: center
+        display: flex
+        justify-content: center
+        align-items: center
+
+        i
+          font-size: 2.5rem
+          color: white
+
+
+      h1
+        margin-bottom: 20px
+        color: #00C2FF
+
+    .certifecat
+      width: 40%
+      display: flex
+      justify-content: flex-end
+      position: relative
+
+      .icon
+        position: absolute
+        left: 50%
+        top: 10px
+        font-size: 40px
+
+    .items
+      padding: 0
+      width: 100%
+      justify-content: normal
+      align-items: center
+      gap: 20px
+
+    &_inner
+      width: 60%
+      display: flex
+      justify-content: space-between
+      padding: 0 20px
+
+      .info
+        width: 55%
+        display: flex
+        flex-direction: column
+        justify-content: space-evenly
+        font-size: 1.8rem
+
+        h1
+          font-size: 35px
+          color: #686868
+
+        h2
+          font-size: 25px
+          color: #00C2FF
+
+        p
+          color: #686868
+
+        &_icons
+          width: 200px
+          display: flex
+          justify-content: space-between
+          align-items: center
+          font-size: 35px
+
+          a
+            color: #686868
+            text-decoration: none
+            //font-size: 2.5rem
+
+            i
+              font-size: 3.5rem
+
+      .item
+        width: 405px
+        height: 390px
+        border-radius: 10px
+        display: flex
+        flex-direction: column
+        gap: 90px
+        position: relative
+        box-shadow: 0 0 15px 0 #B5B5B5
+
+        .background
+          width: 100%
+          height: 169px
+          background-image: linear-gradient(to right, #A1E3FF, #349CCA)
+          border-radius: 10px 10px 0 0
+          display: flex
+          flex-direction: column
+
+
+          .info
+            width: 115px
+            height: 45px
+            background-color: #FFF500
+            font-size: 18px
+            align-self: flex-end
+            margin: 20px
+            border-radius: 3px
+            padding: 10px
+            text-align: center
+
+
+        .image
+          width: 375px
+          position: absolute
+          display: flex
+          align-items: center
+          justify-content: space-between
+          padding: 20px
+          top: 60px
+
+          &__teacher
+            width: 165px
+            height: 165px
+
+          &__student
+            width: 100%
+            height: 100%
+            border-radius: 10px
+
+          &__item
+            width: 71px
+            height: 71px
+            display: flex
+            align-items: center
+            justify-content: center
+            background-color: #FFFFFF
+            box-shadow: 0 0 5px 0 #B5B5B5
+            border-radius: 10px
+
+        .teacher_name
+          display: flex
+          flex-direction: column
+          gap: 10px
+          padding: 20px
+          font-size: 1.4rem
+
+        .name
+          display: flex
+          align-items: center
+          gap: 20px
+          font-size: 1.4rem
+
+        .first
+          i
+            color: #0098DA
+
+@media (max-width: 1440px)
+  .main
+    height: fit-content
+  .teacher
+    height: 400px
+
+    &_box
+      //width: 100%
+      .box_block
+      gap: 30px
+
+      .box_img
+        width: 280px
+        height: 280px
+
+      .information
+        width: 500px
+        height: 280px
+        gap: 20px
+
+        h1
+          font-size: 35px
+
+      .result_block
+        gap: 40px
+
+        .edit
+          font-size: 40px
+
+        &_img
+          width: 250px
+          height: 280px
+
+  .result_box
+    width: 300px
+    height: 350px
+    gap: 60px
+
+    .background
+      height: 150px
+
+    .image
+      width: 300px
+
+      img
+        width: 100px
+
+      &__item
+        img
+          width: 50px
+
+
+  .plus
+    width: 100px
+    height: 100px
+    font-size: 40px
+
+@media (max-width: 1024px)
+  .main
+    height: fit-content
+    gap: 10px
+  .teacher
+    height: 400px
+
+    &_box
+      //width: 100%
+      gap: 5px
+
+      .box_block
+        gap: 30px
+
+      .box_img
+        width: 250px
+        height: 250px
+
+      .information
+        width: 400px
+        height: 250px
+        gap: 10px
+
+        h1
+          font-size: 25px
+
+        h2
+          font-size: 18px
+
+      .result_container
+        justify-content: normal
+        gap: 15px
+
+      .result_block
+        gap: 40px
+
+        .edit
+          font-size: 40px
+
+        &_img
+          width: 250px
+          height: 280px
+
+  .result_box
+    width: 230px
+    height: 250px
+    gap: 60px
+
+    .background
+      height: 100px
+
+      i
+        font-size: 20px
+        margin-left: 20px
+
+      .info
+        width: 80px
+        height: 30px
+        padding: 5px
+        font-size: 15px
+
+    .teacher_name
+      gap: 10px
+
+      h2
+        font-size: 16px
+
+    .image
+      width: 230px
+      top: 55px
+
+      img
+        width: 70px
+
+      &__item
+        img
+          width: 42px
+
+
+  .plus
+    width: 100px
+    height: 100px
+
+@media (max-width: 768px)
+  .teacher
+    height: 300px
+
+    &_box
+      gap: 5px
+
+      .box_block
+        gap: 20px
+
+      .box_img
+        width: 200px
+        height: 200px
+
+      .information
+        width: 400px
+        height: 200px
+        gap: 5px
+
+        h1
+          font-size: 20px
+
+        h4
+          font-size: 18px
+
+        .icons
+          font-size: 25px
+
+      .result_container
+        justify-content: normal
+        gap: 15px
+
+      .result_block
+        gap: 15px
+
+        .edit
+          font-size: 30px
+
+        &_img
+          width: 200px
+          height: 200px
+
+@media (max-width: 430px)
+  .main
+    overflow: hidden
+    width: fit-content
+    height: fit-content
+    padding: 30px 20px
+
+    &__container
+      width: 100%
+      height: 50vh
+
+      .imageModal
+        &__container
+          width: 200px
+          height: 300px
+
+      .modal
+        width: fit-content
+        height: fit-content
+        border-radius: 10px
+
+        .wrapper
+          width: 300px
+          height: 500px
+
+          button
+            width: 165px
+            height: 40px
+            border: none
+            font-size: 3.8rem
+
+        &__wrapper
+          width: 300px
+          height: 400px
+          display: flex
+          flex-direction: column
+          justify-content: space-around
+          align-items: center
+
+          h2
+            align-self: flex-start
+            margin-left: 20px
+            font-size: 3rem
+
+          button
+            width: 165px
+            height: 40px
+            border: none
+            font-size: 3.8rem
+
+        &__container
+          width: 90%
+          height: 80%
+          flex-direction: column
+
+          .modalAdd
+            width: 90%
+
+            .items
+              display: flex
+              flex-direction: column
+
+              input
+                width: 100%
+
+          &_text
+            select, input
+              width: 250px
+
+          &_image
+            .helper
+              p
+                font-size: 3rem
+
+      &:nth-child(1)
+        width: 87%
+        height: 45vh
+        display: flex
+        flex-direction: column
+        align-items: normal
+        position: relative
+
+        .certifecat
+          position: absolute
+          width: 57px
+          height: 78px
+          right: -45px
+          top: 10px
+          padding: 0
+
+          .icon
+            font-size: 3.4rem
+            left: -30px
+            top: 0
+
+        .mobileInfo
+          width: 350px
+          min-height: 150px
+          max-height: 250px
+          display: flex
+          flex-direction: column
+          justify-content: space-around
+
+          &_icons
+            width: 200px
+            height: 30px
+            display: flex
+            justify-content: space-between
+
+            i
+              font-size: 5.2rem
+              color: #686868
+
+          &_text
+            font-size: 3.2rem
+
+        .column
+          padding: 0
+          display: flex
+          height: 107px
+          width: 300px
+
+          .image
+            width: 107px
+            height: 97px
+            border: 2px solid #00c2ff
+            border-radius: 10px
+
+            img
+              width: 100%
+              height: 100%
+
+          .info
+            height: 45px
+            align-self: center
+            gap: 20px
+
+            &_inner
+              font-size: 3.2rem
+
+      &_inner
+        width: 50%
+        height: 100%
+
+      &:nth-child(2)
+        padding: 0
+        width: 385px
+        overflow: hidden
+
+        .plus
+          font-size: 3rem
+
+        h1
+          font-size: 5.2rem
+
+        .items
+          height: 230px
+          overflow-x: scroll
+
+          .item
+            min-width: 193px
+            height: 220px
+
+            &:nth-child(1)
+              margin-left: 10px
+
+            .background
+              height: 150px
+
+              .info
+                width: 63px
+                height: 23px
+                font-size: 2rem
+                padding: 0
+                margin: 15px
+
+            .image
+              width: 193px
+              position: absolute
+              top: 25px
+
+              &__teacher
+                width: 65px
+                height: 65px
+                border-radius: 50%
+
+              &__item
+                width: 40px
+                height: 50px
+                display: flex
+                justify-content: center
+                align-items: center
+
+                //img
+                  width: 85%
+                  height: 95%
+                  border-radius: 10px
+
+            .names
+              padding: 0
+              margin-bottom: 20px
+
+              .name
+                margin-left: 30px
+
+                &_inner
+                  font-size: 3.2rem
+
+@media (max-width: 375px)
+  .main
+    &__container
+      &:nth-child(1)
+        .certifecat
+          right: -40px
+
+      &:nth-child(2)
+        width: 349px

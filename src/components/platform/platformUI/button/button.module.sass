@@ -1,0 +1,129 @@
+@import "styles/abstracts/variables"
+
+
+.btnPlatform
+  padding: 0.7rem 1.5rem
+  border: 1px solid $color-grey-dark
+  color: $color-grey-dark
+  font-size: 1.7rem
+  border-radius: 5px
+  display: flex
+  align-items: center
+  justify-content: center
+  transition: all .3s
+  cursor: pointer
+  user-select: none
+  margin: .5rem
+  position: relative
+  background-color: white
+  font-weight: 200
+  .extraMsg
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 2rem
+    height: 2rem
+    position: absolute
+    padding: 1rem
+    top: -1rem
+    right: -1rem
+    background-color: white
+    border-radius: 15px
+    box-shadow: 0 0 5px 1px #cecece
+    //border: 1px solid black
+  i
+    font-size: 1.7rem
+    color: $color-grey-dark
+    margin: 0 0.3rem
+  &:hover,&:active,&.active
+    color: $color-main-light
+    .extraMsg
+      box-shadow:  0 0 2px 1px $color-main-light
+    i
+      color: $color-main-light
+  &:hover
+    filter: brightness(93%)
+  &:active
+    transform: scale(0.9)
+
+  &.simple
+    padding: 0.7rem 1.5rem
+    border: 1px solid $color-grey-dark
+    color: $color-grey-dark
+    box-shadow: none
+    background-color: rgba(255, 255, 255, 0)
+    &:hover
+      background-color: $color-grey-dark
+      color: white
+      i
+        color: white
+      svg
+        fill: white
+    &.active
+      border: 2px solid $color-main-dark
+      color: white
+      background-color: $color-main-dark
+      i
+        color: white
+      svg
+        fill: white
+    &.disabled
+      color: $color-grey-dark
+      background-color: $color-grey-light
+      i
+        color: $color-grey-dark
+      svg
+        fill: $color-grey-dark
+
+
+
+  &.submit
+    border-radius: 5px
+    padding: 0.7rem 1.5rem
+    border: 2px solid rgba($color-main-dark,.6)
+    color: white
+    background-color: $color-main-dark
+    svg
+      fill: white
+    &.active
+      background-color: $color-main-light
+    &.disabled
+      background-color: $color-main-light
+
+
+  &.danger
+    padding: 0.7rem 1.5rem
+    border: 2px solid rgba(#f53c3c,.6)
+    background-color: #f53c3c
+    box-shadow: none
+    color: white
+    &.active
+      background-color: #f53c3c
+    &.disabled
+      background-color: #f53c3c
+
+
+
+  &.warning
+    background-color: #ff8829
+    &.active
+      background-color: #ff8829
+    &.disabled
+      background-color: #ff8829
+
+@media (max-width: 768px)
+  .btnPlatform
+    font-size: 2.3rem
+    &:hover,&:active
+      border: 1px solid $color-grey-dark
+      color: $color-grey-dark
+      box-shadow: none
+
+@media (max-width: 475px)
+  .btnPlatform
+    padding: 1.2rem 2.3rem
+    font-size: 3rem
+    &:hover,&:active
+      border: 1px solid $color-grey-dark
+      color: $color-grey-dark
+      box-shadow: none

@@ -1,0 +1,384 @@
+@import "styles/abstracts/variables"
+
+
+.insideGroup
+  padding: 4rem
+  .header
+    width: 100%
+    padding: 3rem
+    display: flex
+    &>div
+      width: 33.3333%
+      display: flex
+      flex-direction: column
+      &:nth-child(2)
+        align-items: center
+      &:last-child
+        flex-direction: row
+        justify-content: flex-end
+      h1
+        font-size: 2.3rem
+      h2
+        margin-top: 1rem
+        font-size: 2.5rem
+    &-btn
+      position: relative
+      display: flex
+      align-items: center
+      justify-content: center
+      cursor: pointer
+      i
+        font-size: 3rem
+        color: $color-grey-dark
+      .modalOptions
+        width: 20rem
+        border-radius: 10px
+        background-color: #ffffff
+        position: absolute
+        top: 150%
+        right: 0
+        z-index: 101
+        box-shadow: 0 1px 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.12) ,0 4px 8px rgba(0,0,0,0.12) ,0 8px 16px rgba(0,0,0,0.12) ,0 16px 32px rgba(0,0,0,0.12)
+        visibility: hidden
+        opacity: 0
+        overflow: hidden
+        &.active
+          visibility: visible
+          opacity: 1
+        .option
+          display: flex
+          align-items: center
+          justify-content: flex-start
+          padding: 1rem 2rem
+          //margin-bottom: 1rem
+          transition: all .5s
+          &:last-child
+            margin-bottom: 0
+          &:hover
+            background-color: #ebebeb
+          i
+            color: $color-grey-dark
+            font-size: 1.8rem
+          span
+            font-size: 1.5rem
+            color: $color-grey-dark
+            margin-left: 1rem
+  .error
+    margin: 1rem 0
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    h1
+      color: red
+  .subheader
+    width: 100%
+    padding: 3rem
+    margin-top: 1rem
+    &__links
+      width: 100%
+      height: fit-content
+      padding: 2rem
+      display: flex
+      align-items: center
+      &-item
+        width: 50%
+        font-size: 1.8rem
+        display: flex
+        align-items: center
+        justify-content: center
+        padding: 2rem 0
+        border-bottom: 2px solid
+        font-weight: bold
+        cursor: pointer
+        user-select: none
+        &:hover,&.active
+          border-bottom: 2px solid $color-main-dark
+          color: $color-main-dark
+
+
+
+  .main
+    display: grid
+    grid-template-columns: repeat(2,2fr)
+    grid-auto-rows: auto
+    justify-items: center
+    &-flex
+      width: 100%
+      display: flex
+      align-items: center
+      justify-content: center
+      padding: 0 4rem
+    &__item
+      width: fit-content
+      height: fit-content
+      padding: 2rem
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.12) ,0 4px 8px rgba(0,0,0,0.12) ,0 8px 16px rgba(0,0,0,0.12) ,0 16px 32px rgba(0,0,0,0.12)
+      border-radius: 15px
+    .information
+      padding: 3rem
+      &__header
+        width: 100%
+        display: flex
+        justify-content: space-between
+        margin-bottom: 2rem
+        &>div
+          display: flex
+          align-items: center
+          justify-content: flex-end
+        i
+          font-size: 2.6rem
+          color: $color-grey-dark
+
+      &__container
+        width: 33rem
+        height: fit-content
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: center
+      &__item
+        display: flex
+        align-items: center
+        justify-content: space-between
+        width: 100%
+        height: 3rem
+        margin: 1rem 0
+        border-bottom: 1px solid $color-grey-dark
+        span
+          font-size: 1.8rem
+          color: $color-grey-dark
+    .students
+      padding: 3rem
+      &__header
+        width: 100%
+        height: 5rem
+        display: flex
+        align-items: center
+        justify-content: space-between
+        margin-bottom: 1rem
+        i
+          font-size: 2.6rem
+          color: $color-grey-dark
+      &__container
+        width: 37rem
+      &__item
+        height: 6rem
+        width: 100%
+        display: flex
+        align-items: center
+        justify-content: flex-start
+        border-bottom: 1px solid
+        padding: 1rem
+        margin: 1rem 0
+        &>div
+          height: 100%
+          display: flex
+          align-items: center
+          justify-content: center
+          img
+            width: 5rem
+            height: 5rem
+            border-radius: 50%
+        .info
+          flex-direction: column
+          align-items: flex-start
+          justify-content: center
+          margin-left: 3em
+          span
+            text-transform: capitalize
+            font-size: 1.8rem
+        .money
+          width: fit-content
+          padding: 0.7rem 1.5rem
+          border-radius: 15px
+          font-size: 1.7rem
+          margin-left: 3rem
+          border: 2px solid green
+          color: green
+        .red
+          border: 2px solid red
+          color: red
+        .yellow
+          border: 2px solid #faa727
+          color:  #faa727
+        .black
+          border: 2px solid #000000
+          color:  #000000
+          box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.61)
+        &.navy
+          border: 2px solid #2467b0
+          color: #2467b0
+          box-shadow: 0 0 14px 1px #2467b0
+    .checkAttendance
+      min-width: 13rem
+      height: 13rem
+      background-color: rgba(white,0.7)
+      margin: 2rem
+      border-radius: 15px
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.12) ,0 4px 8px rgba(0,0,0,0.12) ,0 8px 16px rgba(0,0,0,0.12) ,0 16px 32px rgba(0,0,0,0.12)
+      display: flex
+      align-items: center
+      justify-content: center
+      transition: all .5s
+      cursor: pointer
+      &:hover
+        box-shadow: 0 1px 2px rgba($color-main-dark,0.24),0 2px 4px rgba($color-main-dark,0.24) ,0 4px 8px rgba($color-main-dark,0.24) ,0 8px 16px rgba($color-main-dark,0.24) ,0 16px 32px rgba($color-main-light,0.24)
+        i
+          transition: all .6s
+          color: $color-main-dark
+      &:active
+        transform: scale(0.9)
+      i
+        font-size: 4.5rem
+        color: $color-grey-dark
+
+@media (max-width: 768px)
+  .insideGroup
+    .header
+      &>div
+        h1
+          font-size: 2.7rem
+        h2
+          font-size: 3.2rem
+      &-btn
+        i
+          font-size: 3.7rem
+        .modalOptions
+          width: 25rem
+          .option
+            padding: 2rem
+            i
+              font-size: 2.5rem
+            span
+              font-size: 2rem
+    .subheader
+      &__links
+        &-item
+          font-size: 2.5rem
+
+    .main
+      grid-template-columns: repeat(1,1fr)
+      grid-gap: 5rem
+      .information
+        &__header
+          h1
+            font-size: 2.7rem
+          i
+            font-size: 3rem
+        &__container
+          width: 40rem
+        &__item
+          height: 5rem
+          span
+            font-size: 2.2rem
+      .students
+        &__header
+          i
+            font-size: 3rem
+          h1
+            font-size: 2.7rem
+        &__container
+          width: 100%
+        &__item
+          height: 8rem
+          &>div
+            img
+              width: 6rem
+              height: 6rem
+          .info
+            span
+              font-size: 2.4rem
+          .money
+            font-size: 2.2rem
+            border: 1px solid green
+          .red
+            border: 1px solid red
+          .yellow
+            border: 1px solid #faa727
+
+      .checkAttendance
+        min-width: 15rem
+        height: 15rem
+        i
+          font-size: 5rem
+
+
+
+@media (max-width: 475px)
+  .insideGroup
+    padding: 2rem
+    .header
+      &>div
+        h1
+          font-size: 3rem
+        h2
+          font-size: 3.7rem
+      &-btn
+
+        i
+          font-size: 5rem
+        .modalOptions
+          width: 30rem
+          .option
+            padding: 2rem 3rem
+            .icon
+              width: 4rem
+              i
+                font-size: 3rem
+            span
+              font-size: 2.7rem
+    .subheader
+      &__links
+        &-item
+          font-weight: normal
+          font-size: 2.7rem
+          border-bottom: 1px solid $color-grey-dark
+
+    .main
+      grid-template-columns: repeat(1,1fr)
+      grid-gap: 5rem
+      .information
+        &__header
+          h1
+            font-size: 3rem
+          i
+            font-size: 3.5rem
+        &__container
+          width: 45rem
+        &__item
+          height: 6rem
+          span
+            font-size: 2.7rem
+      .students
+        &__header
+          i
+            font-size: 3.5rem
+          h1
+            font-size: 3rem
+        &__container
+          width: 100%
+        &__item
+          height: 10rem
+          &>div
+            img
+              width: 8rem
+              height: 8rem
+          .info
+            span
+              font-size: 2.7rem
+          .money
+            font-size: 2.7rem
+            border: 1px solid green
+          .red
+            border: 1px solid red
+          .yellow
+            border: 1px solid #faa727
+
+      .checkAttendance
+        min-width: 15rem
+        height: 15rem
+        i
+          font-size: 5rem
+
+

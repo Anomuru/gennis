@@ -1,0 +1,87 @@
+@import "styles/abstracts/variables"
+
+
+.teacherLocations
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding: 3rem
+  header
+    width: 100%
+    padding: 1rem
+    display: flex
+    align-items: center
+    justify-content: space-between
+  main
+    width: 100%
+    padding: 2rem
+    display: flex
+    align-items: center
+    flex-direction: column
+  &__title
+    width: 100%
+    font-size: 2rem
+    margin-bottom: 2rem
+    text-align: center
+  &__btns
+    padding: 2rem
+    display: flex
+    align-items: center
+    justify-content: center
+    a
+      padding: 1rem 1.5rem
+      border-radius: 15px
+      border: 2px solid $color-grey-dark
+      margin: 0 1rem
+      font-size: 1.5rem
+      transition: all .2s
+      font-weight: bold
+      &:hover,&.active
+        border: 2px solid $color-main-light
+        color: $color-main-light
+        box-shadow: 0 0 13px $color-main-light
+      &:active
+        transform: scale(0.9)
+
+  &__container
+    width: 55%
+    .birth
+      width: 80%
+    .subjects
+      width: 100%
+      height: fit-content
+      padding: 1rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      margin: 1.5rem 0
+      h3
+        font-size: 1.8rem
+        font-weight: bold
+        color: $color-grey-dark
+      &__wrapper
+        width: 75%
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: center
+        margin: 1rem 0
+      &__item
+        border-radius: 10px
+        border: 1px solid $color-grey-dark
+        padding: 1.5rem
+        font-size: 1.7rem
+        margin: 1rem 0
+        width: 100%
+        position: relative
+        &-info
+          position: relative
+        i
+          position: absolute
+          font-size: 2.5rem
+          top: 50%
+          right: 0
+          transform: translateY(-50%)
+          color: $color-grey-dark

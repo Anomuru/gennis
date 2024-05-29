@@ -1,0 +1,23 @@
+@import "styles/abstracts/variables"
+
+
+.accounting
+  padding-top: 3rem
+  overflow: auto
+  height: calc(100vh - #{$appHeader-height})
+  &::-webkit-scrollbar
+      width: 8px
+  &::-webkit-scrollbar-track
+    background-color: #ffffff
+  &::-webkit-scrollbar-thumb
+    cursor: pointer
+    border-radius: 5px
+    background-color: #313131
+  section
+    height: max-content
+
+  &__header
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center

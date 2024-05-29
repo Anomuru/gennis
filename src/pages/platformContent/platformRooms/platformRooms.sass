@@ -1,0 +1,191 @@
+@import "styles/abstracts/variables"
+
+
+.rooms
+  width: 100%
+  padding: 5rem
+  &__tools
+    padding: 2.5rem
+    border-radius: 20px
+    display: flex
+    align-items: center
+    justify-content: flex-end
+    &-item
+      width: fit-content
+      padding: 1.2rem
+      border-radius: 50%
+      display: flex
+      border: 2px solid $color-grey-dark
+      cursor: pointer
+      i
+        color: $color-grey-dark
+        font-size: 2.3rem
+      &:hover,&:active
+        border: 2px solid $color-main-light
+        i
+          color: $color-main-light
+      &:active
+        transition: all .2s
+        transform: scale(0.9)
+  &__wrapper
+    width: 100%
+    padding: 2rem
+    margin-top: 3rem
+    gap: 3rem
+    display: flex
+    justify-content: space-around
+    flex-wrap: wrap
+    &-item
+      width: 35rem
+      box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034) ,0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06) ,0 22.3px 17.9px rgba(0, 0, 0, 0.072),0 41.8px 33.4px rgba(0, 0, 0, 0.086),0 100px 80px rgba(0, 0, 0, 0.12)
+      .image
+        width: 100%
+        height: 250px
+        background-color: #575757
+        position: relative
+        display: flex
+        overflow: hidden
+        .index
+          position: absolute
+          right: 2rem
+          bottom: 2rem
+          color: white
+          font-size: 1.7rem
+          background-color: rgba(0, 0, 0, 0.75)
+          border-radius: 50%
+          padding: 1rem
+        img
+          width: 100%
+          height: 100%
+          object-fit: cover
+          //image-rendering: auto
+      .info
+        width: 100%
+        padding: 2rem
+        h1
+          font-size: 2.2rem
+          margin-bottom: 1rem
+
+        h4
+          color: #676767
+          display: flex
+          font-size: 1.7rem
+          margin-top: 0.5rem
+          span
+            &:last-child
+              margin-left: 1rem
+              color: $color-grey-dark
+              font-size: 1.8rem
+              i
+                font-size: 2rem
+              &.true
+                i
+                  color: #4af34a
+
+              &.false
+                i
+                  color: #fc5757
+
+        .subjects
+          width: 100%
+          display: flex
+          flex-wrap: wrap
+          align-items: center
+          margin-top: 1rem
+          &__item
+            padding: 0.3rem 1.5rem
+            border: 1px solid $color-grey-dark
+            color: $color-grey-dark
+            margin: 1rem 0.5rem
+            border-radius: 15px
+            font-size: 1.7rem
+  &__register
+    width: 100%
+
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 3rem
+    overflow: auto
+    form
+      width: 50rem
+      height: fit-content
+      padding: 3rem
+      border-radius: 15px
+      background-color: white
+      overflow: auto
+      .subjects
+        width: 100%
+        height: fit-content
+        padding: 1rem
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: center
+        margin: 1.5rem 0
+        h3
+          font-size: 1.8rem
+          font-weight: bold
+          color: $color-grey-dark
+        &__wrapper
+          width: 75%
+          display: flex
+          flex-direction: column
+          align-items: center
+          justify-content: center
+          margin: 1rem 0
+        &__item
+          border-radius: 10px
+          border: 1px solid $color-grey-dark
+          padding: 1.5rem
+          font-size: 1.7rem
+          margin: 1rem 0
+          width: 100%
+          position: relative
+          &-info
+            position: relative
+          i
+            position: absolute
+            font-size: 2.5rem
+            top: 50%
+            right: 0
+            transform: translateY(-50%)
+            color: $color-grey-dark
+      .img-input
+        display: none
+
+      .addImg
+        width: 100%
+        padding: 2rem
+        border: 5px dotted $color-grey-dark
+        margin: 2rem 0
+        display: flex
+        align-items: center
+        justify-content: space-around
+        cursor: pointer
+        color: #afafaf
+
+      .images
+        width: 100%
+        display: flex
+        flex-wrap: wrap
+        align-items: center
+        justify-content: space-around
+        &__item
+          padding: 1rem
+          width: fit-content
+          position: relative
+          margin: 1rem
+          &-del
+            position: absolute
+            right: -1rem
+            top: -1rem
+            i
+              font-size: 2rem
+              color: $color-grey-dark
+
+        img
+          width: 100px
+          height: 100px
+          display: block
+          object-fit: cover

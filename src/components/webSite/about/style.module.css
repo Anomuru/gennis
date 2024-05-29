@@ -1,0 +1,344 @@
+.about {
+  width: 100%;
+  height: 1020px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.about .icon {
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  font-size: 25px;
+  border-radius: 5px;
+  background-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  left: 70px;
+  top: 80px;
+  z-index: 5;
+}
+.about__modal {
+  width: fit-content;
+  height: fit-content;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 10px;
+  gap: 2rem;
+}
+.about__modal h1 {
+  font-size: 2.4rem;
+}
+.about__modal .wrapper {
+  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+.about__modal textarea {
+  width: 400px;
+  height: 175px;
+  padding: 10px;
+  font-size: 18px;
+  resize: none;
+  border: 2px solid #626262;
+}
+.about__modal_link {
+  width: 450px;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.about_info {
+  width: 837px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 75px;
+  margin-top: -160px;
+  font-size: 1.8rem;
+}
+.about_info h1 {
+  font-size: 40px;
+  font-weight: 500;
+}
+.about_info h1 span {
+  color: #0098DA;
+}
+.about_img {
+  height: 1020px;
+  width: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.about_img .square {
+  width: 877px;
+  height: 560px;
+  background: #00C2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 10px solid black;
+  border-radius: 20px;
+}
+.about_img .square img {
+  width: 350px;
+  height: 350px;
+  position: absolute;
+}
+.about_img .square .circle {
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.about_img .square .circle .radius {
+  z-index: -1;
+  height: 180px;
+  width: 180px;
+  border-radius: 50%;
+  animation-name: plus;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.about_img .square .circle .plus {
+  width: 125px;
+  height: 125px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.about_img .square .circle .plus i {
+  font-size: 60px;
+  border-radius: 50%;
+  color: #000000;
+  position: relative;
+  z-index: 5;
+}
+
+@keyframes plus {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@media (max-width: 1440px) {
+  .about_info {
+    width: 600px;
+  }
+  .about_info h1 {
+    font-size: 33px;
+  }
+  .about_img {
+    height: 1020px;
+    width: 920px;
+  }
+  .about_img .square {
+    width: 710px;
+    height: 453px;
+  }
+  .about_img .square img {
+    width: 230px;
+    height: 230px;
+  }
+  .about_img .square .circle .radius {
+    z-index: -1;
+    height: 102px;
+    width: 102px;
+  }
+  .about_img .square .circle .plus {
+    width: 102px;
+    height: 102px;
+  }
+  .about_img .square .circle .plus i {
+    font-size: 32px;
+  }
+}
+@media (max-width: 1024px) {
+  .about {
+    height: 500px;
+  }
+  .about__modal_data {
+    justify-content: space-around;
+  }
+  .about__modal_data textarea {
+    height: 174px;
+  }
+  .about__modal_link {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .about .icon {
+    top: 15px;
+    left: 20px;
+    width: 65px;
+    height: 65px;
+    font-size: 25px;
+  }
+  .about_img {
+    width: 640px;
+    height: 617px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .about_img .square {
+    width: 465px;
+    height: 297px;
+  }
+  .about_img .square img {
+    width: 151px;
+    height: 186px;
+  }
+  .about_img .square .circle .radius {
+    z-index: -1;
+    height: 67px;
+    width: 67px;
+  }
+  .about_img .square .circle .plus {
+    width: 67px;
+    height: 67px;
+  }
+  .about_img .square .circle .plus i {
+    font-size: 22px;
+  }
+  .about_info {
+    width: 500px;
+    font-size: 16px;
+    padding: 25px;
+    margin: 0;
+  }
+  .about_info h1 {
+    font-size: 22px;
+    font-weight: 400;
+  }
+}
+@media (max-width: 768px) {
+  .about {
+    height: 450px;
+  }
+  .about__modal h1 {
+    font-size: 3.7rem;
+  }
+  .about .icon {
+    top: 40px;
+    width: 55px;
+    height: 55px;
+    font-size: 20px;
+    left: 30px;
+  }
+  .about_info {
+    width: 420px;
+    font-size: 14px;
+  }
+  .about_info h2 {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .about_img {
+    width: 420px;
+  }
+  .about_img .square {
+    width: 292px;
+    height: 223px;
+  }
+  .about_img .square img {
+    width: 113px;
+    height: 140px;
+  }
+  .about_img .square .circle .radius {
+    z-index: -1;
+    height: 50px;
+    width: 50px;
+  }
+  .about_img .square .circle .plus {
+    width: 50px;
+    height: 50px;
+  }
+  .about_img .square .circle .plus i {
+    font-size: 17px;
+  }
+}
+@media (max-width: 430px) {
+  .about {
+    height: 561px;
+    flex-direction: column-reverse;
+  }
+  .about .wrapper {
+    width: 100%;
+    height: 80%;
+  }
+  .about__modal {
+    width: 220px;
+    height: 350px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+  }
+  .about__modal h1 {
+    font-size: 3.7rem;
+  }
+  .about__modal_data {
+    width: 100%;
+    justify-content: space-around;
+  }
+  .about__modal_data textarea {
+    width: 240px;
+    height: 150px;
+  }
+  .about__modal_link {
+    width: 100%;
+    height: 100px;
+  }
+  .about_info {
+    text-align: center;
+    font-size: 2.8rem;
+  }
+}
+@media (max-width: 375px) {
+  .about {
+    height: 450px;
+  }
+  .about .icon {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
+  .about_info {
+    width: 350px;
+    font-size: 2.4rem;
+  }
+  .about_info h1 {
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .about_img {
+    width: 350px;
+  }
+  .about_img .square {
+    width: 257px;
+    height: 196px;
+  }
+  .about_img .square img {
+    width: 100px;
+    height: 123px;
+  }
+}
+
+/*# sourceMappingURL=style.module.css.map */

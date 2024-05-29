@@ -1,0 +1,33 @@
+@import "../abstracts/variables"
+
+.heading
+  color: $color-second
+  font-family: 'Cabin Condensed',sans-serif
+  font-style: normal
+  font-weight: 600
+  font-size: 45px
+  margin-bottom: 45px
+
+
+@media (max-width: 1024px)
+  .heading
+    font-size: 40px
+
+
+.title
+  width: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+  margin-bottom: 10rem
+  h1
+    font-size: 3rem
+    font-style: normal
+    font-weight: normal
+
+
+@media (max-width: 425px)
+  .title
+    h1
+      font-size: 4rem
+      text-align: center

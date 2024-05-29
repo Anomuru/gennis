@@ -1,0 +1,335 @@
+@import "styles/abstracts/variables"
+
+
+
+.menu-bar
+  height: calc((100svh - #{$appHeader-height}))
+  font-size: $font-size
+  width: 12rem
+  &__menu
+    margin-top: 2rem
+    padding: 3rem 0 0.8rem 2.5rem
+    width: 12rem
+    height: 90%
+    border-radius: 0 1rem 1rem 0
+    list-style: none
+    z-index: 1000
+    overflow: hidden
+    transition: all .1s linear
+    overflow-y: auto
+    position: relative
+    &::-webkit-scrollbar
+      width: 6px
+    &::-webkit-scrollbar-track
+      background-color: #ffffff
+      -webkit-box-shadow: inset 0 0 13px rgba(0, 0, 0, 0.52)
+      border-radius: 10px
+      margin: 1rem
+    &::-webkit-scrollbar-thumb
+      cursor: pointer
+      border-radius: 5px
+      background-color: #575757
+    &-item
+      margin: 1.5rem 0
+      user-select: none
+      width: 100%
+      display: flex
+      flex-direction: column
+      height: fit-content
+      .desc
+        width: 14rem
+        margin: 0 1.5rem
+        color: #000000
+        transition: all 0.5s
+        opacity: 0
+        visibility: hidden
+
+        &_active
+          visibility: visible
+          opacity: 1
+          transition-delay: 0.3s
+      .sub-item
+        max-height: 0
+        overflow: hidden
+        transition: max-height 0.5s ease-in-out
+        width: 100%
+        &_link
+          width: 100%
+          text-decoration: none
+          margin: 1rem 0.6rem
+          display: flex
+          align-items: center
+          justify-content: flex-start
+          &>div
+            min-width: 3.3rem
+            min-height: 3.3rem
+            display: flex
+            align-items: center
+            justify-content: flex-start
+          &:hover,&_active
+            i
+              color: $color-platform-main !important
+            .sub-item_icon-link
+              border: 1px solid $color-platform-main
+          i
+            font-size: 1.6rem
+            color: $color-grey-dark
+        &_icon-link
+          min-width: 3.3rem
+          min-height: 3.3rem
+          border: 1px solid $color-grey-dark
+          border-radius: 50%
+          display: flex
+          align-items: center
+          justify-content: center
+      .active
+        max-height: calc(4.5rem * #{$locations})
+    &-link
+      min-width: fit-content
+      min-height: 4.5rem
+      display: flex
+      align-items: center
+      text-decoration: none
+      transition: all .3s ease
+      &:hover
+        i
+          color: $color-platform-main
+        .icon-link
+          border: 1px solid $color-platform-main
+          box-shadow: 0 0 14px $color-platform-main
+      i
+        font-size: 2rem
+        color: $color-grey-dark
+      .icon-link
+        min-width: 4.5rem
+        min-height: 4.5rem
+        display: flex
+        justify-content: center
+        align-items: center
+        border: 1px solid $color-grey-dark
+        border-radius: 50%
+        &:hover
+          color: $color-platform-main !important
+          border: 1px solid $color-platform-main
+          box-shadow: 0 0 14px $color-platform-main
+      &_active
+        .icon-link
+          border: 1px solid $color-platform-main
+          box-shadow: 0 0 14px $color-platform-main
+        i
+          color: $color-platform-main !important
+      .arrow
+        position: absolute
+        right: 1.5rem
+        transition: all .2s ease
+        &_active
+          transform: rotate(90deg)
+    &-active
+      width: 30rem
+      background-color: white
+      box-shadow: 0 0 20px 10px white
+      .desc
+        white-space: normal
+
+
+
+
+.overlay
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100vh
+  background-color: rgba(49, 49, 49, 0.44)
+  visibility: hidden
+  opacity: 0
+  transition: all 0.6s ease-in-out
+  z-index: 999
+  &-active
+    opacity: 1
+    visibility: visible
+
+
+
+@media (max-width: 768px)
+  .menu-bar
+    width: 12rem
+    &__menu
+      width: 12rem
+      &::-webkit-scrollbar
+        width: 4px
+      &-item
+        .desc
+          width: 20rem
+          font-size: 2.4rem
+        .sub-item
+          &_link
+            width: 100%
+            text-decoration: none
+            margin: 1rem 0.6rem
+            display: flex
+            align-items: center
+            justify-content: flex-start
+            &>div
+              min-width: 4.3rem
+              min-height: 4.3rem
+              display: flex
+              align-items: center
+              justify-content: flex-start
+            i
+              font-size: 2rem
+          &_icon-link
+            min-width: 4.4rem
+            min-height: 4.4rem
+      &-link
+        min-width: fit-content
+        min-height: 5.5rem
+        display: flex
+        align-items: center
+        text-decoration: none
+        transition: all .3s ease
+        i
+          font-size: 2rem
+          color: $color-grey-dark
+        .icon-link
+          min-width: 5.5rem
+          min-height: 5.5rem
+        .arrow
+          position: absolute
+          right: 1.5rem
+          transition: all .2s ease
+          &_active
+            transform: rotate(90deg)
+      &-active
+        width: 40rem
+
+
+@media (max-width: 475px)
+  .menu-bar
+    height: calc((100svh - (#{$appHeader-height} + 5rem) ))
+    font-size: $font-size
+    position: absolute
+    transform: translateX(-100%)
+    transition: transform .6s ease
+    z-index: 300
+    &-active
+      transform: translateX(0)
+    &__menu
+      margin-top: 0
+      padding: 5rem 0 0.8rem 3rem
+      width: 43rem
+      height: 100%
+      border-radius: 0 1rem 1rem 0
+      list-style: none
+      z-index: 1000
+      overflow: hidden
+      transition: all .1s linear
+      overflow-y: auto
+      position: absolute
+      transform: translateX(-100%)
+      &::-webkit-scrollbar
+        display: none
+      &-item
+        margin: 1.5rem 0
+        user-select: none
+        width: 100%
+        display: flex
+        flex-direction: column
+        height: fit-content
+        .desc
+          width: fit-content
+          font-size: 2.7rem
+        .sub-item
+          max-height: 0
+          overflow: hidden
+          transition: max-height 0.5s ease-in-out
+          width: 100%
+          display: flex
+          flex-direction: column
+          align-items: flex-start
+          padding: 0 1rem
+          &_link
+            width: 100%
+            text-decoration: none
+            margin: 1rem 0.6rem
+            display: flex
+            align-items: center
+            justify-content: flex-start
+            &>div
+              min-width: 6rem
+              min-height: 6rem
+              display: flex
+              align-items: center
+              justify-content: flex-start
+            &_active
+              i
+                color: $color-platform-main !important
+              .sub-item_icon-link
+                border: 1px solid $color-platform-main
+            i
+              font-size: 2.5rem
+              color: $color-grey-dark
+          &_icon-link
+            min-width: 6rem
+            min-height: 6rem
+            border: 1px solid $color-grey-dark
+            border-radius: 50%
+            display: flex
+            align-items: center
+            justify-content: center
+
+        .active
+          max-height: calc(6rem * #{$locations})
+      &-link
+        min-width: 7rem
+        min-height: 7rem
+        display: flex
+        align-items: center
+        text-decoration: none
+        transition: all .3s ease
+        &:hover
+          i
+            color: $color-grey-dark
+          .icon-link
+            border: 1px solid $color-grey-dark
+            box-shadow: 0 0 14px $color-grey-dark
+        i
+          font-size: 2.2rem
+          color: $color-grey-dark
+        .icon-link
+          min-width: 7rem
+          min-height: 7rem
+          display: flex
+          justify-content: center
+          align-items: center
+          border: 1px solid $color-grey-dark
+          border-radius: 50%
+          font-size: 3rem
+          &:hover
+            color: $color-grey-dark !important
+            border: 1px solid $color-grey-dark
+            box-shadow: 0 0 14px $color-grey-dark
+        &_active
+          .icon-link
+            border: 1px solid $color-main !important
+            box-shadow: 0 0 14px $color-main !important
+            color: $color-platform-main !important
+          i
+            color: $color-platform-main !important
+
+        .arrow
+          position: absolute
+          right: 1.5rem
+          transition: all .2s ease
+          &_active
+            transform: rotate(90deg)
+      &-active
+        transform: translateX(0)
+        width: 53rem
+        background-color: white
+        box-shadow: 0 0 20px 10px white
+        .desc
+          white-space: normal
+
+
+

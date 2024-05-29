@@ -1,0 +1,53 @@
+@import "styles/abstracts/variables"
+
+
+.overlay-platform__modal
+  width: 100%
+  min-height: 100vh
+  max-height: 100%
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  background-color: rgba(0, 0, 0, 0.65)
+  z-index: 1500
+  opacity: 0
+  visibility: hidden
+
+  &.active
+    visibility: visible
+    opacity: 1
+  .modal
+    width: 100%
+    position: relative
+    overflow: auto
+    display: flex
+    align-items: center
+    justify-content: center
+  .close
+    position: absolute
+    top: 2rem
+    right: 2rem
+    cursor: pointer
+    i
+      font-size: 3rem
+
+@media (max-width: 768px)
+  .overlay-platform__modal
+    .close
+      i
+        font-size: 5rem
+
+
+@media (max-width: 425px)
+  .overlay-platform__modal
+    overflow: auto
+    .modal
+      width: 100%
+      position: relative
+      overflow: auto

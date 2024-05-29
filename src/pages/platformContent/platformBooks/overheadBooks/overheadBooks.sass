@@ -1,0 +1,102 @@
+@import "styles/abstracts/variables"
+
+
+.accountingBooks
+  padding: 3rem 1rem
+  overflow: auto
+  height: calc(100vh - #{$appHeader-height})
+  &::-webkit-scrollbar
+    width: 8px
+  &::-webkit-scrollbar-track
+    background-color: #ffffff
+  &::-webkit-scrollbar-thumb
+    cursor: pointer
+    border-radius: 5px
+    background-color: #313131
+
+
+  .section
+    height: max-content
+    &::-webkit-scrollbar
+      width: 8px
+    &::-webkit-scrollbar-track
+      background-color: #ffffff
+    &::-webkit-scrollbar-thumb
+      cursor: pointer
+      border-radius: 5px
+      background-color: #313131
+    &__header
+      display: flex
+      flex-direction: column
+      align-items: flex-start
+      &>div
+        width: 100%
+        display: flex
+        justify-content: space-between
+        align-items: center
+        &:nth-child(2)
+          margin-top: 1rem
+        &:last-child
+          flex-direction: column
+      .accounting__money
+        display: flex
+        align-items: center
+        justify-content: center
+        span
+          padding: 1rem 2rem
+          border: 1px solid $color-grey-dark
+          color: $color-grey-dark
+          border-radius: 10px
+          font-size: 1.8rem
+
+    &__main
+      margin-top: 3rem
+      width: 100%
+      height: fit-content
+    .links
+      width: 100%
+      display: flex
+      align-items: center
+      justify-content: flex-start
+      height: fit-content
+      padding: 2rem
+
+  .overhead
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    form
+      width: 50rem
+      padding: 3rem
+      display: flex
+      align-items: center
+      justify-content: center
+      background-color: white
+      border-radius: 15px
+
+
+  .locationMoneys
+    width: 100%
+    padding: 2rem
+    display: flex
+    align-items: center
+    justify-content: flex-start
+    &__item
+      width: fit-content
+      height: fit-content
+      padding: 0.7rem 1rem
+      display: flex
+      flex-direction: column
+      span
+        width: 100%
+        display: block
+        font-size: 1.7rem
+        color: $color-grey-dark
+        font-weight: bold
+        text-transform: capitalize
+        &:last-child
+
+          margin-top: .5rem
+          font-weight: normal
+          font-size: 1.6rem

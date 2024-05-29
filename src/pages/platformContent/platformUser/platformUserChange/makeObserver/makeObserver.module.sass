@@ -1,0 +1,31 @@
+@import "styles/abstracts/variables"
+
+
+.change
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 2rem
+  &_btn
+    width: fit-content
+    height: fit-content
+    padding: 1rem 3rem
+    border-radius: 10px
+    font-size: 1.8rem
+    transition: all .3s
+    cursor: pointer
+    user-select: none
+    background-color: white
+    border: 1px solid $color-grey-dark
+    color: $color-grey-dark
+    &:hover
+      box-shadow: 0 0 13px 2px $color-grey-dark
+    &:active
+      transform: scale(0.9)
+    &.green
+      color: white
+      background-color: #4af34a
+      border: none
+      &:hover
+        box-shadow: 0 0 13px 2px #4af34a

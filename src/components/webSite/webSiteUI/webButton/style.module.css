@@ -1,0 +1,41 @@
+.webBtn {
+  width: 219px;
+  height: 50px;
+  border-radius: 10px;
+  outline: none;
+  color: #FFFFFF;
+  background: var(--f, #0098DA);
+  border: none;
+  font-size: 20px;
+  font-weight: 600;
+}
+.webBtn.blackWhite {
+  background: white;
+  color: black;
+}
+.webBtn.light {
+  background-image: linear-gradient(to right, #0098DA, #00C2FF);
+}
+
+@media (max-width: 1024px) {
+  .webBtn {
+    width: 150px;
+    height: 35px;
+    font-size: 2rem;
+    font-weight: 100;
+  }
+}
+@media (max-width: 768px) {
+  .webBtn {
+    width: 150px;
+    font-size: 3rem;
+    font-weight: 400;
+  }
+}
+@media (max-width: 430px) {
+  .webBtn {
+    font-size: 3.5rem;
+  }
+}
+
+/*# sourceMappingURL=style.module.css.map */

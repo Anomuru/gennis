@@ -1,0 +1,225 @@
+@import "styles/abstracts/variables"
+
+
+
+
+.tableBox
+  table
+    width: 100%
+    border: none
+    border-collapse: collapse
+    caption
+      text-align: right
+      font-size: 2rem
+      margin-bottom: 1rem
+    tr
+      border: none
+      border-collapse: collapse
+      height: 5rem
+      transition: background-color .3s
+      border-bottom: 1px solid $color-grey-dark
+      &:not(.tbody_th)
+        &:hover
+          background-color: #eef2fd
+    th,td
+      border: none
+      border-collapse: collapse
+      font-size: 1.5rem
+    th
+      text-align: left
+    .imgTd
+      width: 6rem
+    td
+      position: relative
+      cursor: pointer
+      padding: 0.5rem
+      &:hover
+        .popup
+          visibility: visible
+          opacity: 1
+      &:nth-child(1)
+        width: 2rem
+      img
+        width: 4rem
+        height: 4rem
+        object-fit: cover
+        border-radius: 50%
+
+      &.true
+        i
+          font-size: 2rem
+          color: #5fb65f
+      &.false
+        i
+          font-size: 2rem
+          color: #fc5757
+      .subject
+        padding: 5px 15px
+        border-radius: 15px
+        border: 1px solid $color-grey-dark
+        margin: 0 1rem
+        position: relative
+        i
+          font-size: 2rem
+          color: $color-grey-dark
+
+        &:hover
+          .popup
+            visibility: visible
+            opacity: 1
+      .delete
+        padding: 5px 15px
+        border-radius: 15px
+        border: 1px solid #fc5757
+        margin: 0 1rem
+        position: relative
+        display: flex
+        align-items: center
+        justify-content: center
+        width: fit-content
+        transition: all .5s
+        i
+          color: #fc5757
+          font-size: 2rem
+          transition: all .5s
+        &:hover
+          box-shadow: 0 0 13px 1px #fc5757
+        &:active
+          transform: scale(0.9)
+      .update
+        padding: 5px 15px
+        border-radius: 15px
+        border: 1px solid #4af34a
+        margin: 0 1rem
+        position: relative
+        display: flex
+        align-items: center
+        justify-content: center
+        width: fit-content
+        transition: all .5s
+        i
+          color: #4af34a
+          font-size: 2rem
+          transition: all .5s
+        &:hover
+          box-shadow: 0 0 13px 1px #4af34a
+        &:active
+          transform: scale(0.9)
+      .popup
+        width: max-content
+        max-width: 30rem
+        visibility: hidden
+        opacity: 0
+        background-color: $color-grey-dark
+        padding: .5rem 1rem
+        border-radius: 5px
+        position: absolute
+        top: 70%
+        left: 50%
+        transform: translateX(-50%)
+        z-index: 200
+        color: white
+        transition: all .1s
+      .money
+        padding: 5px 15px
+        border-radius: 15px
+        border: 1px solid green
+        color: green
+        margin: 0 1rem
+        position: relative
+        &.red
+          border: 1px solid red
+          color: red
+          box-shadow: 0 0 14px 1px rgba(255, 0, 0, 0.64)
+        &.yellow
+          border: 2px solid #faa727
+          color:  #faa727
+          box-shadow: 0 0 14px 1px rgba(250, 167, 39, 0.58)
+        &.black
+          border: 2px solid #000000
+          color:  #000000
+          box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.61)
+        &.navy
+          border: 2px solid #2467b0
+          color: #2467b0
+          box-shadow: 0 0 14px 1px #2467b0
+      .typePayment
+        border: 1px solid $color-grey-dark
+        border-radius: 15px
+        color: $color-grey-dark
+        text-transform: capitalize
+        padding: 0.5rem 1.5rem
+        transition: all .2s
+        &:hover
+          border: 1px solid $color-main-dark
+          box-shadow: 0 0 13px 1px $color-main-light
+          color: $color-main-dark
+          background-color: white
+        &:active
+          transform: scale(0.9)
+      .status,.color
+        display: flex
+        align-items: center
+        justify-content: center
+        span
+          width: 10px
+          height: 10px
+          border-radius: 50%
+        .true,.green
+          background-color: #65ec65
+          box-shadow: 0 0 14px 2px #65ec65
+        .false,.red
+          background-color: #fc5757
+          box-shadow: 0 0 14px 2px #fc5757
+      input
+        width: 2.2rem
+        height: 2.2rem
+      select
+        &:hover
+          border: 1px solid $color-grey-dark
+          box-shadow: none
+      label
+        margin: 0
+
+    .groupName
+      width: 15rem !important
+  .changeTypePayment
+    margin: 0 auto
+    width: 25rem
+    padding: 4rem
+    background-color: white
+    border-radius: 15px
+
+@media (max-width: 768px)
+  .tableBox
+    overflow-x: scroll
+    .newStudents
+      min-width: 150vw
+    table
+      width: 100%
+      overflow: hidden
+      tr
+        height: 8rem
+      th,td
+        font-size: 2.5rem
+      td
+        input
+          width: 5rem
+          height: 5rem
+
+@media (max-width: 475px)
+  .tableBox
+    overflow-x: scroll
+    .newStudents
+      min-width: 300vw
+    .groupsTable
+      min-width: 250vw
+    table
+      min-width: 150vw
+      overflow: hidden
+      tr
+        height: 10rem
+      th,td
+        font-size: 3rem
+      .groupName
+        width: 20rem !important

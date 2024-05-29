@@ -1,0 +1,125 @@
+@import "styles/abstracts/variables"
+
+
+.leads
+  width: 100%
+  padding: 3rem
+  //background-color: #2f2f2f
+  &__header
+    display: flex
+    justify-content: flex-end
+  &__wrapper
+    display: flex
+    align-items: flex-start
+    justify-content: space-around
+    flex-wrap: wrap
+  &__item
+    width: 40rem
+    min-height: 20rem
+    border-radius: 10px
+    padding: 3rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    position: relative
+    overflow: hidden
+    margin: 1rem
+    transition: all .3s
+    background-image: linear-gradient(130deg, #FF1F00, #FF8A00)
+    &.green
+      background-image: linear-gradient(130deg, #52FF00, #039900)
+    &.yellow
+      background-image: linear-gradient(130deg, #FFD600, #FFA800)
+    &:hover
+      box-shadow: 0 0 13px rgba(0,0,0,0.4)
+
+    &Header
+      width: 100%
+      display: flex
+      align-items: center
+      justify-content: space-between
+      margin-bottom: 2rem
+      & > div
+        display: flex
+      .icon
+        margin: 0 1rem
+        transition: all .2s
+        &:active
+          transform: scale(.99)
+        i
+          font-size: 2rem
+
+    &:before
+      width: 15rem
+      height: 15rem
+      content: ""
+      display: block
+      background-image: url("/assets/icons/Circles top.svg")
+      background-size: contain
+      position: absolute
+      right: -3rem
+      top: -3rem
+    &:after
+      width: 15rem
+      height: 15rem
+      content: ""
+      display: block
+      background-image: url("/assets/icons/Circles bottom.svg")
+      background-size: contain
+      position: absolute
+      left: -3rem
+      bottom: -3rem
+    h3
+      padding: 1rem
+      width: 80%
+      background-color: white
+      text-align: center
+      font-size: 1.8rem
+      border-radius: 10px
+      margin: .5rem 0
+      transition: all .1s
+      &:hover
+        .popup
+          opacity: 1
+          visibility: visible
+      .popup
+        opacity: 0
+        visibility: hidden
+        position: absolute
+        background-color: $color-grey-light
+        padding: 1rem
+        border-radius: 10px
+        top: 50%
+        left: 50%
+        transform: translate(-50%,-50%)
+        box-shadow: 0 0 13px 1px black
+
+
+
+  &__change
+    width: 50rem
+    border-radius: 10px
+    padding: 4rem
+    background-color: white
+    h3
+      font-size: 1.8rem
+      margin: 1rem
+  &__callList
+    width: 80%
+    background-color: white
+    border-radius: 10px
+    padding: 2rem
+    max-height: 60rem
+    overflow: auto
+    position: relative
+    tr
+      &:first-child
+        background-color: white
+        top: 0
+        position: sticky
+        z-index: 3
+    th
+      &:first-child
+        width: 70%
+

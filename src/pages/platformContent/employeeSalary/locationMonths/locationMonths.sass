@@ -1,0 +1,54 @@
+
+@import "styles/abstracts/variables"
+
+
+.locationMonths
+  width: 100%
+  display: flex
+  flex-direction: column
+  padding: 2rem
+  .subheader
+    display: flex
+    align-items: center
+    justify-content: center
+  header
+    display: flex
+    justify-content: space-between
+    padding: 2rem
+    &>div
+      display: flex
+      flex-direction: column
+      align-items: flex-start
+      justify-content: center
+      padding: 0 1rem
+      &:last-child
+        align-items: flex-end
+        justify-content:  flex-start
+    .payment
+      i
+        font-size: 2.7rem
+        color: $color-grey-dark
+    h1
+      color: $color-grey-dark
+      font-size: 1.9rem
+      margin: 0.5rem 0
+  main
+    width: 100%
+    padding: 2rem
+
+
+.paymentModal
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  form
+    width: 50rem
+    height: 50rem
+    background-color: white
+    border-radius: 15px
+    padding: 1rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center

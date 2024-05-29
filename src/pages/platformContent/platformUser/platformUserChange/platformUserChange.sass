@@ -1,0 +1,139 @@
+@import "styles/abstracts/variables"
+
+.changeInfo
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding: 3rem
+  header
+    width: 100%
+    padding: 1rem
+  main
+    width: 100%
+    padding: 2rem
+    display: flex
+    align-items: center
+    flex-direction: column
+  &__title
+    width: 100%
+    font-size: 2rem
+    margin-bottom: 2rem
+    text-align: center
+  &__btns
+    width: 100%
+    padding: 2rem
+    display: flex
+    align-items: center
+    justify-content: center
+    &-item
+      padding: 1rem 1.5rem
+      border-radius: 15px
+      border: 2px solid $color-grey-dark
+      margin: 0 1rem
+      font-size: 1.5rem
+      transition: all .2s
+      font-weight: bold
+      cursor: pointer
+      &:hover,&.active
+        border: 2px solid $color-main-light
+        color: $color-main-light
+        box-shadow: 0 0 13px $color-main-light
+      &:active
+        transform: scale(0.9)
+
+  &__container
+    width: 55%
+    .birth
+      width: 80%
+    .subjects
+      width: 100%
+      height: fit-content
+      padding: 1rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      margin: 1.5rem 0
+      h3
+        font-size: 1.8rem
+        font-weight: bold
+        color: $color-grey-dark
+      &__wrapper
+        width: 75%
+        display: flex
+        flex-direction: column
+        align-items: center
+        justify-content: center
+        margin: 1rem 0
+      &__item
+        border-radius: 10px
+        border: 1px solid $color-grey-dark
+        padding: 1.5rem
+        font-size: 1.7rem
+        margin: 1rem 0
+        width: 100%
+        position: relative
+        &-info
+          position: relative
+        i
+          position: absolute
+          font-size: 2.5rem
+          top: 50%
+          right: 0
+          transform: translateY(-50%)
+          color: $color-grey-dark
+    .block
+      width: 100%
+      display: flex
+      align-items: center
+      justify-content: center
+      padding: 2rem
+      &_btn
+        width: fit-content
+        height: fit-content
+        padding: 1rem 3rem
+        border-radius: 10px
+        font-size: 1.8rem
+        transition: all .3s
+        cursor: pointer
+        user-select: none
+        color: white
+        background-color: black
+        &:hover
+          box-shadow: 0 0 13px 2px black
+        &:active
+          transform: scale(0.9)
+        &.green
+          color: white
+          background-color: #4af34a
+          &:hover
+            box-shadow: 0 0 13px 2px #4af34a
+    .change
+      width: 100%
+      display: flex
+      align-items: center
+      justify-content: center
+      padding: 2rem
+      &_btn
+        width: fit-content
+        height: fit-content
+        padding: 1rem 3rem
+        border-radius: 10px
+        font-size: 1.8rem
+        transition: all .3s
+        cursor: pointer
+        user-select: none
+        background-color: white
+        border: 1px solid $color-grey-dark
+        color: $color-grey-dark
+        &:hover
+          box-shadow: 0 0 13px 2px $color-grey-dark
+        &:active
+          transform: scale(0.9)
+        &.green
+          color: white
+          background-color: #4af34a
+          border: none
+          &:hover
+            box-shadow: 0 0 13px 2px #4af34a

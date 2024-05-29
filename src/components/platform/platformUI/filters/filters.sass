@@ -1,0 +1,52 @@
+@import "styles/abstracts/variables"
+
+
+.otherFilters
+  display: flex
+  flex-direction: column
+  height: 0
+  width: 100%
+  transition: all .6s
+  margin-top: 1rem
+  overflow: hidden
+  border-bottom: 1px solid $color-grey-dark
+  padding: 0 2rem
+  &__item
+    height: fit-content
+    padding: 3rem 2rem
+    border-radius: 15px
+    margin: 2rem 0
+    display: flex
+    flex-direction: column
+    box-shadow: 0 1px 1px rgba(0,0,0,0.11),0 2px 2px rgba(0,0,0,0.11),0 4px 4px rgba(0,0,0,0.11),0 6px 8px rgba(0,0,0,0.11),0 8px 16px rgba(0,0,0,0.11)
+    h2
+      font-size: 1.8rem
+      margin-bottom: 1rem
+    select
+      width: fit-content
+    &>div
+      width: 100%
+      display: flex
+      flex-wrap: wrap
+    .active
+      box-shadow: 0 0 10px 2px $color-main-light
+      color: $color-main-light
+      border: 1px solid $color-main-light
+
+@media (max-width: 768px)
+  .otherFilters
+    &__item
+      padding: 3.5rem 2.5rem
+      margin: 2rem 0
+      h2
+        font-size: 2.3rem
+        margin-bottom: 2rem
+
+@media (max-width: 475px)
+  .otherFilters
+    &__item
+      padding: 4rem 3rem
+      margin: 2rem 0
+      h2
+        font-size: 3rem
+        margin-bottom: 2rem

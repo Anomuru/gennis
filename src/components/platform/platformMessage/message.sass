@@ -1,0 +1,22 @@
+@import "../../../styles/abstracts/variables"
+
+.message
+  width: fit-content
+  padding: 10px 30px
+  font-size: 1.7rem
+  font-weight: bold
+  background-color: $color-white
+  border-radius: 10px
+  position: fixed
+  top: 2rem
+  left: 50%
+  transform: translateX(-50%)
+  z-index: 1000
+  &.error
+    border: 2px solid #ff7171
+    box-shadow: 0 0 13px 4px #ff7171
+    color: #ff7171
+  &.success
+    border: 2px solid #65ec65
+    box-shadow: 0 0 13px 4px #65ec65
+    color: #65ec65

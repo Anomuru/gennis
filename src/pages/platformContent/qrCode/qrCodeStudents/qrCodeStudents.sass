@@ -1,0 +1,66 @@
+@import "styles/abstracts/variables"
+.section
+  padding: 3rem
+  display: flex
+  flex-direction: column
+  &__header
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    &>div
+      width: 100%
+      display: flex
+      justify-content: space-between
+      align-items: center
+      &:nth-child(2)
+        margin-top: 1rem
+      &:last-child
+        flex-direction: column
+    .accounting__money
+      display: flex
+      align-items: center
+      justify-content: center
+      span
+        padding: 1rem 2rem
+        border: 1px solid $color-grey-dark
+        color: $color-grey-dark
+        border-radius: 10px
+        font-size: 1.8rem
+
+
+  &__main
+    margin-top: 3rem
+    width: 100%
+    height: fit-content
+  .links
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: flex-start
+    height: fit-content
+    padding: 2rem
+
+.overhead
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  form
+    width: 50rem
+    padding: 3rem
+    display: flex
+    align-items: center
+    justify-content: center
+    background-color: white
+    border-radius: 15px
+
+
+
+@media (max-width: 475px)
+  .section
+    &__header
+      &>div
+        align-items: flex-start
+        flex-direction: column
+        &>div
+          margin: 1rem 0

@@ -1,0 +1,335 @@
+@import "styles/abstracts/variables"
+
+
+.websiteEdit
+  padding: 3rem
+
+
+
+.advantagesEdit
+  width: 100%
+  padding: 1rem
+  //border: 1px solid $color-second
+  border-radius: 15px
+  &__header
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding: 2rem
+    &-item
+      display: flex
+      align-items: center
+      justify-content: center
+      i
+        margin: 0 2rem
+        font-size: 3rem
+        color: $color-second
+  &__wrapper
+    width: 100%
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: space-around
+    &-item
+      border: 1px solid $color-second
+      border-radius: 15px
+      width: 35rem
+      height: 30rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      padding: 2rem
+      margin: 1rem
+      &-header
+        width: 100%
+        display: flex
+        align-items: center
+        justify-content: flex-end
+        i
+          font-size: 2rem
+          color: $color-second
+          margin: 0 1rem
+      &-content
+        width: 100%
+        height: 90%
+        display: flex
+        flex-direction: column
+        align-items: center
+        img
+          margin-top: 1rem
+          height: 50%
+        .desc
+          margin-top: 1rem
+          font-size: 1.6rem
+          width: 100%
+  .edit
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    &__wrapper
+      width: 50rem
+      height: 50rem
+      background-color: white
+      border-radius: 15px
+      padding: 3rem
+      .img-input
+        display: none
+      .addImg
+        width: 100%
+        padding: 2rem
+        border: 5px dotted $color-grey-dark
+        margin: 2rem 0
+        display: flex
+        align-items: center
+        justify-content: space-around
+        cursor: pointer
+        color: #afafaf
+        max-width: 100%
+        height: 17rem
+        img
+          height: 100%
+      textarea
+        width: 100%
+        max-width: 100%
+        height: 40%
+        max-height: 40%
+        padding: 1rem
+        font-size: 1.5rem
+        font-weight: lighter
+
+
+
+.commentsEdit
+  width: 100%
+  padding: 3rem
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  &__item
+    width: 34rem
+    border: 1px solid $color-second
+    border-radius: 15px
+    padding: 2rem
+    margin: 2rem
+    &-header
+      display: flex
+      align-items: flex-start
+      justify-content: space-between
+      .info
+        display: flex
+        img
+          border-radius: 50%
+          object-fit: cover
+          width: 4.5rem
+        &>div
+          display: flex
+          flex-direction: column
+          justify-content: center
+          margin-left: 1rem
+          span
+            font-size: 1.7rem
+            font-weight: bold
+      .links
+        display: flex
+        align-items: flex-start
+        justify-content: center
+        i
+          font-size: 2rem
+          color: $color-second
+    p
+      margin-top: 2rem
+      font-size: 1.6rem
+
+
+
+.eventsEdit
+  width: 100%
+  padding: 1rem
+  //border: 1px solid $color-second
+  border-radius: 15px
+  &__header
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding: 2rem
+    &-item
+      display: flex
+      align-items: center
+      justify-content: center
+      i
+        margin: 0 2rem
+        font-size: 3rem
+        color: $color-second
+  &__wrapper
+    width: 100%
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: space-around
+    &-item
+      border: 1px solid $color-second
+      border-radius: 15px
+      width: 35rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      padding: 2rem
+      margin: 1rem
+      &-header
+        width: 100%
+        display: flex
+        align-items: center
+        justify-content: flex-end
+        i
+          font-size: 2rem
+          color: $color-second
+          margin: 0 1rem
+      &-content
+        width: 100%
+        height: 90%
+        display: flex
+        flex-direction: column
+        align-items: center
+        img
+          margin-top: 1rem
+          width: 100%
+          height: 20rem
+          object-fit: cover
+        .title
+          color: $color-second
+          font-size: 1.6rem
+          margin: 2rem 0
+          justify-content: flex-start
+        .desc
+          font-size: 1.6rem
+          width: 100%
+        .links
+          margin-top: 1rem
+          width: 100%
+          display: flex
+          justify-content: flex-start
+          a
+            margin: 0 1rem
+          i
+            font-size: 3rem
+            color: $color-second
+            transition: all .5s
+            &:hover
+              color: $color-main
+  .edit
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    &__wrapper
+      width: 50rem
+      height: 50rem
+      background-color: white
+      border-radius: 15px
+      padding: 4rem
+      overflow: auto
+      justify-content: flex-start
+      .img-input
+        display: none
+      .addImg
+        width: 100%
+        padding: 2rem
+        border: 5px dotted $color-grey-dark
+        margin: 2rem 0
+        display: flex
+        align-items: center
+        justify-content: space-around
+        cursor: pointer
+        color: #afafaf
+        max-width: 100%
+        height: 17rem
+        img
+          height: 100%
+      .button
+        margin-top: 2rem
+        i
+          color: $color-second
+          font-size: 3rem
+      textarea
+        width: 100%
+        max-width: 100%
+        height: 40%
+        max-height: 40%
+        padding: 1rem
+        font-size: 1.5rem
+        font-weight: lighter
+      .links
+
+        display: flex
+        flex-direction: column
+        &__item
+          display: flex
+
+
+.galleryEdit
+  width: 100%
+  padding: 2rem
+  &__wrapper
+    display: grid
+    grid-template-columns:  repeat(6, 1fr)
+    grid-template-rows:  repeat(3,20rem)
+    grid-gap: .5rem
+  &__item
+    width: 100%
+    height: 20rem
+    display: block
+    background-color: $color-second
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+    &:nth-child(1)
+      grid-column: span 2
+    &:nth-child(2)
+      grid-column: span 3
+    &:nth-child(3)
+      grid-column: span 1
+    &:nth-child(4)
+      grid-column: span 4
+    &:nth-child(5)
+      grid-column: span 2
+    &:nth-child(6)
+      grid-column: span 1
+    &:nth-child(7)
+      grid-column: span 4
+    &:nth-child(8)
+      grid-column: span 1
+
+.imgEdit
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+
+  &-wrapper
+    width: 50rem
+    height: 35rem
+    background-color: white
+    padding: 2rem
+
+  .img-input
+    display: none
+  .addImg
+    width: 100%
+    padding: 2rem
+    border: 5px dotted $color-grey-dark
+    margin: 2rem 0
+    display: flex
+    align-items: center
+    justify-content: space-around
+    cursor: pointer
+    color: #afafaf
+    max-width: 100%
+    height: 17rem
+    img
+      height: 100%

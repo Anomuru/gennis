@@ -1,0 +1,101 @@
+@import "../../../../styles/abstracts/variables"
+
+
+.timeTable
+  width: 100%
+  padding: 3rem
+
+.roomDate
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: column
+  position: relative
+  padding: 5rem
+  .zoom
+    width: fit-content
+    padding: 2rem
+    background-color: white
+    border-radius: 15px
+.table
+  width: 100%
+  height: 80vh
+  overflow: scroll
+  position: relative
+  cursor: grab
+  user-select: none
+  &:active
+    cursor: grabbing
+  &__wrapper
+    width: fit-content
+    zoom: 50%
+    .container
+      width: 100%
+      position: relative
+    .rooms
+      min-width: 100%
+      max-width: fit-content
+      margin-left: 50px
+      display: flex
+      position: sticky
+      top: 0
+      z-index: 100
+      padding: 0
+      &>div
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: 1.6rem
+        height: 50px
+        min-width: 170px
+        border: 1px solid black
+        background-color: white
+    .wrapper
+      min-width: 100%
+      max-width: fit-content
+      display: flex
+      &__hours
+        height: fit-content
+        position: sticky
+        left: 0
+        z-index: 100
+        &>div
+          display: flex
+          align-items: center
+          justify-content: center
+          writing-mode: vertical-lr
+          width: 50px
+          height: 120px
+          border: 1px solid black
+          font-size: 1.5rem
+          background-color: white
+      &__classes
+        width: 100%
+        position: relative
+        .lesson
+          width: 170px
+          display: flex
+          flex-direction: column
+          align-items: center
+          justify-content: center
+          font-size: 1.6rem
+          border: 1px solid $color-grey-dark
+          position: absolute
+          z-index: 10
+          background-color: white
+          cursor: pointer
+          h1
+            font-size: 1.5rem
+        .default
+          position: static
+          width: 100%
+          height: 120px
+          border-bottom: 1px solid $color-grey-dark
+          display: flex
+          flex-direction: row
+          &>div
+            width: 170px
+            height: 120px
+            border-right: 1px solid $color-grey-dark
+          &:hover
+            background-color: $color-grey-light

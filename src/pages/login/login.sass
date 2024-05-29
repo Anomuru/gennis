@@ -1,0 +1,203 @@
+@import "styles/abstracts/variables"
+
+.login
+  height: 100vh
+  background-image: linear-gradient(180deg, #00C2FF 0%, #8DE3FE 100%)
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  &__logo
+    width: 35rem
+    height: auto
+    margin-bottom: 10rem
+  form
+    width: 50rem
+    height: 40rem
+    border-radius: 15px
+    box-shadow: 0 0 13px 4px $color-white
+    background-color: white
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    padding: 0 4rem
+    .title
+      font-weight: 600
+      text-align: center
+      color: $color-grey-dark
+      font-size: 3.5rem
+      margin-bottom: 1rem
+    label
+      width: 75%
+      position: relative
+      display: flex
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      margin-top: 3rem
+      .name-field
+        position: absolute
+        left: 2rem
+        top: -1rem
+        background-color: white !important
+        color: $color-grey-dark
+        font-size: 1.5rem
+        padding: 0 10px
+      .error-field
+        color: #ff7171
+        font-size: 1.5rem
+        font-weight: bold
+        margin-top: 5px
+      i
+        position: absolute
+        color: $color-grey-dark
+        right: 1rem
+        top: 50%
+        transform: translateY(-50%)
+        font-size: 2rem
+    .input-fields
+      padding: 0 3.5rem 0 2.5rem
+      width: 100%
+      height: 4.5rem
+      border-radius: 10px
+      outline: none
+      border: 2px solid $color-grey-dark
+      background-color: white
+      font-size: 1.7rem
+      transition: all 0.6s ease
+      &:-webkit-autofill
+        background-color: transparent !important
+        -webkit-box-shadow: 0 0 0 30px #ffffff inset !important
+      &:active
+        background-color: #fff !important
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active
+        -webkit-box-shadow: 0 0 0 30px #ffffff inset !important
+      &:focus
+        border: 2px solid $color-main-dark
+        box-shadow: 0 0 5px 1px $color-main-dark
+      &-error
+        border: 2px solid #ff7171
+        box-shadow: 0 0 5px 1px #ff7171
+    .input-submit
+      padding: 0.8rem 3rem
+      background-color: $color-main-dark
+      outline: none
+      border: none
+      color: $color-white
+      font-size: 1.6rem
+      border-radius: 10px
+      font-weight: bold
+      margin-top: 2rem
+      transition: all 0.4s ease
+      &:hover,&:focus
+        box-shadow: 0 0 13px 3px $color-main-dark
+        cursor: pointer
+        transform: translateY(-5px)
+      &:active
+        transform: scale(0.9)
+    .link__register
+      margin-top: 2rem
+      font-size: 1.7rem
+      color: $color-grey-dark
+      font-weight: bold
+      span
+        margin-left: 1rem
+        color: $color-main-dark
+        border-bottom: 1px solid$color-main-dark
+
+
+
+@media (max-width: 768px)
+  .login
+    &__logo
+      top: 10rem
+      width: 45rem
+    form
+      width: 60rem
+      height: 50rem
+      padding: 0 4rem
+      .title
+        font-size: 4.5rem
+      label
+        width: 80%
+        .name-field
+          left: 2rem
+          top: -1rem
+          font-size: 1.9rem
+        .error-field
+          font-size: 1.5rem
+        i
+          font-size: 2.5rem
+      .input-fields
+        padding: 0 2.5rem
+        width: 100%
+        height: 6rem
+        font-size: 2.2rem
+      .input-submit
+        padding: 1rem 3rem
+        margin-top: 4rem
+        font-size: 2rem
+      .link__register
+        font-size: 2.3rem
+        margin-top: 3rem
+
+@media (max-width: 430px)
+  .login
+    &__logo
+      top: 12rem
+      width: 55rem
+    form
+      width: 65rem
+      height: 60rem
+      padding: 0 4rem
+      .title
+        font-size: 5.5rem
+      label
+        width: 85%
+        .name-field
+
+          top: -1.5rem
+          font-size: 2.5rem
+        .error-field
+          font-size: 1.5rem
+        i
+          right: 2rem
+          font-size: 3rem
+          background-color: white
+      .input-fields
+        padding: 0 2.5rem
+        width: 100%
+        height: 8.5rem
+        font-size: 2.6rem
+        &:nth-child(2)
+          padding: 0 5.5rem 0 2.5rem
+      .input-submit
+        padding: 1.3rem 3rem
+        margin-top: 4rem
+        font-size: 2.7rem
+      .link__register
+        font-size: 2.6rem
+        margin-top: 3rem
+
+
+@media (max-width: 375px)
+  .login
+    &__logo
+      top: 8rem
+      width: 50rem
+
+@media (max-width: 320px)
+  .login
+    &__logo
+      top: 8rem
+      width: 45rem
+    form
+      width: 60rem
+      height: 60rem
+      .link__register
+        text-align: center
+
+

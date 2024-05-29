@@ -1,0 +1,28 @@
+@import "styles/abstracts/variables"
+
+
+.content
+  overflow: auto
+  height: calc(100svh - #{$appHeader-height})
+  width: calc(100% - #{$appMenuBar-width})
+  &::-webkit-scrollbar
+    width: 8px
+  &::-webkit-scrollbar-track
+    background-color: #ffffff
+  &::-webkit-scrollbar-thumb
+    cursor: pointer
+    border-radius: 5px
+    background-color: #313131
+
+
+@media (max-width: 768px)
+  .content
+    &::-webkit-scrollbar
+      display: none
+
+
+
+@media (max-width: 474px)
+  .content
+    height: calc(100svh - ( #{$appHeader-height} + 5rem))
+    width: 100%

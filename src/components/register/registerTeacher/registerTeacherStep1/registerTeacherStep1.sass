@@ -1,0 +1,25 @@
+@import "../../../../styles/abstracts/variables"
+
+.register__step-1
+  form
+    width: 55rem
+    height: fit-content
+    border-radius: 15px
+    box-shadow: 0 0 13px 4px $color-white
+    background-color: white
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    padding: 3rem 2rem
+
+@media (max-width: 768px)
+  .register__step-1
+    form
+      width: 70rem
+
+
+@media (max-width: 320px)
+  .register__step-1
+    form
+      width: 60rem

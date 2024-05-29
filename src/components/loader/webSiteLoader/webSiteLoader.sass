@@ -1,0 +1,42 @@
+@import "styles/abstracts/variables"
+@import "styles/components/buttons"
+
+
+.Loader
+  width: 100vw
+  height: 100vh
+  background-image: radial-gradient($color-main-dark,$color-main-light)
+  display: flex
+  justify-content: center
+  align-items: center
+  overflow: hidden
+  &-box
+    width: 175px
+    height: 175px
+    border-radius: 50%
+    background-color: rgba(255, 255, 255, 0)
+    position: absolute
+    z-index: 1
+
+  &-logo
+    width: 175px
+    height: 175px
+    background-color: white
+    border-radius: 50%
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    img
+      &:first-child
+        width: 100px
+        height: auto
+      &:last-child
+        margin-top: 2px
+        width: 70px
+        height: auto
+
+
+
+
+

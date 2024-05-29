@@ -1,0 +1,91 @@
+@import "styles/abstracts/variables"
+
+.confetti
+  width: 100vw
+  height: 100vh
+  position: absolute
+  z-index: 1000!important
+
+
+.discount
+  overflow: hidden
+  width: 100%
+  height: 100vh
+  background-image: linear-gradient(to left, #00C2FF,#8DE3FE)
+  display: flex
+  align-items: center
+  justify-content: space-around
+  img
+    width: 40rem
+    height: 40rem
+  form
+    width: 45rem
+    background-color: white
+    padding: 4rem
+    border-radius: 15px
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18),0 2px 4px rgba(0, 0, 0, 0.19),0 4px 8px rgba(0, 0, 0, 0.2),0 8px 16px rgba(0, 0, 0, 0.17),0 16px 32px rgba(0,0,0,0.12)
+    h1
+      text-align: center
+      font-size: 3rem
+      color: $color-grey-dark
+
+.jackpot
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  &>div
+    width: fit-content
+    height: fit-content
+    border-radius: 15px
+    background-color: white
+    padding: 3rem
+  h2
+    text-align: center
+    font-size: 2.7rem
+    color: $color-grey-dark
+    margin-bottom: 1rem
+  h1
+    text-align: center
+    font-size: 4.5rem
+    color: #4af34a
+    text-shadow: 0 0 5px #4af34a
+
+
+
+@media (max-width: 768px)
+  .discount
+    flex-direction: column
+    form
+      width: 70rem
+      h1
+        font-size: 3.7rem
+
+  .money
+    &>div
+      padding: 5rem
+    h2
+      font-size: 4rem
+      margin-bottom: 2rem
+    h1
+      font-size: 5rem
+
+@media (max-width: 425px)
+  .discount
+    flex-direction: column
+    justify-content: center
+    form
+      margin-top: 10rem
+      width: 60rem
+      h1
+        font-size: 4.5rem
+
+  .money
+    &>div
+      padding: 5rem
+    h2
+      font-size: 4rem
+      margin-bottom: 2rem
+    h1
+      letter-spacing: 1rem
+      font-size: 5rem
