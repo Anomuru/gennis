@@ -3,6 +3,7 @@ import {Outlet} from "react-router-dom";
 import PlatformHeader from "components/platform/platformHeader/platformHeader";
 import PlatformMenuBar from "components/platform/platformMenuBar/platformMenuBar";
 import PlatformMessage from "components/platform/platformMessage";
+import {TaskManagerModal} from "pages/platformContent/platformTaskManager/taskManagerModal/taskManagerModal";
 
 
 const Platform = () => {
@@ -23,6 +24,7 @@ const Platform = () => {
                 <Outlet/>
             </div>
             <PlatformMessage />
+            <TaskManagerModal/>
         </>
     )
 }

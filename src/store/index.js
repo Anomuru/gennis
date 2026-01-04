@@ -46,6 +46,7 @@ import newAccountingSlice from "pages/platformContent/platformAccounting2.0/mode
 import groupsAttendanceSlice from "slices/groupsAttendanceSlice";
 import accountingProfileSlice from "slices/accountingProfileSlice";
 import todoistSlice from "slices/todoistSlice";
+import taskManagerModalSlice from "slices/taskManagerModalSlice";
 
 const stringMiddlewere = () => (next) => (action) => {
     if (typeof action === 'string') {
@@ -103,7 +104,8 @@ const store = configureStore({
         teacherEquipmentsSlice,
         newAccountingSlice,
         accountingProfileSlice,
-        todoistSlice
+        todoistSlice,
+        taskManagerModalSlice
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(
