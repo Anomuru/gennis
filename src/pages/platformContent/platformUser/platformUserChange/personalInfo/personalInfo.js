@@ -298,6 +298,8 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
         }
     ]
 
+    console.log(extraInfo, "extraInfo")
+
 
     const renderedSelectedOptions = renderSubjects()
 
@@ -328,11 +330,11 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
                     </label> : null
             }
             {
-                data?.crm_username ?
+                user?.crm_username ?
                     <label htmlFor="crm_username">
                         <span className="name-field">Crm Username</span>
                         <input
-                            defaultValue={extraInfo?.crm_username}
+                            defaultValue={extraInfo?.crm_username?.value}
                             id="username"
                             className="input-fields"
                             {...register("crm_username", {

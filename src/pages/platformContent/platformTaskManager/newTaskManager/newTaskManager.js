@@ -33,6 +33,7 @@ import Button from "components/platform/platformUI/button";
 import styles from "./newTaskManager.module.sass"
 import switchCompletedBtn from "assets/icons/progress.svg";
 import switchXButton from "assets/icons/bx_task-x.svg";
+import {onCallStart} from "../../../../slices/taskManagerModalSlice";
 
 const NewTaskManager = () => {
 
@@ -69,6 +70,7 @@ const NewTaskManager = () => {
 
 
     const [selectedAudioId, setSelectedAudioId] = useState({id: null, state: null})
+    const [selectedPerson, setSelectedPerson] = useState(null)
     const [isCall, setIsCall] = useState(false)
     const [audioCom, setAudioCom] = useState(null)
     const [audioDate, setAudioDate] = useState(null)
@@ -156,155 +158,10 @@ const NewTaskManager = () => {
         completed.leads,
     ])
 
-    useEffect(() => {
-        if (!callId) return;
-
-        let isActive = true;
-        let timeoutId = null;
-
-        setIsCall(true);
-
-        const poll = async () => {
-            if (!isActive && callStatus === "loading") return;
-
-            try {
-                let url;
-                if (activeCategory === "leads") {
-                    url = "task_leads"
-                } else if (activeCategory === "debtors") {
-                    url = "task_debts"
-                } else {
-                    url = "task_new_students"
-                }
-
-                const response = await request(
-                    `${BackUrl}${url}/call-status/${callId}`,
-                    "GET",
-                    null,
-                    headers()
-                );
-
-                // setSelectedAudioId(prev => ({ ...prev, state: response?.state }))
-
-                // ❗ проверка состояния
-                if (response?.state === "SUCCESS") {
-                    if (response.result.success) {
-                        let result;
-                        if (activeCategory === "leads") {
-                            result = {
-                                audioId: response.result.lead_info_id,
-                                callId: null,
-                                callStatus: "success",
-                                callState: "success"
-                            }
-                        } else {
-                            result = {
-                                audioId: response.result.audio_record_id,
-                                callId: null,
-                                callStatus: "success",
-                                callState: "success"
-                            }
-                        }
-                        dispatch(callStart(result))
-                    } else {
-                        console.log(response.result.attempts)
-                        dispatch(callStart({
-                            callId: null,
-                            callStatus: "success",
-                            callState: "error"
-                        }))
-                        if (response.result.attempts === 2) {
-                            if (activeCategory === "leads") {
-                                dispatch(onDelLeads({id: selectedId}))
-                            } else {
-                                dispatch(onDelDebtors({id: selectedId, type: activeCategory}))
-                            }
-                        }
-                    }
-                    // setIsCall(false);
-                    // setSelectedAudioId(prev => ({ ...prev, state: response?.state, lead_id: response?.result?.lead_info_id }))
-                    isActive = false; // останавливаем polling
-                    return;
-                }
-
-                // продолжаем polling
-                timeoutId = setTimeout(poll, 5000);
-
-            } catch (error) {
-                console.error(error);
-                timeoutId = setTimeout(poll, 5000);
-            }
-        };
-
-        poll();
-
-        return () => {
-            isActive = false;
-            if (timeoutId) clearTimeout(timeoutId);
-        };
-    }, [callId]);
-
 
     const onChangeIsCompleted = (status) => {
         setData([])
         setIsCompleted(status)
-    }
-
-
-    const onSubmit = () => {
-
-        let post;
-        let postURL;
-        if (activeCategory === "leads") {
-            postURL = `task_leads/task_leads_update/${audioId}`
-            post = {
-                comment: audioCom,
-                date: audioDate,
-            }
-        } else if (activeCategory === "debtors") {
-            postURL = "task_debts/call_to_debts"
-            post = {
-                excuse_id: audioId,
-                phone: selectedPhone,
-                comment: audioCom,
-                date: audioDate,
-            }
-        } else {
-            postURL = "task_new_students/call_to_new_students"
-            post = {
-                id: audioId,
-                phone: selectedPhone,
-                comment: audioCom,
-                date: audioDate,
-            }
-        }
-
-        request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
-            .then(res => {
-                if (activeCategory === "leads") {
-                    dispatch(onDelLeads({id: res?.lead_id}))
-                } else {
-                    dispatch(onDelDebtors({id: res.student_id, type: activeCategory}))
-                }
-                dispatch(onChangeProgress({
-                    progress: res.task_statistics,
-                    allProgress: res.task_daily_statistics
-                }))
-                dispatch(setMessage({
-                    msg: activeCategory === "leads" ? res.msg : res.message,
-                    type: "success",
-                    active: true
-                }))
-                setIsCall(false)
-                dispatch(callStart({
-                    audioId: null,
-                    callId: null,
-                    callStatus: "idle",
-                    callState: "idle"
-                }))
-            })
-            .catch(err => console.log(err))
-
     }
 
 
@@ -377,27 +234,41 @@ const NewTaskManager = () => {
         } else if (activeCategory === "debtors") {
             postURL = "task_debts/call_to_debt"
             post = {student_id: id, phone}
+            setSelectedPerson(prev => ({...prev, phone}))
         } else {
             postURL = "task_new_students/call_to_new_student"
             post = {student_id: id, phone}
+            setSelectedPerson(prev => ({...prev, phone}))
         }
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
             .then(res => {
-                console.log(res)
-                dispatch(callStart({
+                // dispatch(callStart({
+                //     callId: res.task_id,
+                //     callStatus: "loading",
+                //     callState: "processing"
+                // }))
+                // setSelectedPhone(phone)
+                // setSelectedId(id)
+                dispatch(onCallStart({
+                    person: {
+                        fullName: `${selectedPerson.name} ${activeCategory === "leads" ? "" : selectedPerson.surname}`,
+                        id,
+                        phone
+                    },
                     callId: res.task_id,
                     callStatus: "loading",
-                    callState: "processing"
+                    callState: "processing",
+                    type: activeCategory
                 }))
-                setSelectedPhone(phone)
-                setSelectedId(id)
             })
             .catch(err => {
-                dispatch(setMessage({
-                    msg: "Missing 'crm_username'",
-                    type: "error",
-                    active: true
-                }))
+                if (err) {
+                    dispatch(setMessage({
+                        msg: "Missing 'crm_username'",
+                        type: "error",
+                        active: true
+                    }))
+                }
             })
     }
 
@@ -496,6 +367,7 @@ const NewTaskManager = () => {
                                     setIsSelectPhone={setIsSelectPhone}
                                     setIsSelectedStudent={setIsSelectedStudent}
                                     onCall={onCall}
+                                    setSelectedPerson={setSelectedPerson}
                                 />
 
                                 {
@@ -509,6 +381,7 @@ const NewTaskManager = () => {
                                             setIsSelectPhone={setIsSelectPhone}
                                             setIsSelectedStudent={setIsSelectedStudent}
                                             onCall={onCall}
+                                            setSelectedPerson={setSelectedPerson}
                                         />
                                     )
                                 }
@@ -597,35 +470,6 @@ const NewTaskManager = () => {
                 </div>
             </aside>
             <Modal
-                activeModal={isCall}
-                setActiveModal={setIsCall}
-                extraClass={styles.audioModal}
-            >
-                <div className={styles.audioModal__loader}>
-                    <CallStatusLoader
-                        status={callStatus}
-                        state={callState}
-                    />
-                </div>
-                {
-                    (callStatus === "success" && callState !== "error") && (
-                        <>
-                            <Input
-                                title={"Koment"}
-                                placeholder={"Koment"}
-                                onChange={setAudioCom}
-                            />
-                            <Input
-                                type={"date"}
-                                title={"Kun"}
-                                onChange={setAudioDate}
-                            />
-                            <Button onClickBtn={onSubmit}>Kiritish</Button>
-                        </>
-                    )
-                }
-            </Modal>
-            <Modal
                 activeModal={isSelectPhone}
                 setActiveModal={setIsSelectPhone}
                 extraClass={styles.audioModal}
@@ -657,7 +501,8 @@ const WrapperSlide = ({
                           setIsSelectPhone,
                           setPhonesList,
                           onCall,
-                          setIsSelectedStudent
+                          setIsSelectedStudent,
+                          setSelectedPerson
                       }) => {
 
     const {request} = useHttp()
@@ -678,12 +523,29 @@ const WrapperSlide = ({
     const onGetPnohe = (id) => {
         request(`${BackUrl}task_debts/get_phones/${id}/`, "GET", null, headers())
             .then(res => {
-                console.log(res, "res")
                 setIsSelectPhone(true)
                 setPhonesList(res.phones)
                 setIsSelectedStudent(id)
             })
     }
+
+    const onCallPhone = (id, phone, student) => {
+        request(`${BackUrl}task_leads/call-to-lead`, "POST", JSON.stringify({lead_id: id}), headers())
+            .then(res => {
+                dispatch(onCallStart({
+                    person: {
+                        fullName: student.name,
+                        id,
+                        phone
+                    },
+                    callId: res.task_id,
+                    callStatus: "loading",
+                    callState: "processing",
+                    type: activeCategory
+                }))
+            })
+    }
+
 
     return (
         <motion.div
@@ -730,12 +592,13 @@ const WrapperSlide = ({
                                         />
                                         <button
                                             className={styles.phoneButton}
-                                            onClick={() =>
+                                            onClick={() => {
+                                                setSelectedPerson(student)
                                                 activeCategory === "leads"
                                                     ?
-                                                    onCall(student.id)
+                                                    onCallPhone(student.id, student.phone, student)
                                                     : onGetPnohe(student.student)
-                                            }
+                                            }}
                                         >
                                             <PhoneIcon size={20}/>
                                         </button>
@@ -754,6 +617,10 @@ const WrapperSlide = ({
                                     {activeCategory === "leads" && <p className={styles.regDate}>{student.day}</p>}
                                 </div>
                                 <div className={styles.cardFooter}>
+                                    <div className={styles.footerItem}>
+                                        <span className={styles.label}>Parent number:</span>
+                                        <span className={styles.value}>{student.parent}</span>
+                                    </div>
                                     {activeCategory === "debtors" && (
                                         <>
                                             <div className={styles.footerItem}>
@@ -782,10 +649,6 @@ const WrapperSlide = ({
                                             </div>
                                         </>
                                     )}
-                                    <div className={styles.footerItem}>
-                                        <span className={styles.label}>Parent number:</span>
-                                        <span className={styles.value}>{student.parent}</span>
-                                    </div>
                                 </div>
                             </div>
                         )
@@ -793,71 +656,6 @@ const WrapperSlide = ({
                 }
             </motion.div>
         </motion.div>
-    )
-}
-
-const CallStatusLoader = ({status, state}) => {
-    const [showCheckmark, setShowCheckmark] = useState(false)
-
-    useEffect(() => {
-        if (status === "success") {
-            setTimeout(() => setShowCheckmark(true), 100)
-        } else {
-            setShowCheckmark(false)
-        }
-    }, [status])
-
-    return (
-        <div className={styles.container}>
-            <div className={styles.loaderWrapper}>
-                <span
-                    className={classNames(styles.parent, {
-                        [styles.fadeOut]: status === "success"
-                    })}
-                >
-                    <span className={styles.loader}/>
-                </span>
-
-                {
-                    state === "error"
-                        ? <svg
-                            className={`${styles.checkmark} ${showCheckmark ? styles.show : ""}`}
-                            viewBox="0 0 100 100"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                style={{stroke: "#e53935"}}
-                                className={styles.checkmarkPath}
-                                d="M 30 30 L 70 70 M 70 30 L 30 70"
-                            />
-                        </svg>
-                        : <svg
-                            className={`${styles.checkmark} ${showCheckmark ? styles.show : ""}`}
-                            viewBox="0 0 100 100"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path className={styles.checkmarkPath} d="M 25 52 L 42 68 L 75 32"/>
-                        </svg>
-                }
-
-
-            </div>
-
-            <p
-                style={state === "error" ? {color: "#e53935"} : null}
-                className={styles.statusText}
-            >
-                {
-                    status === "loading"
-                        ? "Calling in progress..."
-                        : status === "success"
-                            ? state === "error"
-                                ? "Call rejected"
-                                : "Call successed"
-                            : "Call connecting..."
-                }
-            </p>
-        </div>
     )
 }
 
