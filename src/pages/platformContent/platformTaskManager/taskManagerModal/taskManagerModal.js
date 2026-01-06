@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from "classnames";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Input from "components/platform/platformUI/input";
 import Button from "components/platform/platformUI/button";
 import Modal from "components/platform/platformUI/modal";
-import {callStart, onChangeProgress, onDelDebtors, onDelLeads} from "slices/taskManagerSlice";
-import {BackUrl, headers} from "constants/global";
-import {useHttp} from "hooks/http.hook";
+import { callStart, onChangeProgress, onDelDebtors, onDelLeads } from "slices/taskManagerSlice";
+import { BackUrl, headers } from "constants/global";
+import { useHttp } from "hooks/http.hook";
 
 import cls from "./taskManagerModal.module.sass";
-import {onCallEnd, onCallProgressing, onCallStart} from "slices/taskManagerModalSlice";
-import {setMessage} from "slices/messageSlice";
-import {createPortal} from "react-dom";
+import { onCallEnd, onCallProgressing, onCallStart } from "slices/taskManagerModalSlice";
+import { setMessage } from "slices/messageSlice";
+import { createPortal } from "react-dom";
 
 export const TaskManagerModal = () => {
 
@@ -27,7 +27,7 @@ export const TaskManagerModal = () => {
         type
     } = useSelector(state => state.taskManagerModalSlice)
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     const dispatch = useDispatch()
 
 
@@ -106,9 +106,9 @@ export const TaskManagerModal = () => {
                         }))
                         if (response.result.attempts === 2) {
                             if (type === "leads") {
-                                dispatch(onDelLeads({id: person.id}))
+                                dispatch(onDelLeads({ id: person.id }))
                             } else {
-                                dispatch(onDelDebtors({id: person.id, type}))
+                                dispatch(onDelDebtors({ id: person.id, type }))
                             }
                         }
                     }
@@ -168,9 +168,9 @@ export const TaskManagerModal = () => {
             .then(res => {
                 console.log(res, "res")
                 if (type === "leads") {
-                    dispatch(onDelLeads({id: res?.lead_id}))
+                    dispatch(onDelLeads({ id: res?.lead_id }))
                 } else {
-                    dispatch(onDelDebtors({id: res.student_id, type}))
+                    dispatch(onDelDebtors({ id: res.student_id, type }))
                 }
                 dispatch(onChangeProgress({
                     progress: res.task_statistics,
@@ -251,7 +251,7 @@ export const TaskManagerModal = () => {
     );
 }
 
-const CallStatusLoader = ({status, state}) => {
+const CallStatusLoader = ({ status, state }) => {
     const [showCheckmark, setShowCheckmark] = useState(false)
 
     useEffect(() => {
@@ -270,7 +270,7 @@ const CallStatusLoader = ({status, state}) => {
                         [cls.fadeOut]: status === "success"
                     })}
                 >
-                    <span className={cls.loader}/>
+                    <span className={cls.loader} />
                 </span>
 
                 {
@@ -281,7 +281,7 @@ const CallStatusLoader = ({status, state}) => {
                             xmlns="http://www.w3.org/2000/svg"
                         >
                             <path
-                                style={{stroke: "#e53935"}}
+                                style={{ stroke: "#e53935" }}
                                 className={cls.checkmarkPath}
                                 d="M 30 30 L 70 70 M 70 30 L 30 70"
                             />
@@ -291,7 +291,7 @@ const CallStatusLoader = ({status, state}) => {
                             viewBox="0 0 100 100"
                             xmlns="http://www.w3.org/2000/svg"
                         >
-                            <path className={cls.checkmarkPath} d="M 25 52 L 42 68 L 75 32"/>
+                            <path className={cls.checkmarkPath} d="M 25 52 L 42 68 L 75 32" />
                         </svg>
                 }
 
@@ -299,7 +299,7 @@ const CallStatusLoader = ({status, state}) => {
             </div>
 
             <p
-                style={state === "error" ? {color: "#e53935"} : null}
+                style={state === "error" ? { color: "#e53935" } : null}
                 className={cls.statusText}
             >
                 {

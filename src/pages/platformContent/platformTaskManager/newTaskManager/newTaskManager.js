@@ -1,7 +1,7 @@
-import React, {useEffect, useState, useRef, useCallback} from "react"
-import {motion, useDragControls, useMotionValue, useMotionValueEvent} from "framer-motion";
-import {useLocation, useNavigate, useParams} from "react-router-dom"
-import {useDispatch, useSelector} from "react-redux"
+import React, { useEffect, useState, useRef, useCallback } from "react"
+import { motion, useDragControls, useMotionValue, useMotionValueEvent } from "framer-motion";
+import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
 import {
     PhoneIcon,
     SearchIcon,
@@ -21,9 +21,9 @@ import {
     onDelDebtors,
     onDelLeads
 } from "slices/taskManagerSlice"
-import {BackUrl, BackUrlForDoc, formatDate, headers} from "constants/global";
-import {useHttp} from "hooks/http.hook";
-import {setMessage} from "slices/messageSlice";
+import { BackUrl, BackUrlForDoc, formatDate, headers } from "constants/global";
+import { useHttp } from "hooks/http.hook";
+import { setMessage } from "slices/messageSlice";
 import DefaultLoader from "components/loader/defaultLoader/DefaultLoader";
 import Table from "components/platform/platformUI/table";
 import Modal from "components/platform/platformUI/modal";
@@ -33,15 +33,15 @@ import Button from "components/platform/platformUI/button";
 import styles from "./newTaskManager.module.sass"
 import switchCompletedBtn from "assets/icons/progress.svg";
 import switchXButton from "assets/icons/bx_task-x.svg";
-import {onCallStart} from "../../../../slices/taskManagerModalSlice";
+import { onCallStart } from "../../../../slices/taskManagerModalSlice";
 
 const NewTaskManager = () => {
 
     const location = useLocation()
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const {locationId} = useParams()
-    const {request} = useHttp()
+    const { locationId } = useParams()
+    const { request } = useHttp()
 
     const {
         unCompleted,
@@ -69,7 +69,7 @@ const NewTaskManager = () => {
     const [data, setData] = useState([])
 
 
-    const [selectedAudioId, setSelectedAudioId] = useState({id: null, state: null})
+    const [selectedAudioId, setSelectedAudioId] = useState({ id: null, state: null })
     const [selectedPerson, setSelectedPerson] = useState(null)
     const [isCall, setIsCall] = useState(false)
     const [audioCom, setAudioCom] = useState(null)
@@ -90,25 +90,25 @@ const NewTaskManager = () => {
         if (isCompleted) {
             switch (activeCategory) {
                 case "debtors":
-                    dispatch(fetchCompletedDebtorsData({locationId, date: formatted}))
+                    dispatch(fetchCompletedDebtorsData({ locationId, date: formatted }))
                     break;
                 case "newStudents":
-                    dispatch(fetchCompletedNewStudentsTaskData({locationId, date: formatted}))
+                    dispatch(fetchCompletedNewStudentsTaskData({ locationId, date: formatted }))
                     break;
                 case "leads":
-                    dispatch(fetchCompletedLeadsData({locationId, date: formatted}))
+                    dispatch(fetchCompletedLeadsData({ locationId, date: formatted }))
                     break;
             }
         } else {
             switch (activeCategory) {
                 case "debtors":
-                    dispatch(fetchDebtorsData({locationId, date: formatted}))
+                    dispatch(fetchDebtorsData({ locationId, date: formatted }))
                     break;
                 case "newStudents":
-                    dispatch(fetchNewStudentsTaskData({locationId, date: formatted}))
+                    dispatch(fetchNewStudentsTaskData({ locationId, date: formatted }))
                     break;
                 case "leads":
-                    dispatch(fetchLeadsData({locationId, date: formatted}))
+                    dispatch(fetchLeadsData({ locationId, date: formatted }))
                     break;
 
 
@@ -230,15 +230,15 @@ const NewTaskManager = () => {
         let postURL;
         if (activeCategory === "leads") {
             postURL = "task_leads/call-to-lead"
-            post = {lead_id: id}
+            post = { lead_id: id }
         } else if (activeCategory === "debtors") {
             postURL = "task_debts/call_to_debt"
-            post = {student_id: id, phone}
-            setSelectedPerson(prev => ({...prev, phone}))
+            post = { student_id: id, phone }
+            setSelectedPerson(prev => ({ ...prev, phone }))
         } else {
             postURL = "task_new_students/call_to_new_student"
-            post = {student_id: id, phone}
-            setSelectedPerson(prev => ({...prev, phone}))
+            post = { student_id: id, phone }
+            setSelectedPerson(prev => ({ ...prev, phone }))
         }
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
             .then(res => {
@@ -281,7 +281,7 @@ const NewTaskManager = () => {
                 {/* Top Navigation */}
                 <div className={styles.topNav}>
                     <div className={styles.searchBox}>
-                        <SearchIcon size={20}/>
+                        <SearchIcon size={20} />
                         <input
                             type="text"
                             placeholder="Qidiruv"
@@ -305,13 +305,13 @@ const NewTaskManager = () => {
                     <h2 className={styles.categoryTitle}>My tasks</h2>
                     <div className={styles.tabsContainer}>
                         {[
-                            {id: "debtors", label: "Qarzdorlar", count: calcLengthData("debtors", isCompleted)},
+                            { id: "debtors", label: "Qarzdorlar", count: calcLengthData("debtors", isCompleted) },
                             {
                                 id: "newStudents",
                                 label: "Yangi o'quvchilar",
                                 count: calcLengthData("newStudents", isCompleted)
                             },
-                            {id: "leads", label: "Lead", count: calcLengthData("leads", isCompleted)},
+                            { id: "leads", label: "Lead", count: calcLengthData("leads", isCompleted) },
                             // { id: "completed", label: "Completed", count: 0 },
                         ].map((tab) => (
                             <button
@@ -335,7 +335,7 @@ const NewTaskManager = () => {
                 {
                     (unCompletedStatus === "loading" || completedStatus === "loading")
                         ? <div classNames={styles.main__loader}>
-                            <DefaultLoader/>
+                            <DefaultLoader />
                         </div>
                         : isTable
                             ? <div className={styles.main__table}>
@@ -494,18 +494,18 @@ const NewTaskManager = () => {
 }
 
 const WrapperSlide = ({
-                          arr,
-                          index,
-                          activeCategory,
-                          getCardColor,
-                          setIsSelectPhone,
-                          setPhonesList,
-                          onCall,
-                          setIsSelectedStudent,
-                          setSelectedPerson
-                      }) => {
+    arr,
+    index,
+    activeCategory,
+    getCardColor,
+    setIsSelectPhone,
+    setPhonesList,
+    onCall,
+    setIsSelectedStudent,
+    setSelectedPerson
+}) => {
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -530,7 +530,7 @@ const WrapperSlide = ({
     }
 
     const onCallPhone = (id, phone, student) => {
-        request(`${BackUrl}task_leads/call-to-lead`, "POST", JSON.stringify({lead_id: id}), headers())
+        request(`${BackUrl}task_leads/call-to-lead`, "POST", JSON.stringify({ lead_id: id }), headers())
             .then(res => {
                 dispatch(onCallStart({
                     person: {
@@ -560,7 +560,7 @@ const WrapperSlide = ({
                 drag={"x"}
                 dragElastic={0}
                 dragMomentum={false}
-                dragConstraints={{left: -width, right: 0}}
+                dragConstraints={{ left: -width, right: 0 }}
                 dragControls={controls}
             >
                 {
@@ -600,7 +600,7 @@ const WrapperSlide = ({
                                                     : onGetPnohe(student.student)
                                             }}
                                         >
-                                            <PhoneIcon size={20}/>
+                                            <PhoneIcon size={20} />
                                         </button>
                                     </div>
                                 </div>
@@ -659,22 +659,22 @@ const WrapperSlide = ({
     )
 }
 
-const SwitchButton = ({isCompleted, setIsCompleted, setSearchValue}) => {
+const SwitchButton = ({ isCompleted, setIsCompleted, setSearchValue }) => {
     return (
         <div className={styles.switchBox}>
             <div className={`${styles.switch} ${isCompleted ? `${styles.completed}` : `${styles.inProgress} `}`}
-                 onClick={() => {
-                     setIsCompleted(!isCompleted)
-                     setSearchValue("")
-                 }}>
+                onClick={() => {
+                    setIsCompleted(!isCompleted)
+                    setSearchValue("")
+                }}>
                 <div className={styles.iconButton}>
                     {isCompleted ?
                         <div className={styles.icon__handlerSucces}>
-                            <img className={styles.buttonIcon} src={switchCompletedBtn} alt=""/>
+                            <img className={styles.buttonIcon} src={switchCompletedBtn} alt="" />
                         </div>
                         :
                         <div className={styles.icon__handler}>
-                            <img src={switchXButton} className={styles.buttonIcon} alt=""/>
+                            <img src={switchXButton} className={styles.buttonIcon} alt="" />
                         </div>
                     }
                 </div>
@@ -692,8 +692,8 @@ const SwitchButton = ({isCompleted, setIsCompleted, setSearchValue}) => {
 };
 
 
-const CommentCard = ({comment, activeCategory}) => {
-    const {request} = useHttp()
+const CommentCard = ({ comment, activeCategory }) => {
+    const { request } = useHttp()
     const navigate = useNavigate()
     const audioRef = useRef(null)
 
@@ -836,7 +836,18 @@ const CommentCard = ({comment, activeCategory}) => {
                     comment?.audio_url && (
                         <div className={styles.audio}>
                             <p className={styles.audio__subTitle}>
-                                {formatTime(currentTime)} / {duration ? formatTime(duration) : `0:${comment.duration ? Number(comment.duration) <= 10 ? `0${comment.duration}` : comment.duration : "00"}`}
+                                {formatTime(currentTime)}
+                                {" / "}
+                                {
+                                    duration
+                                        ? formatTime(duration)
+                                        : `${comment.duration >= 60 ? Math.floor(comment.duration / 60) : "0"}:${comment.duration
+                                            ? (Number(comment.duration) - (60 * Math.floor(comment.duration / 60)))
+                                                <= 10
+                                                ? `0${comment.duration}`
+                                                : Number(comment.duration) - (60 * Math.floor(comment.duration / 60))
+                                            : "00"}`
+                                }
                             </p>
 
                             <input
