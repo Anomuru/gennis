@@ -26,8 +26,6 @@ const PlatformAdminItem = () => {
     const navigate = useNavigate()
     const location = useLocation()
 
-    console.log(location, "location");
-
 
     // 🔑 localStorage dan oxirgi tanlovni olish
     // const savedRadio = localStorage.getItem("platformAdminRadio");

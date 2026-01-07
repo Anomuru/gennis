@@ -27,6 +27,16 @@ export const TaskManagerModal = () => {
         type
     } = useSelector(state => state.taskManagerModalSlice)
 
+
+    const lastCallId = localStorage.getItem("callId")
+    const lastCategoryType = localStorage.getItem("categoryType")
+    const lastSelectedPerson = localStorage.getItem("selectedPerson")
+    const lastCallStatus = localStorage.getItem("callStatus")
+    const lastCallState = localStorage.getItem("callState")
+    const lastShowStatus = localStorage.getItem("showStatus")
+    const lastAudioId = localStorage.getItem("audioId")
+
+
     const { request } = useHttp()
     const dispatch = useDispatch()
 
@@ -36,6 +46,57 @@ export const TaskManagerModal = () => {
     const [audioCom, setAudioCom] = useState(null)
     const [audioDate, setAudioDate] = useState(null)
 
+    useEffect(() => {
+        if (lastShowStatus)
+            localStorage.setItem("showStatus", Number(lastShowStatus) + 1)
+    }, [])
+
+    useEffect(() => {
+        console.log(lastCallId, lastCategoryType, lastSelectedPerson, lastCallStatus, lastCallState, lastShowStatus, lastAudioId)
+
+        if (lastCallState && lastCallState !== "error") {
+            console.log(true)
+            let props = {
+                person: JSON.parse(lastSelectedPerson),
+                callStatus: lastCallStatus,
+                callState: lastCallState,
+                type: lastCategoryType
+            };
+            if (lastCallId) {
+                dispatch(onCallStart({
+                    ...props,
+                    callId: lastCallId,
+                }))
+            } else {
+                dispatch(onCallProgressing({
+                    ...props,
+                    audioId: lastAudioId,
+                }))
+            }
+        } else {
+            console.log(lastShowStatus, "lastShowStatus");
+
+            if (lastShowStatus && Number(lastShowStatus) >= 3) {
+                dispatch(onCallStart({
+                    person: JSON.parse(lastSelectedPerson),
+                    callStatus: lastCallStatus,
+                    callState: lastCallState,
+                    type: lastCategoryType,
+                }))
+            } else {
+                console.log(false)
+                localStorage.removeItem("callId")
+                localStorage.removeItem("categoryType")
+                localStorage.removeItem("selectedPerson")
+                localStorage.removeItem("callStatus")
+                localStorage.removeItem("callState")
+                localStorage.removeItem("showStatus")
+                localStorage.removeItem("audioId")
+            }
+        }
+    }, [lastCallId, lastCallStatus, lastCallState, lastCategoryType, lastSelectedPerson, lastShowStatus])
+
+    console.log(type, "type")
 
     useEffect(() => {
         setIsCall(isOpen)
@@ -96,6 +157,12 @@ export const TaskManagerModal = () => {
                                 callState: "success"
                             }
                         }
+                        localStorage.removeItem("callId")
+                        localStorage.setItem("audioId", result.audioId)
+                        // localStorage.setItem("categoryType", activeCategory)
+                        // localStorage.setItem("selectedPerson", JSON.stringify(person))
+                        localStorage.setItem("callStatus", "success")
+                        localStorage.setItem("callState", "success")
                         dispatch(onCallProgressing(result))
                     } else {
                         dispatch(onCallProgressing({
@@ -104,6 +171,10 @@ export const TaskManagerModal = () => {
                             callStatus: "success",
                             callState: "error"
                         }))
+                        localStorage.removeItem("callId")
+                        localStorage.setItem("callStatus", "success")
+                        localStorage.setItem("callState", "error")
+                        localStorage.setItem("showStatus", 1)
                         if (response.result.attempts === 2) {
                             if (type === "leads") {
                                 dispatch(onDelLeads({ id: person.id }))
@@ -166,7 +237,13 @@ export const TaskManagerModal = () => {
 
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
             .then(res => {
-                console.log(res, "res")
+                localStorage.removeItem("callId")
+                localStorage.removeItem("categoryType")
+                localStorage.removeItem("selectedPerson")
+                localStorage.removeItem("callStatus")
+                localStorage.removeItem("callState")
+                localStorage.removeItem("showStatus")
+                localStorage.removeItem("audioId")
                 if (type === "leads") {
                     dispatch(onDelLeads({ id: res?.lead_id }))
                 } else {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react"
 import { motion, useDragControls, useMotionValue, useMotionValueEvent } from "framer-motion";
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { json, useLocation, useNavigate, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import {
     PhoneIcon,
@@ -33,7 +33,7 @@ import Button from "components/platform/platformUI/button";
 import styles from "./newTaskManager.module.sass"
 import switchCompletedBtn from "assets/icons/progress.svg";
 import switchXButton from "assets/icons/bx_task-x.svg";
-import { onCallStart } from "../../../../slices/taskManagerModalSlice";
+import { onCallProgressing, onCallStart } from "../../../../slices/taskManagerModalSlice";
 
 const NewTaskManager = () => {
 
@@ -68,19 +68,13 @@ const NewTaskManager = () => {
     const [date, setDate] = useState(new Date())
     const [data, setData] = useState([])
 
-
-    const [selectedAudioId, setSelectedAudioId] = useState({ id: null, state: null })
     const [selectedPerson, setSelectedPerson] = useState(null)
-    const [isCall, setIsCall] = useState(false)
-    const [audioCom, setAudioCom] = useState(null)
-    const [audioDate, setAudioDate] = useState(null)
 
     const [isSelectPhone, setIsSelectPhone] = useState(false)
     const [phonesList, setPhonesList] = useState([])
     const [isSelectedStudent, setIsSelectedStudent] = useState(null)
     const [selectedPhone, setSelectedPhone] = useState(null)
     const [selectedId, setSelectedId] = useState(null)
-
 
     useEffect(() => {
         if (!locationId && !date) return;
@@ -242,6 +236,11 @@ const NewTaskManager = () => {
         }
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
             .then(res => {
+                const person = {
+                    fullName: `${selectedPerson.name} ${activeCategory === "leads" ? "" : selectedPerson.surname}`,
+                    id,
+                    phone
+                }
                 // dispatch(callStart({
                 //     callId: res.task_id,
                 //     callStatus: "loading",
@@ -249,12 +248,13 @@ const NewTaskManager = () => {
                 // }))
                 // setSelectedPhone(phone)
                 // setSelectedId(id)
+                localStorage.setItem("callId", res.task_id)
+                localStorage.setItem("categoryType", activeCategory)
+                localStorage.setItem("selectedPerson", JSON.stringify(person))
+                localStorage.setItem("callStatus", "loading")
+                localStorage.setItem("callState", "processing")
                 dispatch(onCallStart({
-                    person: {
-                        fullName: `${selectedPerson.name} ${activeCategory === "leads" ? "" : selectedPerson.surname}`,
-                        id,
-                        phone
-                    },
+                    person,
                     callId: res.task_id,
                     callStatus: "loading",
                     callState: "processing",
@@ -778,7 +778,11 @@ const CommentCard = ({ comment, activeCategory }) => {
                         {comment.name} {comment.surname}
                         {" "}
                         <span>
-                            ({comment.added_date} / {comment.to_date ?? comment.date})
+                            {
+                                (comment.to_date || comment.date)
+                                    ? `(${comment.added_date} / ${comment.to_date ?? comment.date})`
+                                    : `(${comment.added_date})`
+                            }
                         </span>
                     </strong>
 

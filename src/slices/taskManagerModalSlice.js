@@ -1,4 +1,4 @@
-import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
     person: null,
@@ -29,6 +29,10 @@ const taskManagerModalSlice = createSlice({
             state.callId = action.payload.callId
             state.status = action.payload.callStatus
             state.state = action.payload.callState
+            state.person = action.payload.person
+            state.type = action.payload.type
+            state.isOpen = true
+            state.isActive = true
         },
         onCallEnd: (state) => {
             state.isActive = false
