@@ -298,9 +298,6 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
         }
     ]
 
-    console.log(extraInfo, "extraInfo");
-
-
 
     const renderedSelectedOptions = renderSubjects()
 
@@ -347,6 +344,27 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
                             errors?.crm_username &&
                             <span className="error-field">
                                 {errors?.crm_username?.message}
+                            </span>
+                        }
+                    </label> : null
+            }
+            {
+                data?.level ?
+                    <label htmlFor="level">
+                        <span className="name-field">Level</span>
+                        <input
+                            defaultValue={extraInfo?.level?.value}
+                            id="level"
+                            className="input-fields"
+                            {...register("level", {
+                                required: "Iltimos to'ldiring",
+                                // onBlur: event => checkUsername(event.target.value)
+                            })}
+                        />
+                        {
+                            errors?.level &&
+                            <span className="error-field">
+                                {errors?.level?.message}
                             </span>
                         }
                     </label> : null

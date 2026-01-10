@@ -114,7 +114,13 @@ const todoistSlice = createSlice({
             state.notificationLoading = false
         },
         addTask: (state, action) => {
-            state.tasks = [action.payload, ...state.tasks]
+            state.tasks = [
+                {
+                    children: action.payload,
+                    ...action.payload[0]
+                },
+                ...state.tasks
+            ]
             state.taskLoading = false
         },
         editTask: (state, action) => {
@@ -124,8 +130,35 @@ const todoistSlice = createSlice({
             ]
             state.taskLoading = false
         },
+        editMultiTask: (state, action) => {
+            state.tasks =
+                state.tasks.map(item => {
+                    if (item.id === action.payload.parent) {
+                        return {
+                            ...item.children.filter(it => it.id !== action.payload.id)[0],
+                            children: [
+                                ...item.children.filter(it => it.id !== action.payload.id),
+                                action.payload
+                            ]
+                        }
+                    } else return item
+                })
+            state.taskLoading = false
+        },
         deleteTask: (state, action) => {
             state.tasks = state.tasks.filter(item => item.id !== action.payload)
+            state.taskLoading = false
+        },
+        deleteMultiTask: (state, action) => {
+            state.tasks =
+                state.tasks.map(item => {
+                    if (item.id === action.payload.parent) {
+                        return {
+                            ...item.children.filter(it => it.id !== action.payload.id)[0],
+                            children: item.children.filter(it => it.id !== action.payload.id)
+                        }
+                    } else return item
+                })
             state.taskLoading = false
         },
         addTag: (state, action) => {
@@ -336,7 +369,9 @@ export const {
     notificationLoadingStop,
     addTask,
     editTask,
+    editMultiTask,
     deleteTask,
+    deleteMultiTask,
     addTag,
     editTag,
     deleteTag,

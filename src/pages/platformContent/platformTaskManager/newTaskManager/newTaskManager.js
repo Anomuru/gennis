@@ -227,11 +227,11 @@ const NewTaskManager = () => {
             post = { lead_id: id }
         } else if (activeCategory === "debtors") {
             postURL = "task_debts/call_to_debt"
-            post = { student_id: id, phone }
+            post = { student_id: id, phone: "901101664" }
             setSelectedPerson(prev => ({ ...prev, phone }))
         } else {
             postURL = "task_new_students/call_to_new_student"
-            post = { student_id: id, phone }
+            post = { student_id: id, phone: "901101664" }
             setSelectedPerson(prev => ({ ...prev, phone }))
         }
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
@@ -263,6 +263,8 @@ const NewTaskManager = () => {
             })
             .catch(err => {
                 if (err) {
+                    console.log(err.status, "err");
+
                     dispatch(setMessage({
                         msg: "Missing 'crm_username'",
                         type: "error",

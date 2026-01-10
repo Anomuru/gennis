@@ -146,6 +146,7 @@ const PlatformContent = () => {
 
                     {/* <Route path="oneDay/:locationId" element={<PlatformOneDay/>}/> */}
                     <Route path="adminItem/:locationId/*" element={<PlatformAdminItem />} />
+                    <Route path="todoist/:locationId/*" element={<PlatformTodoist />} />
                     {/* <Route path="storyProfile/:storyId" element={<PlatformTaskManagerProfile />} /> */}
                     {/* </Route> */}
 

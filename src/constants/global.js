@@ -4,14 +4,14 @@ import { useMemo } from "react";
 //
 
 // export const BackUrlForDoc = `http://26.196.249.247:5002/`
-// export const BackUrlForDoc = `http://192.168.0.104:5002/`
-// export const BackUrl = `${BackUrlForDoc}api/`
+export const BackUrlForDoc = `http://192.168.0.107:5002/`
+export const BackUrl = `${BackUrlForDoc}api/`
 
 // export const ClassroomUrl = `http://localhost:3000/`
 // export const ClassroomUrlForDoc = "http://26.12.122.72:5001/"
 //
-export const BackUrl = "https://admin.gennis.uz/api/"
-export const BackUrlForDoc = "https://admin.gennis.uz/"
+// export const BackUrl = "https://admin.gennis.uz/api/"
+// export const BackUrlForDoc = "https://admin.gennis.uz/"
 //
 
 
@@ -73,6 +73,14 @@ export const requireMenuItems = (id) => {
             location: true,
             children: true,
             roles: [ROLES.Admin, ROLES.Director]
+        },
+        {
+            to: "todoist",
+            name: "To do",
+            classIcon: "fa-circle-check",
+            location: true,
+            children: true,
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant]
         },
         // {
         //     to: "adminRating",

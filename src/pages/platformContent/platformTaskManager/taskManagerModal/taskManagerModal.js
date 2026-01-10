@@ -145,16 +145,10 @@ export const TaskManagerModal = () => {
                         if (type === "leads") {
                             result = {
                                 audioId: response.result.lead_info_id,
-                                callId: null,
-                                callStatus: "success",
-                                callState: "success"
                             }
                         } else {
                             result = {
                                 audioId: response.result.audio_record_id,
-                                callId: null,
-                                callStatus: "success",
-                                callState: "success"
                             }
                         }
                         localStorage.removeItem("callId")
@@ -163,9 +157,18 @@ export const TaskManagerModal = () => {
                         // localStorage.setItem("selectedPerson", JSON.stringify(person))
                         localStorage.setItem("callStatus", "success")
                         localStorage.setItem("callState", "success")
-                        dispatch(onCallProgressing(result))
+                        dispatch(onCallProgressing({
+                            ...result,
+                            person,
+                            callStatus: "success",
+                            callState: "success",
+                            callId: null,
+                            type
+                        }))
                     } else {
                         dispatch(onCallProgressing({
+                            person,
+                            type,
                             audioId: null,
                             callId: null,
                             callStatus: "success",
