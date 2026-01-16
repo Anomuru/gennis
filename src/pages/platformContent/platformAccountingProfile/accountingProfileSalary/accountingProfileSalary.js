@@ -78,7 +78,7 @@ const AccountingProfileSalary = () => {
                         {activeCategory === "teacher" ? staff.teacher_name : staff.staff_name}
                         {staff.is_deleted ? " 🚫" : null}
                     </td>
-                    <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(staff.teacher_salary)}</td>
+                    <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(activeCategory === "teacher" ? staff.teacher_salary : staff.staff_salary)}</td>
                     <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(staff.taken_money)}</td>
                     <td className={`${styles.tableCell} ${styles.tableCellRight} ${styles.tableCellBold}`}>
                         {formatCurrency(staff.remaining_salary)}
