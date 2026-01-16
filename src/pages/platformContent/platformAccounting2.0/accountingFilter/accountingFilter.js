@@ -101,6 +101,9 @@ export const AccountingFilter = ({ currentPage, pageSize, setCurrentPage, search
             case "capital":
                 route = "capital/";
                 break;
+            case "prepayment":
+                route = "prepayments/"
+                break;
         }
 
         if (route) {

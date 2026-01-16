@@ -50,6 +50,7 @@ const initialState = {
         { value: "capital", name: "Kapital xarajatlari", disabled: false },
         { value: "investments", name: "Invistitsiya", disabled: false },
         { value: "dividends", name: "Dividends", disabled: false },
+        { value: "prepayment", name: "Prepayments", disabled: false }
     ],
     selectedValue: savedValue || "studentsPayments",
     selectedName: savedName || "O'quvchilar tolovlari",
