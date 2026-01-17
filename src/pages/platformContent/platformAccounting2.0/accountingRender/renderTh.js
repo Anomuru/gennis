@@ -1,5 +1,5 @@
-import {useSelector} from "react-redux";
-import {newAccountingSelectOptionValue} from "pages/platformContent/platformAccounting2.0/model/accountingSelector";
+import { useSelector } from "react-redux";
+import { newAccountingSelectOptionValue } from "pages/platformContent/platformAccounting2.0/model/accountingSelector";
 import React from "react";
 
 export const RenderTh = () => {
@@ -23,6 +23,17 @@ export const RenderTh = () => {
                 <th>Sana</th>
                 <th>Tel</th>
                 <th>Qarz</th>
+            </>
+        }
+
+        case "prepayment": {
+            return <>
+                <th>#</th>
+                <th>Ism Familiya</th>
+                {/* <th>Sabab</th> */}
+                {/* <th>Sana</th> */}
+                <th>Tel</th>
+                <th>Balans</th>
             </>
         }
 
@@ -57,7 +68,7 @@ export const RenderTh = () => {
             </>
         }
 
-        case "studentsPayments" : {
+        case "studentsPayments": {
             return <>
                 <th>#</th>
                 <th>Ism</th>
@@ -69,7 +80,7 @@ export const RenderTh = () => {
             </>
         }
 
-        case "teachersSalary" : {
+        case "teachersSalary": {
             return <>
                 <th>#</th>
                 <th>Ism</th>
@@ -80,7 +91,7 @@ export const RenderTh = () => {
                 <th>O‘chirish</th>
             </>
         }
-        case "studentsDiscounts" : {
+        case "studentsDiscounts": {
             return <>
                 <th>#</th>
                 <th>Ism</th>
@@ -91,7 +102,7 @@ export const RenderTh = () => {
             </>
         }
 
-        case "employeesSalary" : {
+        case "employeesSalary": {
             return <>
                 <th>#</th>
                 <th>Ism</th>
@@ -103,7 +114,7 @@ export const RenderTh = () => {
             </>
         }
 
-        case "capital" : {
+        case "capital": {
             return <>
                 <th>#</th>
                 <th>Nomi</th>

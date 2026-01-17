@@ -39,7 +39,7 @@ import {
     deleteMultiTask
 } from "slices/todoistSlice"
 import { useHttp } from "hooks/http.hook";
-import { BackUrl, headers, headersImg } from "constants/global"
+import { BackUrl, BackUrlForDoc, headers, headersImg } from "constants/global"
 import { fetchTeachersByLocationWithoutPagination } from "slices/teachersSlice"
 import { setMessage } from "slices/messageSlice"
 import Button from "components/platform/platformUI/button"
@@ -109,6 +109,8 @@ const PlatformTodoist = () => {
     // State management
 
     const [isFilter, setIsFilter] = useState(false)
+    const [isTeachersSelect, setIsTeachersSelect] = useState(false)
+    const [isEpmloyeesSelect, setIsEpmloyeesSelect] = useState(false)
     const [selectedStatus, setSelectedStatus] = useState("all")
     const [selectedCreate, setSelectedCreate] = useState()
     const [selectedDeadlineFrom, setSelectedDeadlineFrom] = useState()
@@ -424,6 +426,8 @@ const PlatformTodoist = () => {
                 }))
                 setModalType(null)
                 setActiveTaskType("givenTask")
+                setIsTeachersSelect(false)
+                setIsEpmloyeesSelect(false)
                 //         })
                 // })
             })
@@ -454,11 +458,11 @@ const PlatformTodoist = () => {
             is_recurring: formData.is_recurring,
             recurring_type: formData.recurring_type,
             repeat_every: formData.repeat_every,
-            executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
+            // executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
         }
 
         dispatch(taskLoading())
-        request(`${BackUrl}missions/${formData.id}/`, "PUT", JSON.stringify(patch), headers())
+        request(`${BackUrl}missions/${formData.id}/`, "PATCH", JSON.stringify(patch), headers())
             .then(res => {
 
                 request(`${BackUrl}missions/${res.id}/`, "GET", null, headers())
@@ -545,7 +549,10 @@ const PlatformTodoist = () => {
 
     const handleChangeStatus = () => {
         dispatch(taskLoading())
-        request(`${BackUrl}missions/${formData.id}/`, "PATCH", JSON.stringify({ status: formData.status, executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id] }), headers())
+        request(`${BackUrl}missions/${formData.id}/`, "PATCH", JSON.stringify({
+            status: formData.status,
+            // executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
+        }), headers())
             .then(res => {
                 request(`${BackUrl}missions/${res.id}/`, "GET", null, headers())
                     .then(res => {
@@ -736,7 +743,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("subtasks"))
 
-        request(`${BackUrl}subtasks/${nestedFormData.id}`, "DELETE", null, headers())
+        request(`${BackUrl}subtasks/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
                 dispatch(deleteSubTasks({ mission_id: selectedTask.id, subtask: nestedFormData.id }))
                 setSelectedTask({
@@ -764,7 +771,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("subtasks"))
 
-        request(`${BackUrl}subtasks/${id}`, "PATCH", JSON.stringify({ is_done: !isDone }), headers())
+        request(`${BackUrl}subtasks/${id}/`, "PATCH", JSON.stringify({ is_done: !isDone }), headers())
             .then(res => {
                 dispatch(editSubTasks(res))
                 setSelectedTask({
@@ -867,7 +874,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("attachments"))
 
-        request(`${BackUrl}attachments/${nestedFormData.id}`, "DELETE", null, headers())
+        request(`${BackUrl}attachments/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
                 dispatch(deleteAttachments({ mission_id: selectedTask.id, attachment: nestedFormData.id }))
                 setSelectedTask({
@@ -897,13 +904,13 @@ const PlatformTodoist = () => {
         dispatch(taskProfileLoading("comments"))
 
         formDataImg.append("text", nestedFormData.text)
-        formDataImg.append("user", userId)
+        formDataImg.append("user_id", userId)
         if (nestedFormData.comFile && typeof nestedFormData.comFile === "object") {
             formDataImg.append("attachment", nestedFormData.comFile)
         }
         formDataImg.append("mission_id", selectedTask.id)
 
-        request(`${BackUrl}comments/`, "POST", formDataImg, headersImg())
+        request(`${BackUrl}comment/`, "POST", formDataImg, headersImg())
             .then(res => {
                 dispatch(addComments(res))
                 setSelectedTask(prev => ({
@@ -912,7 +919,7 @@ const PlatformTodoist = () => {
                 }))
                 setNestedModalType(null)
                 formDataImg.delete("text")
-                formDataImg.delete("user")
+                formDataImg.delete("user_id")
                 formDataImg.delete("attachment")
                 formDataImg.delete("mission_id")
                 dispatch(setMessage({
@@ -942,7 +949,7 @@ const PlatformTodoist = () => {
             formDataImg.append("attachment", nestedFormData.comFile)
         }
 
-        request(`${BackUrl}comments/${nestedFormData.id}/`, "PATCH", formDataImg, headersImg())
+        request(`${BackUrl}comment/${nestedFormData.id}/`, "PATCH", formDataImg, headersImg())
             .then(res => {
                 dispatch(editComments(res))
                 setSelectedTask({
@@ -973,7 +980,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("comments"))
 
-        request(`${BackUrl}comments/${nestedFormData.id}`, "DELETE", null, headers())
+        request(`${BackUrl}comment/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
                 dispatch(deleteComments({ mission_id: selectedTask.id, comment: nestedFormData.id }))
                 setSelectedTask({
@@ -1075,7 +1082,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("proofs"))
 
-        request(`${BackUrl}proofs/${nestedFormData.id}`, "DELETE", null, headers())
+        request(`${BackUrl}proofs/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
                 dispatch(deleteProofs({ mission_id: selectedTask.id, proof: nestedFormData.id }))
                 setSelectedTask({
@@ -1620,6 +1627,59 @@ const PlatformTodoist = () => {
                                                         {/*        )*/}
                                                         {/*    }*/}
                                                         {/*</select>*/}
+                                                        <div className={styles.formGroup__btns}>
+                                                            {
+                                                                modalType === "createTask" && (
+                                                                    <>
+                                                                        <Button
+                                                                            onClickBtn={() => {
+                                                                                setIsTeachersSelect(!isTeachersSelect)
+                                                                                setFormData({
+                                                                                    ...formData,
+                                                                                    executor_ids: isTeachersSelect
+                                                                                        ? formData.executor_ids.filter(item =>
+                                                                                            !teachers.map(t => t.user_id).includes(item.value)
+                                                                                        )
+                                                                                        : [
+                                                                                            ...formData.executor_ids,
+                                                                                            ...teachers.map(item => ({
+                                                                                                value: item.id,
+                                                                                                label: `${item.name} ${item.surname} (${item.subjects[0]})`
+                                                                                            }))
+                                                                                        ]
+                                                                                })
+                                                                            }}
+                                                                            active={isTeachersSelect}
+                                                                        >
+                                                                            O'qituvchilar
+                                                                        </Button>
+                                                                        <Button
+                                                                            onClickBtn={() => {
+                                                                                setIsEpmloyeesSelect(!isEpmloyeesSelect)
+                                                                                setFormData({
+                                                                                    ...formData,
+                                                                                    executor_ids: isEpmloyeesSelect
+                                                                                        ? formData.executor_ids.filter(item =>
+                                                                                            !employees.map(e => e.user_id).includes(item.value)
+                                                                                        )
+                                                                                        : [
+                                                                                            ...formData.executor_ids,
+                                                                                            ...employees.map(item => ({
+                                                                                                value: item.id,
+                                                                                                label: `${item.name} ${item.surname} (${item.job})`
+                                                                                            }))
+                                                                                        ]
+                                                                                })
+                                                                            }}
+                                                                            active={isEpmloyeesSelect}
+                                                                        >
+                                                                            Ishchilar
+                                                                        </Button>
+                                                                    </>
+                                                                )
+                                                            }
+                                                            {/* <Button></Button> */}
+                                                        </div>
                                                     </div>
                                                 )
                                             }
@@ -1936,9 +1996,9 @@ const PlatformTodoist = () => {
                                                                 </div>
                                                             </div>
                                                             {
-                                                                att.file && (
+                                                                att.file_path && (
                                                                     <div className={styles.nestedItem__content}>
-                                                                        <img crossOrigin="anonymous" src={att.file} alt="" />
+                                                                        <img crossOrigin="anonymous" src={BackUrlForDoc + att.file_path} alt="" />
                                                                     </div>
                                                                 )
                                                             }
@@ -1994,9 +2054,9 @@ const PlatformTodoist = () => {
                                                                 </div>
                                                             </div>
                                                             {
-                                                                com.attachment && (
+                                                                com.attachment_path && (
                                                                     <div className={styles.nestedItem__content}>
-                                                                        <img crossOrigin="anonymous" src={com.attachment}
+                                                                        <img crossOrigin="anonymous" src={BackUrlForDoc + com.attachment_path}
                                                                             alt="" />
                                                                     </div>
                                                                 )
@@ -2049,9 +2109,9 @@ const PlatformTodoist = () => {
                                                                 </div>
                                                             </div>
                                                             {
-                                                                proof.file && (
+                                                                proof.file_path && (
                                                                     <div className={styles.nestedItem__content}>
-                                                                        <img crossOrigin="anonymous" src={proof.file} alt="" />
+                                                                        <img crossOrigin="anonymous" src={BackUrlForDoc + proof.file_path} alt="" />
                                                                     </div>
                                                                 )
                                                             }
