@@ -8,7 +8,8 @@ const initialState = {
     isOpen: false,
     type: null,
     status: "idle",
-    state: "idle"
+    state: "idle",
+    msg: null
 }
 
 const taskManagerModalSlice = createSlice({
@@ -21,6 +22,7 @@ const taskManagerModalSlice = createSlice({
             state.status = action.payload.callStatus
             state.state = action.payload.callState
             state.type = action.payload.type
+            state.msg = action.payload.msg
             state.isOpen = true
             state.isActive = true
         },
@@ -31,6 +33,7 @@ const taskManagerModalSlice = createSlice({
             state.state = action.payload.callState
             state.person = action.payload.person
             state.type = action.payload.type
+            state.msg = action.payload.msg
             state.isOpen = true
             state.isActive = true
         },
@@ -39,6 +42,7 @@ const taskManagerModalSlice = createSlice({
             state.isOpen = false
             state.person = null
             state.callId = null
+            state.audioId = null
             state.type = null
             state.status = "idle"
             state.state = "idle"

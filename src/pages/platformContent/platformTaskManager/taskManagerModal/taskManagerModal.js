@@ -1,397 +1,653 @@
-import React, { useEffect, useState } from 'react';
-import classNames from "classnames";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import classNames from 'classnames';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Input from "components/platform/platformUI/input";
-import Button from "components/platform/platformUI/button";
-import Modal from "components/platform/platformUI/modal";
-import { callStart, onChangeProgress, onDelDebtors, onDelLeads } from "slices/taskManagerSlice";
-import { BackUrl, headers } from "constants/global";
-import { useHttp } from "hooks/http.hook";
+import Input from 'components/platform/platformUI/input';
+import Button from 'components/platform/platformUI/button';
+import Modal from 'components/platform/platformUI/modal';
+import { onDelDebtors, onDelLeads, onChangeProgress } from 'slices/taskManagerSlice';
+import { onCallStart, onCallProgressing, onCallEnd } from 'slices/taskManagerModalSlice';
+import { setMessage } from 'slices/messageSlice';
+import { BackUrl, BackUrlForDoc, headers } from 'constants/global';
+import { useHttp } from 'hooks/http.hook';
+import socketService from 'services/socketService';
 
-import cls from "./taskManagerModal.module.sass";
-import { onCallEnd, onCallProgressing, onCallStart } from "slices/taskManagerModalSlice";
-import { setMessage } from "slices/messageSlice";
-import { createPortal } from "react-dom";
+import cls from './taskManagerModal.module.sass';
 
-export const TaskManagerModal = () => {
+// ============================================================================
+// КОНСТАНТЫ
+// ============================================================================
 
-    const {
-        isOpen,
-        isActive,
-        person,
-        audioId,
-        callId,
-        status,
-        state,
-        type
-    } = useSelector(state => state.taskManagerModalSlice)
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || BackUrlForDoc;
 
+const CALL_TYPES = {
+    LEADS: 'leads',
+    DEBTORS: 'debtors',
+    NEW_STUDENTS: 'new_students',
+};
 
-    const lastCallId = localStorage.getItem("callId")
-    const lastCategoryType = localStorage.getItem("categoryType")
-    const lastSelectedPerson = localStorage.getItem("selectedPerson")
-    const lastCallStatus = localStorage.getItem("callStatus")
-    const lastCallState = localStorage.getItem("callState")
-    const lastShowStatus = localStorage.getItem("showStatus")
-    const lastAudioId = localStorage.getItem("audioId")
+const CALL_TYPE_CONFIG = {
+    [CALL_TYPES.LEADS]: {
+        label: 'Lead',
+        apiUrl: 'task_leads',
+        updateUrl: (audioId) => `task_leads/task_leads_update/${audioId}`,
+        audioIdField: 'lead_info_id',
+        deleteIdField: 'lead_id',
+    },
+    [CALL_TYPES.DEBTORS]: {
+        label: 'Qarzdor',
+        apiUrl: 'task_debts',
+        updateUrl: () => 'task_debts/call_to_debts',
+        audioIdField: 'audio_record_id',
+        deleteIdField: 'student_id',
+    },
+    [CALL_TYPES.NEW_STUDENTS]: {
+        label: "Yangi o'quvchi",
+        apiUrl: 'task_new_students',
+        updateUrl: () => 'task_new_students/call_to_new_students',
+        audioIdField: 'audio_record_id',
+        deleteIdField: 'student_id',
+    },
+};
 
+const CALL_STATE = {
+    PENDING: 'PENDING',
+    SUCCESS: 'SUCCESS',
+    ERROR: 'error',
+};
 
-    const { request } = useHttp()
-    const dispatch = useDispatch()
+const STORAGE_KEYS = {
+    CALL_ID: 'callId',
+    CATEGORY_TYPE: 'categoryType',
+    SELECTED_PERSON: 'selectedPerson',
+    CALL_STATUS: 'callStatus',
+    CALL_STATE: 'callState',
+    SHOW_STATUS: 'showStatus',
+    AUDIO_ID: 'audioId',
+};
 
+// ============================================================================
+// УТИЛИТЫ ДЛЯ LOCALSTORAGE
+// ============================================================================
 
-    const [isCall, setIsCall] = useState(false)
+const callStorage = {
+    saveCallState: ({ callId, type, person, status, state, audioId }) => {
+        if (callId) localStorage.setItem(STORAGE_KEYS.CALL_ID, callId);
+        if (type) localStorage.setItem(STORAGE_KEYS.CATEGORY_TYPE, type);
+        if (person) localStorage.setItem(STORAGE_KEYS.SELECTED_PERSON, JSON.stringify(person));
+        if (status) localStorage.setItem(STORAGE_KEYS.CALL_STATUS, status);
+        if (state) localStorage.setItem(STORAGE_KEYS.CALL_STATE, state);
+        if (audioId) localStorage.setItem(STORAGE_KEYS.AUDIO_ID, audioId);
+    },
 
-    const [audioCom, setAudioCom] = useState(null)
-    const [audioDate, setAudioDate] = useState(null)
+    loadCallState: () => {
+        const callId = localStorage.getItem(STORAGE_KEYS.CALL_ID);
+        const type = localStorage.getItem(STORAGE_KEYS.CATEGORY_TYPE);
+        const personStr = localStorage.getItem(STORAGE_KEYS.SELECTED_PERSON);
+        const status = localStorage.getItem(STORAGE_KEYS.CALL_STATUS);
+        const state = localStorage.getItem(STORAGE_KEYS.CALL_STATE);
+        const showStatus = localStorage.getItem(STORAGE_KEYS.SHOW_STATUS);
+        const audioId = localStorage.getItem(STORAGE_KEYS.AUDIO_ID);
 
-    useEffect(() => {
-        if (lastShowStatus)
-            localStorage.setItem("showStatus", Number(lastShowStatus) + 1)
-    }, [])
+        return {
+            callId,
+            type,
+            person: personStr ? JSON.parse(personStr) : null,
+            status,
+            state,
+            showStatus: showStatus ? Number(showStatus) : 0,
+            audioId,
+        };
+    },
 
-    useEffect(() => {
-        console.log(lastCallId, lastCategoryType, lastSelectedPerson, lastCallStatus, lastCallState, lastShowStatus, lastAudioId)
+    clearCallState: () => {
+        Object.values(STORAGE_KEYS).forEach((key) => {
+            localStorage.removeItem(key);
+        });
+    },
 
-        if (lastCallState && lastCallState !== "error") {
-            console.log(true)
-            let props = {
-                person: JSON.parse(lastSelectedPerson),
-                callStatus: lastCallStatus,
-                callState: lastCallState,
-                type: lastCategoryType
-            };
-            if (lastCallId) {
-                dispatch(onCallStart({
-                    ...props,
-                    callId: lastCallId,
-                }))
-            } else {
-                dispatch(onCallProgressing({
-                    ...props,
-                    audioId: lastAudioId,
-                }))
-            }
-        } else {
-            console.log(lastShowStatus, "lastShowStatus");
+    incrementShowStatus: () => {
+        const current = localStorage.getItem(STORAGE_KEYS.SHOW_STATUS);
+        localStorage.setItem(STORAGE_KEYS.SHOW_STATUS, String(Number(current || 0) + 1));
+    },
 
-            if (lastShowStatus && Number(lastShowStatus) >= 3) {
-                dispatch(onCallStart({
-                    person: JSON.parse(lastSelectedPerson),
-                    callStatus: lastCallStatus,
-                    callState: lastCallState,
-                    type: lastCategoryType,
-                }))
-            } else {
-                console.log(false)
-                localStorage.removeItem("callId")
-                localStorage.removeItem("categoryType")
-                localStorage.removeItem("selectedPerson")
-                localStorage.removeItem("callStatus")
-                localStorage.removeItem("callState")
-                localStorage.removeItem("showStatus")
-                localStorage.removeItem("audioId")
-            }
-        }
-    }, [lastCallId, lastCallStatus, lastCallState, lastCategoryType, lastSelectedPerson, lastShowStatus])
+    moveToAudioState: (audioId) => {
+        localStorage.removeItem(STORAGE_KEYS.CALL_ID);
+        localStorage.setItem(STORAGE_KEYS.AUDIO_ID, audioId);
+        localStorage.setItem(STORAGE_KEYS.CALL_STATUS, 'success');
+        localStorage.setItem(STORAGE_KEYS.CALL_STATE, 'success');
+    },
 
-    console.log(type, "type")
+    setErrorState: () => {
+        localStorage.removeItem(STORAGE_KEYS.CALL_ID);
+        localStorage.setItem(STORAGE_KEYS.CALL_STATUS, 'success');
+        localStorage.setItem(STORAGE_KEYS.CALL_STATE, 'error');
+        localStorage.setItem(STORAGE_KEYS.SHOW_STATUS, '1');
+    },
+};
 
-    useEffect(() => {
-        setIsCall(isOpen)
-    }, [isOpen])
+// ============================================================================
+// HOOK ДЛЯ ОТПРАВКИ РЕЗУЛЬТАТА
+// ============================================================================
 
-    useEffect(() => {
-        if (state === "error") {
-            setIsCall(true)
-        }
-    }, [state])
+const useSubmitCallResult = () => {
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (!callId) return;
+    const submitCallResult = useCallback(
+        async (request, type, audioId, person, comment, date) => {
+            const config = CALL_TYPE_CONFIG[type];
+            const url = config.updateUrl(audioId);
 
-        let isActive = true;
-        let timeoutId = null;
-
-        setIsCall(true);
-
-        const poll = async () => {
-            if (!isActive && status === "loading") return;
+            const payload =
+                type === CALL_TYPES.LEADS
+                    ? { comment, date }
+                    : {
+                        [type === CALL_TYPES.DEBTORS ? 'excuse_id' : 'id']: audioId,
+                        phone: person.phone,
+                        comment,
+                        date,
+                    };
 
             try {
-                let url;
-                if (type === "leads") {
-                    url = "task_leads"
-                } else if (type === "debtors") {
-                    url = "task_debts"
+                console.log('📤 Submitting call result:', { url, payload });
+
+                const response = await request(url, 'POST', JSON.stringify(payload));
+
+                console.log('✅ Submit response:', response);
+
+                callStorage.clearCallState();
+
+                // Удаление из списка
+                if (type === CALL_TYPES.LEADS) {
+                    dispatch(onDelLeads({ id: response[config.deleteIdField] }));
                 } else {
-                    url = "task_new_students"
+                    dispatch(onDelDebtors({ id: response[config.deleteIdField], type }));
                 }
 
-                const response = await request(
-                    `${BackUrl}${url}/call-status/${callId}`,
-                    "GET",
-                    null,
-                    headers()
+                // Обновление прогресса
+                dispatch(
+                    onChangeProgress({
+                        progress: response.task_statistics,
+                        allProgress: response.task_daily_statistics,
+                    })
                 );
 
-                // setSelectedAudioId(prev => ({ ...prev, state: response?.state }))
+                // Уведомление
+                dispatch(
+                    setMessage({
+                        msg: response.message,
+                        type: 'success',
+                        active: true,
+                    })
+                );
 
-                // ❗ проверка состояния
-                if (response?.state === "SUCCESS") {
-                    if (response.result.success) {
-                        let result;
-                        if (type === "leads") {
-                            result = {
-                                audioId: response.result.lead_info_id,
-                            }
-                        } else {
-                            result = {
-                                audioId: response.result.audio_record_id,
-                            }
-                        }
-                        localStorage.removeItem("callId")
-                        localStorage.setItem("audioId", result.audioId)
-                        // localStorage.setItem("categoryType", activeCategory)
-                        // localStorage.setItem("selectedPerson", JSON.stringify(person))
-                        localStorage.setItem("callStatus", "success")
-                        localStorage.setItem("callState", "success")
-                        dispatch(onCallProgressing({
-                            ...result,
-                            person,
-                            callStatus: "success",
-                            callState: "success",
-                            callId: null,
-                            type
-                        }))
-                    } else {
-                        dispatch(onCallProgressing({
-                            person,
-                            type,
-                            audioId: null,
-                            callId: null,
-                            callStatus: "success",
-                            callState: "error"
-                        }))
-                        localStorage.removeItem("callId")
-                        localStorage.setItem("callStatus", "success")
-                        localStorage.setItem("callState", "error")
-                        localStorage.setItem("showStatus", 1)
-                        if (response.result.attempts === 2) {
-                            if (type === "leads") {
-                                dispatch(onDelLeads({ id: person.id }))
-                            } else {
-                                dispatch(onDelDebtors({ id: person.id, type }))
-                            }
-                        }
-                    }
-                    // setIsCall(false);
-                    // setSelectedAudioId(prev => ({ ...prev, state: response?.state, lead_id: response?.result?.lead_info_id }))
-                    isActive = false; // останавливаем polling
-                    return;
+                dispatch(onCallEnd());
+
+                // ✅ ВЫХОД ИЗ КОМНАТЫ И DISCONNECT
+                const user = JSON.parse(localStorage.getItem('selectedPerson') || '{}');
+                if (user?.id) {
+                    socketService.leaveUserRoom(user.id);
                 }
+                socketService.disconnect();
+                console.log('🛑 Disconnected from socket after submit');
 
-                // продолжаем polling
-                timeoutId = setTimeout(poll, 5000);
-
+                return { success: true };
             } catch (error) {
-                console.error(error);
-                timeoutId = setTimeout(poll, 5000);
+                console.error('❌ Failed to submit call result:', error);
+                return { success: false, error };
             }
-        };
-
-        poll();
-
-        return () => {
-            isActive = false;
-            if (timeoutId) clearTimeout(timeoutId);
-        };
-    }, [callId]);
-
-
-    const onSubmit = () => {
-
-        let post;
-        let postURL;
-        if (type === "leads") {
-            postURL = `task_leads/task_leads_update/${audioId}`
-            post = {
-                comment: audioCom,
-                date: audioDate,
-            }
-        } else if (type === "debtors") {
-            postURL = "task_debts/call_to_debts"
-            post = {
-                excuse_id: audioId,
-                phone: person.phone,
-                comment: audioCom,
-                date: audioDate,
-            }
-        } else {
-            postURL = "task_new_students/call_to_new_students"
-            post = {
-                id: audioId,
-                phone: person.phone,
-                comment: audioCom,
-                date: audioDate,
-            }
-        }
-
-        request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
-            .then(res => {
-                localStorage.removeItem("callId")
-                localStorage.removeItem("categoryType")
-                localStorage.removeItem("selectedPerson")
-                localStorage.removeItem("callStatus")
-                localStorage.removeItem("callState")
-                localStorage.removeItem("showStatus")
-                localStorage.removeItem("audioId")
-                if (type === "leads") {
-                    dispatch(onDelLeads({ id: res?.lead_id }))
-                } else {
-                    dispatch(onDelDebtors({ id: res.student_id, type }))
-                }
-                dispatch(onChangeProgress({
-                    progress: res.task_statistics,
-                    allProgress: res.task_daily_statistics
-                }))
-                dispatch(setMessage({
-                    msg: res.message,
-                    type: "success",
-                    active: true
-                }))
-                setIsCall(false)
-                dispatch(onCallEnd())
-            })
-            .catch(err => console.log(err))
-
-    }
-
-
-    return (
-        <div
-            className={classNames(cls.modal, {
-                [cls.active]: true
-            })}
-        >
-            <i
-                onClick={() => isActive ? setIsCall(true) : null}
-                className={classNames(
-                    "fa-solid fa-headset",
-                    cls.modal__icon,
-                    {
-                        [cls.active]: status === "loading",
-                        [cls.pass]: status === "success"
-                    }
-                )}
-            />
-            <Modal
-                activeModal={isCall}
-                setActiveModal={setIsCall}
-                extraClass={cls.audioModal}
-            >
-                {
-                    person && (
-                        <div className={cls.audioModal__header}>
-                            <h1>{type === "leads" ? "Lead" : type === "debtors" ? "Qarzdor" : "Yangi o'quvchi"}</h1>
-                            <h1>
-                                {person.fullName}
-                                {" "}
-                                <span>({person.phone})</span>
-                            </h1>
-                        </div>
-                    )
-                }
-                <div className={cls.audioModal__loader}>
-                    <CallStatusLoader
-                        status={status}
-                        state={state}
-                    />
-                </div>
-                {
-                    (status === "success" && state !== "error") && (
-                        <>
-                            <Input
-                                title={"Koment"}
-                                placeholder={"Koment"}
-                                onChange={setAudioCom}
-                            />
-                            <Input
-                                type={"date"}
-                                title={"Kun"}
-                                onChange={setAudioDate}
-                            />
-                            <Button onClickBtn={onSubmit}>Kiritish</Button>
-                        </>
-                    )
-                }
-            </Modal>
-        </div>
+        },
+        [dispatch]
     );
-}
 
-const CallStatusLoader = ({ status, state }) => {
-    const [showCheckmark, setShowCheckmark] = useState(false)
+    return { submitCallResult };
+};
+
+// ============================================================================
+// ГЛАВНЫЙ КОМПОНЕНТ
+// ============================================================================
+
+export const TaskManagerModal = () => {
+    const dispatch = useDispatch();
+    const { request } = useHttp();
+
+    const { isOpen, isActive, person, audioId, callId, status, state, type, msg } = useSelector(
+        (state) => state.taskManagerModalSlice
+    );
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [comment, setComment] = useState('');
+    const [date, setDate] = useState('');
+
+    const { submitCallResult } = useSubmitCallResult();
+
+    // ============================================================================
+    // 🔥 SOCKET LOGIC
+    // ============================================================================
 
     useEffect(() => {
-        if (status === "success") {
-            setTimeout(() => setShowCheckmark(true), 100)
-        } else {
-            setShowCheckmark(false)
+        const savedState = callStorage.loadCallState();
+
+        // Проверяем что есть в localStorage
+        const activeCallId = callId || savedState.callId;
+        const activeAudioId = audioId || savedState.audioId;
+
+        console.log('🔍 Checking socket connection:', {
+            callId: activeCallId,
+            audioId: activeAudioId,
+            hasCallId: !!activeCallId,
+            hasAudioId: !!activeAudioId,
+        });
+
+        // ❗ callId и audioId не могут быть одновременно
+        if (activeCallId && activeAudioId) {
+            console.log('❌ Both callId and audioId exist! This should not happen.', activeCallId, activeAudioId);
+            console.log(audioId, 'audioId');
+
+            return;
         }
-    }, [status])
+
+        // ✅ Если есть audioId (но НЕТ callId) → НЕ подключаемся к сокету
+        if (activeAudioId && !activeCallId) {
+            console.log('✅ audioId exists, no socket connection needed');
+            return;
+        }
+
+        // ✅ Если есть callId → подключаемся к сокету
+        if (activeCallId) {
+            console.log('📞 callId exists, connecting to socket...');
+
+            const user = JSON.parse(localStorage.getItem('selectedPerson') || '{}');
+            const userId = user?.id;
+
+            if (!userId) {
+                console.error('❌ No userId found in localStorage');
+                return;
+            }
+
+            // Подключаемся к сокету если не подключены
+            if (!socketService.isConnected()) {
+                console.log('🔌 Connecting to socket:', SOCKET_URL);
+                socketService.connect(SOCKET_URL);
+            } else {
+                console.log('✅ Socket already connected');
+            }
+
+            // Присоединяемся к комнате пользователя
+            socketService.joinUserRoom(userId);
+            console.log('🚪 Joined room:', userId);
+
+            // Обработчик событий call_status
+            const handleCallStatus = (data) => {
+                console.log('📥 call_status received:', data);
+
+                const {
+                    callid,
+                    status: callStatus,
+                    elapsed,
+                    duration,
+                    call_status,
+                    info,
+                    error,
+                    message,
+                    student_id,
+                    result
+                } = data;
+
+                // Фильтр по callId (опционально, если нужно)
+                // if (callid && callid !== activeCallId) {
+                //     console.warn('⚠️ Ignoring different call:', callid);
+                //     return;
+                // }
+
+                let normalized;
+
+                switch (callStatus) {
+                    case 'monitoring_started':
+                    case 'validating':
+                    case 'preparing':
+                    case 'initiating':
+                        normalized = {
+                            state: 'PENDING',
+                            result: {
+                                success: false,
+                                callId: callid,
+                                studentId: student_id,
+                                message: message || 'Call initiated',
+                            },
+                        };
+                        break;
+
+                    case 'calling':
+                    case 'in_progress':
+                        normalized = {
+                            loadingStatus: "inLive",
+                            state: 'PENDING',
+                            result: {
+                                success: false,
+                                callId: callid,
+                                studentId: student_id,
+                                elapsed,
+                                message: message || `Call in progress... ${elapsed}s`
+                            },
+                        };
+                        break;
+
+                    case 'processing':
+                        normalized = {
+                            loadingStatus: "recording",
+                            state: 'PENDING',
+                            result: {
+                                success: false,
+                                callId: callid,
+                                studentId: student_id,
+                                elapsed,
+                                message: message || 'Processing...'
+                            },
+                        };
+                        break;
+
+                    case 'completed': {
+                        const isSuccess =
+                            call_status === 'success' ||
+                            call_status === 'ANSWERED' ||
+                            call_status === 'answered';
+
+                        const config = CALL_TYPE_CONFIG[type || savedState.type];
+                        const extractedAudioId =
+                            result?.[config?.audioIdField] ||
+                            result?.id ||
+                            result?.audio_id ||
+                            info?.id ||
+                            info?.audio_id;
+
+                        normalized = {
+                            loadingStatus: "success",
+                            state: 'SUCCESS',
+                            result: {
+                                audioId: extractedAudioId,
+                                success: isSuccess,
+                                callId: callid,
+                                studentId: student_id,
+                                duration,
+                                call_status,
+                                info,
+                                message: message || (isSuccess ? 'Call succeeded' : 'Call failed'),
+                                ...(config && extractedAudioId ? { [config.audioIdField]: extractedAudioId } : {}),
+                                attempts: result?.attempts || (isSuccess ? 1 : 2),
+                            },
+                        };
+
+                        // ✅ Если успешно → сохраняем audioId и убираем callId
+                        if (isSuccess && extractedAudioId) {
+                            callStorage.moveToAudioState(extractedAudioId);
+                            console.log('✅ Call succeeded, audioId saved:', extractedAudioId);
+                        } else {
+                            // ❌ Если не успешно → ставим error state
+                            callStorage.setErrorState();
+                            console.log('❌ Call failed');
+                        }
+                        break;
+                    }
+
+                    case 'failed':
+                    case 'error':
+                    case 'timeout':
+                    case 'unanswered':
+                        normalized = {
+                            loadingStatus: "error",
+                            state: 'SUCCESS',
+                            result: {
+                                success: false,
+                                callId: callid,
+                                studentId: student_id,
+                                error: error || message || 'Call failed',
+                                attempts: 2,
+                            },
+                        };
+
+                        // ❌ Ошибка → выходим из сокета
+                        callStorage.setErrorState();
+                        socketService.leaveUserRoom(userId);
+                        socketService.disconnect();
+                        console.log('❌ Call error, disconnected from socket');
+                        break;
+
+                    default:
+                        console.warn('⚠️ Unknown status:', callStatus);
+                        return;
+                }
+
+                console.log('📊 Normalized data:', normalized);
+
+                // Обновляем Redux
+                if (normalized.state === 'PENDING') {
+                    dispatch(
+                        onCallProgressing({
+                            person: person || savedState.person,
+                            type: type || savedState.type,
+                            audioId: null,
+                            callId: normalized.result.callId,
+                            callStatus: 'loading',
+                            callState: 'loading',
+                            msg: normalized.result.message
+                        })
+                    );
+                } else if (normalized.state === 'SUCCESS') {
+                    if (normalized.result.success) {
+                        // ✅ Успешный звонок
+                        dispatch(
+                            onCallProgressing({
+                                audioId: normalized.result.audioId,
+                                person: person || savedState.person,
+                                callStatus: 'success',
+                                callState: 'success',
+                                msg: normalized.result.message,
+                                callId: null,
+                                type: type || savedState.type,
+                            })
+                        );
+                    } else {
+                        // ❌ Неуспешный звонок
+                        dispatch(
+                            onCallProgressing({
+                                person: person || savedState.person,
+                                type: type || savedState.type,
+                                audioId: null,
+                                callId: null,
+                                callStatus: 'success',
+                                callState: 'error',
+                                msg: normalized.result.error,
+                            })
+                        );
+
+                        // Удаляем из списка после 2 попыток
+                        if (normalized.result.attempts === 2) {
+                            const personData = person || savedState.person;
+                            const callType = type || savedState.type;
+
+                            if (callType === CALL_TYPES.LEADS) {
+                                dispatch(onDelLeads({ id: personData.id }));
+                            } else {
+                                dispatch(onDelDebtors({ id: personData.id, type: callType }));
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Подписываемся на события
+            socketService.onCallStatus(handleCallStatus);
+            console.log('👂 Listening to call_status events');
+
+            // Cleanup
+            return () => {
+                console.log('🧹 Cleaning up socket connection');
+                socketService.offCallStatus();
+                socketService.leaveUserRoom(userId);
+                socketService.disconnect();
+            };
+        }
+
+        // Если нет ни callId, ни audioId → ничего не делаем
+        console.log('⏸️ No active call, no socket connection needed');
+
+    }, [callId, audioId, dispatch, person, type]); // ← Зависимости
+
+    // ============================================================================
+    // ВОССТАНОВЛЕНИЕ СОСТОЯНИЯ
+    // ============================================================================
+
+    useEffect(() => {
+        const savedState = callStorage.loadCallState();
+
+        console.log('💾 Loaded saved state:', savedState);
+
+        if (!savedState.callId && !savedState.audioId) return;
+
+        callStorage.incrementShowStatus();
+
+        const props = {
+            person: savedState.person,
+            callStatus: savedState.status,
+            callState: savedState.state,
+            type: savedState.type,
+            audioId: savedState.audioId
+        };
+
+        if (savedState.state && savedState.state !== 'error') {
+            if (savedState.callId) {
+                console.log('🔄 Restoring active call:', savedState.callId);
+                dispatch(onCallStart({ ...props, callId: savedState.callId }));
+            } else if (savedState.audioId) {
+                console.log('🔄 Restoring with audioId:', savedState.audioId);
+                dispatch(onCallProgressing({ ...props, audioId: savedState.audioId }));
+            }
+        } else if (savedState.showStatus >= 3) {
+            console.log('⚠️ Showing modal after 3 attempts');
+            dispatch(onCallStart(props));
+        } else {
+            console.log('🧹 Clearing outdated state');
+            callStorage.clearCallState();
+        }
+    }, [dispatch]);
+
+    // Синхронизация модального окна
+    useEffect(() => {
+        setIsModalOpen(isOpen || state === 'error');
+    }, [isOpen, state]);
+
+    // Обработчик отправки формы
+    const handleSubmit = useCallback(async () => {
+        const result = await submitCallResult(
+            (url, method, body) => request(`${BackUrl}${url}`, method, body, headers()),
+            type,
+            audioId,
+            person,
+            comment,
+            date
+        );
+
+        if (result.success) {
+            setIsModalOpen(false);
+            setComment('');
+            setDate('');
+        }
+    }, [request, type, audioId, person, comment, date, submitCallResult]);
+
+    const typeLabel = type ? CALL_TYPE_CONFIG[type]?.label : '';
+
+    return (
+        <>
+            <div className={classNames(cls.modal, { [cls.active]: true })}>
+                <i
+                    onClick={() => isActive && setIsModalOpen(true)}
+                    className={classNames('fa-solid fa-headset', cls.modal__icon, {
+                        [cls.active]: status === 'loading',
+                        [cls.pass]: status === 'success',
+                    })}
+                />
+            </div>
+
+            <Modal activeModal={isModalOpen} setActiveModal={setIsModalOpen} extraClass={cls.audioModal}>
+                {person && (
+                    <div className={cls.audioModal__header}>
+                        <h1>{typeLabel}</h1>
+                        <h1>
+                            {person.fullName} <span>({person.phone})</span>
+                        </h1>
+                    </div>
+                )}
+
+                <div className={cls.audioModal__loader}>
+                    <CallStatusLoader msg={msg} status={status} state={state} />
+                </div>
+
+                {status === 'success' && state !== 'error' && (
+                    <>
+                        <Input title="Koment" placeholder="Koment" value={comment} onChange={setComment} />
+                        <Input type="date" title="Kun" value={date} onChange={setDate} />
+                        <Button onClickBtn={handleSubmit}>Kiritish</Button>
+                    </>
+                )}
+            </Modal>
+        </>
+    );
+};
+
+// ============================================================================
+// КОМПОНЕНТ ЗАГРУЗЧИКА
+// ============================================================================
+
+const CallStatusLoader = ({ status, state, msg }) => {
+    const [showCheckmark, setShowCheckmark] = useState(false);
+
+    useEffect(() => {
+        if (status === 'success') {
+            const timer = setTimeout(() => setShowCheckmark(true), 100);
+            return () => clearTimeout(timer);
+        }
+        setShowCheckmark(false);
+    }, [status]);
+
+    const isError = state === 'error';
+    const statusText =
+        msg ? msg
+            : status === 'loading'
+                ? 'Calling in progress...'
+                : status === 'success'
+                    ? isError
+                        ? 'Call rejected'
+                        : 'Call succeeded'
+                    : 'Call connecting...';
 
     return (
         <div className={cls.container}>
             <div className={cls.loaderWrapper}>
-                <span
-                    className={classNames(cls.parent, {
-                        [cls.fadeOut]: status === "success"
-                    })}
-                >
+                <span className={classNames(cls.parent, { [cls.fadeOut]: status === 'success' })}>
                     <span className={cls.loader} />
                 </span>
 
-                {
-                    state === "error"
-                        ? <svg
-                            className={`${cls.checkmark} ${showCheckmark ? cls.show : ""}`}
-                            viewBox="0 0 100 100"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                style={{ stroke: "#e53935" }}
-                                className={cls.checkmarkPath}
-                                d="M 30 30 L 70 70 M 70 30 L 30 70"
-                            />
-                        </svg>
-                        : <svg
-                            className={`${cls.checkmark} ${showCheckmark ? cls.show : ""}`}
-                            viewBox="0 0 100 100"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path className={cls.checkmarkPath} d="M 25 52 L 42 68 L 75 32" />
-                        </svg>
-                }
-
-
+                <svg
+                    className={`${cls.checkmark} ${showCheckmark ? cls.show : ''}`}
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    {isError ? (
+                        <path
+                            style={{ stroke: '#e53935' }}
+                            className={cls.checkmarkPath}
+                            d="M 30 30 L 70 70 M 70 30 L 30 70"
+                        />
+                    ) : (
+                        <path className={cls.checkmarkPath} d="M 25 52 L 42 68 L 75 32" />
+                    )}
+                </svg>
             </div>
 
-            <p
-                style={state === "error" ? { color: "#e53935" } : null}
-                className={cls.statusText}
-            >
-                {
-                    status === "loading"
-                        ? "Calling in progress..."
-                        : status === "success"
-                            ? state === "error"
-                                ? "Call rejected"
-                                : "Call successed"
-                            : "Call connecting..."
-                }
+            <p style={isError ? { color: '#e53935' } : null} className={cls.statusText}>
+                {statusText}
             </p>
         </div>
-    )
-}
+    );
+};
