@@ -50,7 +50,8 @@ const initialState = {
     callStatus: "idle",
     callState: "idle",
     callId: null,
-    audioId: null
+    audioId: null,
+    message: null
 }
 
 export const fetchNewStudentsData = createAsyncThunk(
@@ -138,7 +139,7 @@ export const fetchCompletedLeadsData = createAsyncThunk(
 
 export const fetchUserDataWithHistory = createAsyncThunk(
     'taskManager/fetchUserDataWithHistory',
-    async ({url}) => {
+    async ({ url }) => {
 
         const { request } = useHttp();
         return await request(`${BackUrl}${url}`, "GET", null, headers())
@@ -178,7 +179,7 @@ const TaskManagerSlice = createSlice({
             if (action.payload.type === "debtors") {
                 state.unCompleted.debtors = [...state.unCompleted.debtors.filter(item => item.student !== action.payload.id)]
             } else {
-                state.unCompleted.students = [...state.unCompleted.students.filter(item => item.student !== action.payload.id)]
+                state.unCompleted.students = [...state.unCompleted.students.filter(item => item.id !== action.payload.id)]
             }
 
             console.log(action.payload.id)
@@ -194,6 +195,7 @@ const TaskManagerSlice = createSlice({
             state.callState = action.payload.callState
             state.callId = action.payload.callId
             state.audioId = action.payload.audioId
+            state.message = action.payload.message
         }
 
     },

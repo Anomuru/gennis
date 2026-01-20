@@ -29,11 +29,13 @@ import Table from "components/platform/platformUI/table";
 import Modal from "components/platform/platformUI/modal";
 import Input from "components/platform/platformUI/input";
 import Button from "components/platform/platformUI/button";
+import socketService from "services/socketService";
 
 import styles from "./newTaskManager.module.sass"
 import switchCompletedBtn from "assets/icons/progress.svg";
 import switchXButton from "assets/icons/bx_task-x.svg";
 import { onCallProgressing, onCallStart } from "../../../../slices/taskManagerModalSlice";
+import DefaultLoaderSmall from "components/loader/defaultLoader/defaultLoaderSmall";
 
 const NewTaskManager = () => {
 
@@ -227,11 +229,11 @@ const NewTaskManager = () => {
             post = { lead_id: id }
         } else if (activeCategory === "debtors") {
             postURL = "task_debts/call_to_debt"
-            post = { student_id: id, phone }
+            post = { student_id: id, phone: "901101664" }
             setSelectedPerson(prev => ({ ...prev, phone }))
         } else {
             postURL = "task_new_students/call_to_new_student"
-            post = { student_id: id, phone }
+            post = { student_id: id, phone: "901101664" }
             setSelectedPerson(prev => ({ ...prev, phone }))
         }
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
@@ -260,6 +262,10 @@ const NewTaskManager = () => {
                     callState: "processing",
                     type: activeCategory
                 }))
+                if (!socketService.isConnected()) {
+                    socketService.connect(BackUrlForDoc);
+                    console.log('🔌 Socket connected');
+                }
             })
             .catch(err => {
                 if (err) {
@@ -477,18 +483,20 @@ const NewTaskManager = () => {
                 extraClass={styles.audioModal}
             >
                 {
-                    phonesList.map(item => (
-                        <div
-                            className={styles.audioModal__inner}
-                            onClick={() => {
-                                onCall(isSelectedStudent, item.phone)
-                                setIsSelectPhone(false)
-                            }}
-                        >
-                            <span>{item.personal ? "Personal" : item.parent ? "Parent" : "Other"}:</span>
-                            {item.phone}
-                        </div>
-                    ))
+                    isSelectPhone === "loading"
+                        ? <DefaultLoaderSmall />
+                        : phonesList.map(item => (
+                            <div
+                                className={styles.audioModal__inner}
+                                onClick={() => {
+                                    onCall(isSelectedStudent, item.phone)
+                                    setIsSelectPhone(false)
+                                }}
+                            >
+                                <span>{item.personal ? "Personal" : item.parent ? "Parent" : "Other"}:</span>
+                                {item.phone}
+                            </div>
+                        ))
                 }
             </Modal>
         </div>
@@ -523,9 +531,10 @@ const WrapperSlide = ({
     const controls = useDragControls()
 
     const onGetPnohe = (id) => {
+        setIsSelectPhone("loading")
         request(`${BackUrl}task_debts/get_phones/${id}/`, "GET", null, headers())
             .then(res => {
-                setIsSelectPhone(true)
+                setIsSelectPhone("success")
                 setPhonesList(res.phones)
                 setIsSelectedStudent(id)
             })

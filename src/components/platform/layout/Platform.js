@@ -1,13 +1,13 @@
-import React, { useState} from 'react';
-import {Outlet} from "react-router-dom";
+import React, { useState } from 'react';
+import { Outlet } from "react-router-dom";
 import PlatformHeader from "components/platform/platformHeader/platformHeader";
 import PlatformMenuBar from "components/platform/platformMenuBar/platformMenuBar";
 import PlatformMessage from "components/platform/platformMessage";
-import {TaskManagerModal} from "pages/platformContent/platformTaskManager/taskManagerModal/taskManagerModal";
+import { TaskManagerModal } from "pages/platformContent/platformTaskManager/taskManagerModal/taskManagerModal";
 
 
 const Platform = () => {
-    const [menuActive,setMenuActive] = useState(false)
+    const [menuActive, setMenuActive] = useState(false)
 
 
     const checkerClickOnMenu = (e) => {
@@ -18,13 +18,13 @@ const Platform = () => {
 
     return (
         <>
-            <PlatformHeader setMenuActive={setMenuActive} menuActive={menuActive}/>
+            <PlatformHeader setMenuActive={setMenuActive} menuActive={menuActive} />
             <div className="wrapper" onClick={checkerClickOnMenu}>
-                <PlatformMenuBar setMenuActive={setMenuActive} menuActive={menuActive}/>
-                <Outlet/>
+                <PlatformMenuBar setMenuActive={setMenuActive} menuActive={menuActive} />
+                <Outlet />
             </div>
             <PlatformMessage />
-            <TaskManagerModal/>
+            <TaskManagerModal />
         </>
     )
 }

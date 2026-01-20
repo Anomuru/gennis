@@ -23,30 +23,30 @@
     &.pass
       color: green
 
-  .audioModal
+.audioModal
+  display: flex
+  flex-direction: column
+  gap: 1rem
+  background: white
+  padding: 2rem
+  z-index: 1000 !important
+  // pointer-events: none
+
+  &__header
     display: flex
     flex-direction: column
-    gap: 1rem
-    background: white
-    padding: 2rem
-    z-index: 1000 !important
-    // pointer-events: none
+    align-items: center
+    gap: .5rem
 
-    &__header
-      display: flex
-      flex-direction: column
-      align-items: center
-      gap: .5rem
-
-    &__inner
-      width: 22rem
-      padding: 1rem 0
-      border-radius: 1rem
-      border: 1px solid
-      font-size: 1.8rem
-      display: flex
-      justify-content: center
-      gap: .7rem
+  &__inner
+    width: 22rem
+    padding: 1rem 0
+    border-radius: 1rem
+    border: 1px solid
+    font-size: 1.8rem
+    display: flex
+    justify-content: center
+    gap: .7rem
 
 .container
   width: 420px
