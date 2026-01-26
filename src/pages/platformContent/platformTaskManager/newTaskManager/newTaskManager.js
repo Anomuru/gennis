@@ -34,7 +34,7 @@ import socketService from "services/socketService";
 import styles from "./newTaskManager.module.sass"
 import switchCompletedBtn from "assets/icons/progress.svg";
 import switchXButton from "assets/icons/bx_task-x.svg";
-import { onCallProgressing, onCallStart } from "../../../../slices/taskManagerModalSlice";
+import { onCallLoading, onCallProgressing, onCallStart } from "../../../../slices/taskManagerModalSlice";
 import DefaultLoaderSmall from "components/loader/defaultLoader/defaultLoaderSmall";
 
 const NewTaskManager = () => {
@@ -236,6 +236,7 @@ const NewTaskManager = () => {
             post = { student_id: id, phone }
             setSelectedPerson(prev => ({ ...prev, phone }))
         }
+        dispatch(onCallLoading(true))
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
             .then(res => {
                 const person = {
@@ -262,6 +263,7 @@ const NewTaskManager = () => {
                     callState: "processing",
                     type: activeCategory
                 }))
+                socketService.disconnect()
             })
             .catch(err => {
                 if (err) {
@@ -272,6 +274,9 @@ const NewTaskManager = () => {
                         active: true
                     }))
                 }
+            })
+            .finally(() => {
+                dispatch(onCallLoading(false))
             })
     }
 

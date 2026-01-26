@@ -13,6 +13,7 @@ import { useHttp } from 'hooks/http.hook';
 import socketService from 'services/socketService';
 
 import cls from './taskManagerModal.module.sass';
+import DefaultLoader from 'components/loader/defaultLoader/DefaultLoader';
 
 // ============================================================================
 // КОНСТАНТЫ
@@ -207,7 +208,7 @@ export const TaskManagerModal = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
 
-    const { isOpen, isActive, person, audioId, callId, status, state, type, msg } = useSelector(
+    const { isOpen, isActive, person, audioId, callId, status, state, type, msg, callLoading } = useSelector(
         (state) => state.taskManagerModalSlice
     );
 
@@ -552,7 +553,11 @@ export const TaskManagerModal = () => {
                 )}
 
                 <div className={cls.audioModal__loader}>
-                    <CallStatusLoader msg={msg} status={status} state={state} />
+                    {
+                        callLoading
+                            ? <DefaultLoader />
+                            : <CallStatusLoader msg={msg} status={status} state={state} />
+                    }
                 </div>
 
                 {status === 'success' && state !== 'error' && (

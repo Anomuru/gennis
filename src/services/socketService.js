@@ -16,27 +16,27 @@ class SocketService {
 
         this.isConnecting = true;
 
-        this.socket = io(url, {
-            transports: ['websocket', 'polling'],
-            reconnection: true,
-            reconnectionAttempts: 5,
-            reconnectionDelay: 1000,
-            autoConnect: true
-        });
-
-        // this.socket = io('https://admin.gennis.uz', {
-        //     path: '/socket.io/',
+        // this.socket = io(url, {
         //     transports: ['websocket', 'polling'],
-        //     upgrade: true,
-        //     // reconnection: true,
+        //     reconnection: true,
         //     reconnectionAttempts: 5,
         //     reconnectionDelay: 1000,
-        //     timeout: 20000,
-        //     autoConnect: true,
-        //     // Add these for stability
-        //     forceNew: false,
-        //     multiplex: true
+        //     autoConnect: true
         // });
+
+        this.socket = io('https://admin.gennis.uz', {
+            path: '/socket.io/',
+            transports: ['websocket', 'polling'],
+            upgrade: true,
+            // reconnection: true,
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000,
+            timeout: 20000,
+            autoConnect: true,
+            // Add these for stability
+            forceNew: false,
+            multiplex: true
+        });
 
         this.socket.on('connect', () => {
             this.isConnecting = false
