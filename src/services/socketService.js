@@ -4,14 +4,17 @@ import { io } from 'socket.io-client';
 class SocketService {
     constructor() {
         this.socket = null;
+        this.room = null;
+        this.isConnecting = false;
         this.listeners = new Map();
     }
 
     connect(url = BackUrlForDoc) {
         if (this.socket?.connected) {
-            console.log('Already connected');
             return;
         }
+
+        this.isConnecting = true;
 
         this.socket = io(url, {
             transports: ['websocket', 'polling'],
@@ -21,39 +24,82 @@ class SocketService {
             autoConnect: true
         });
 
+        // this.socket = io('https://admin.gennis.uz', {
+        //     path: '/socket.io/',
+        //     transports: ['websocket', 'polling'],
+        //     upgrade: true,
+        //     // reconnection: true,
+        //     reconnectionAttempts: 5,
+        //     reconnectionDelay: 1000,
+        //     timeout: 20000,
+        //     autoConnect: true,
+        //     // Add these for stability
+        //     forceNew: false,
+        //     multiplex: true
+        // });
+
         this.socket.on('connect', () => {
-            console.log('✅ Socket connected:', this.socket.id);
+            this.isConnecting = false
         });
 
         this.socket.on('connection_response', (data) => {
-            console.log('📡 Connection response:', data);
         });
 
         this.socket.on('disconnect', () => {
-            console.log('❌ Socket disconnected');
+            console.log("Disconnect");
+
+            this.isConnecting = false
+            this.room = null
+        });
+
+        this.socket.on('reconnect_attempt', (attemptNumber) => {
+            console.log(`🔄 Reconnection attempt ${attemptNumber}`);
+
+            // Если были проблемы с WebSocket - используем только polling
+            if (this.hasWebSocketError && this.socket && this.socket.io) {
+                console.log('💡 Using polling for reconnection');
+                this.socket.io.opts.transports = ['polling'];
+                this.socket.io.opts.upgrade = false;
+            }
+        });
+
+        this.socket.on('reconnect', (attemptNumber) => {
+            console.log(`✅ Reconnected after ${attemptNumber} attempts`);
+            console.log('   Transport:', this.socket.io.engine.transport.name);
+            this.room = null
         });
 
         this.socket.on('connect_error', (error) => {
-            console.error('🔴 Connection error:', error);
+            console.error('🔴 Connection error:', error.message);
+            this.isConnecting = false;
+            this.room = null;
+        });
+
+        this.socket.on('connect_error', (error) => {
+            this.isConnecting = false
         });
 
         this.socket.on('join_response', (data) => {
-            console.log('👤 Joined user room:', data);
         });
 
         // ✅ ИСПРАВЛЕНО: правильное событие
         this.socket.on('join_call_response', (data) => {
-            console.log('📞 Joined call room:', data);
         });
     }
 
     joinUserRoom(userId) {
         if (!this.socket) {
-            console.error('Socket not connected');
             return;
         }
-        console.log(`🚪 Joining room for user_${userId}`);
-        this.socket.emit('join', { user_id: userId });
+        console.log(this.room, "this.room");
+        console.log(userId, "userId");
+
+        if (this.room === userId) {
+            return
+        } else {
+            this.room = userId
+            this.socket.emit('join', { user_id: userId });
+        }
     }
 
     leaveUserRoom(userId) {
@@ -63,27 +109,22 @@ class SocketService {
 
     joinCallRoom(callId) {
         if (!this.socket) {
-            console.error('Socket not connected');
             return;
         }
-        console.log(`🚪 Joining room for call: ${callId}`);
         // ✅ ИСПРАВЛЕНО: используем join_call вместо join
         this.socket.emit('join_call', { call_id: callId });
     }
 
     leaveCallRoom(callId) {
         if (!this.socket) return;
-        console.log(`👋 Leaving room for call: ${callId}`);
         this.socket.emit('leave_call', { call_id: callId });
     }
 
     // ✅ ИСПРАВЛЕНО: убраны скобки у callback
     onCallStatus(callback) {
         if (!this.socket) {
-            console.error('Socket not connected');
             return;
         }
-        console.log('📝 Registering call_status listener');  // ← БЕЗ вызова!
         this.socket.on('call_status', callback);
         this.listeners.set('call_status', callback);
     }
@@ -100,7 +141,6 @@ class SocketService {
 
     on(event, callback) {
         if (!this.socket) {
-            console.error('Socket not connected');
             return;
         }
         this.socket.on(event, callback);
@@ -119,7 +159,6 @@ class SocketService {
 
     emit(event, data) {
         if (!this.socket) {
-            console.error('Socket not connected');
             return;
         }
         this.socket.emit(event, data);
@@ -127,6 +166,7 @@ class SocketService {
 
     disconnect() {
         if (this.socket) {
+            this.isConnecting = false
             this.socket.disconnect();
             this.socket = null;
             this.listeners.clear();
@@ -134,7 +174,7 @@ class SocketService {
     }
 
     isConnected() {
-        return this.socket?.connected || false;
+        return this.isConnecting || this.socket?.connected || false
     }
 
     getSocket() {

@@ -262,14 +262,9 @@ const NewTaskManager = () => {
                     callState: "processing",
                     type: activeCategory
                 }))
-                if (!socketService.isConnected()) {
-                    socketService.connect(BackUrlForDoc);
-                    console.log('🔌 Socket connected');
-                }
             })
             .catch(err => {
                 if (err) {
-                    console.log(err.status, "err");
 
                     dispatch(setMessage({
                         msg: "Missing 'crm_username'",
