@@ -180,7 +180,7 @@ const PlatformTodoist = () => {
         if (teachers && employees)
             setTeachersList([
                 ...teachers.map(item => ({
-                    id: item.id,
+                    id: item.user_id,
                     name: `${item.name} ${item.surname} (${item.subjects[0]})`
                 })),
                 ...employees.map(item => ({
