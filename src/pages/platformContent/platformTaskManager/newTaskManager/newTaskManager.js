@@ -229,11 +229,11 @@ const NewTaskManager = () => {
             post = { lead_id: id }
         } else if (activeCategory === "debtors") {
             postURL = "task_debts/call_to_debt"
-            post = { student_id: id, phone: "901101664" }
+            post = { student_id: id, phone }
             setSelectedPerson(prev => ({ ...prev, phone }))
         } else {
             postURL = "task_new_students/call_to_new_student"
-            post = { student_id: id, phone: "901101664" }
+            post = { student_id: id, phone }
             setSelectedPerson(prev => ({ ...prev, phone }))
         }
         request(`${BackUrl}${postURL}`, "POST", JSON.stringify(post), headers())
@@ -853,7 +853,7 @@ const CommentCard = ({ comment, activeCategory }) => {
                                         ? formatTime(duration)
                                         : `${comment.duration >= 60 ? Math.floor(comment.duration / 60) : "0"}:${comment.duration
                                             ? (Number(comment.duration) - (60 * Math.floor(comment.duration / 60)))
-                                                <= 10
+                                                < 10
                                                 ? `0${comment.duration}`
                                                 : Number(comment.duration) - (60 * Math.floor(comment.duration / 60))
                                             : "00"}`
