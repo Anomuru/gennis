@@ -557,8 +557,8 @@ export const TaskManagerModal = () => {
 
                 {status === 'success' && state !== 'error' && (
                     <>
-                        <Input title="Koment" placeholder="Koment" value={comment} onChange={setComment} />
-                        <Input type="date" title="Kun" value={date} onChange={setDate} />
+                        <Input required title="Koment" placeholder="Koment" value={comment} onChange={setComment} />
+                        <Input required type="date" title="Kun" value={date} onChange={setDate} />
                         <Button onClickBtn={handleSubmit}>Kiritish</Button>
                     </>
                 )}
