@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
+import {PlatformAssistants} from "../platformAssistents/platformAssistents";
 import cls from "./platformUsersPage.module.sass";
 import Radio from "components/platform/platformUI/radio/radio";
 import PlatformEmployees from "pages/platformContent/platformEmployees/platformEmployees";
@@ -19,6 +20,10 @@ const studentsPage = [
         name: "parents",
         label: "Ota-onalar",
     },
+    {
+        name: "assistant",
+        label: "Asistentlar",
+    },
 ];
 
 const PlatformUsersPage = () => {
@@ -35,11 +40,13 @@ const PlatformUsersPage = () => {
     const renderPage = () => {
         switch (selectRadio) {
             case "workers":
-                return <PlatformEmployees />;
+                return <PlatformEmployees/>;
             case "teachers":
-                return <PlatformTeachers />;
+                return <PlatformTeachers/>;
             case "parents":
-                return <PlatformParentsList />;
+                return <PlatformParentsList/>;
+            case "assistant" :
+                return <PlatformAssistants/>
             default:
                 return null;
         }
