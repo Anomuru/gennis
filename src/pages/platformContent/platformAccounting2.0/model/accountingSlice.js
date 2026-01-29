@@ -112,7 +112,7 @@ const newAccountingSlice = createSlice({
             state.data = [action.payload, ...state.data]
         }
     },
-    extraReducers: builder =>
+    extraReducers: builder  =>
         builder
             .addCase(fetchAccounting.pending, state => {
                 state.loading = true;
