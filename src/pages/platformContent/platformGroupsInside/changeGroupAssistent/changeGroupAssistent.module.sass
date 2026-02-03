@@ -1,0 +1,204 @@
+@import "styles/abstracts/variables"
+
+.create
+  padding: 5rem
+  &__header
+    width: 100%
+    height: 60px
+    display: flex
+    justify-content: flex-end
+    .checkedSt
+      i
+        font-size: 3rem
+        color: $color-grey-dark
+.groupInfo
+  display: flex
+  align-items: center
+  justify-content: center
+  form
+    width: 60rem
+    background-color: white
+    padding: 4rem
+      //margin: 0 auto
+    height: 50rem
+    overflow: hidden
+    overflow-y: auto
+    justify-content: flex-start
+    border-radius: 15px
+  h1
+    font-size: 2rem
+
+.teacher
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding: 1rem
+    //border-top: 2px solid $color-grey-dark
+    //border-bottom: 2px solid $color-grey-dark
+  margin: 1rem 0
+  span
+    font-size: 1.7rem
+    font-weight: bold
+    &:last-child
+      font-weight: normal
+    .error
+      color: #fc5757
+      font-weight: bold
+.create__section
+  padding: 0 !important
+  padding-top: 1rem !important
+  display: flex
+  flex-direction: column
+  height: fit-content !important
+  overflow: initial
+.section
+.error
+  text-align: center
+  font-weight: bolder
+  font-size: 1.9rem
+  color: #fc5757
+.modalBtns
+  display: flex
+.changeTime
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  form
+    width: 60%
+    background-color: white
+    border-radius: 15px
+    display: flex
+    align-items: center
+    justify-content: center
+    margin-bottom: 3rem
+      //border-bottom: 1px solid $color-grey-dark
+      //border-radius: 15px
+    padding: 2rem 0
+    label
+      margin: 1rem
+    .days
+      width: 100%
+      padding: 1rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      &__wrapper
+        width: 100%
+        &__item
+          width: 100%
+          padding: 1rem 2rem
+          //border-bottom: 2px solid $color-grey-dark
+          //border-radius: 15px
+          display: flex
+        &-del
+          display: flex
+          align-items: center
+          justify-content: center
+          i
+            font-size: 3rem
+            color: $color-grey-dark
+        &__btn
+          margin-bottom: 2rem
+        i
+          font-size: 2.7rem
+          color: $color-grey-dark
+  &__header
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    &>div
+      width: 100%
+      display: flex
+      justify-content: space-between
+      align-items: center
+      &:nth-child(2)
+        margin-top: 1rem
+      &:last-child
+        flex-direction: column
+      .accounting__money
+        display: flex
+        align-items: center
+        justify-content: center
+      span
+        padding: 1rem 2rem
+        border: 1px solid $color-grey-dark
+        color: $color-grey-dark
+        border-radius: 10px
+        font-size: 1.8rem
+
+  &__main
+    margin-top: 3rem
+    width: 100%
+    //height: fit-content
+
+  .links
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: flex-start
+    height: fit-content
+    padding: 2rem
+  .loadMore
+    width: 100%
+    padding: 2rem
+    display: flex
+    align-items: center
+    justify-content: center
+
+  .checkedStudents
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+  &__wrapper
+    max-height: 50rem
+    overflow: auto
+    width: 40%
+    padding: 2rem
+    background-color: white
+    border-radius: 15px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: flex-start
+    margin: 1rem
+    form
+
+      width: 75%
+  .isShift,.errorSub
+    border: 2px solid #65ec65 !important
+    color: #65ec65
+  &__item
+    padding: 1rem 0
+    width: 100%
+    min-height: 4rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+      //padding: 0 1rem
+    margin: 1rem 0
+    border: 2px solid red
+    border-radius: 15px
+    &>div
+      display: flex
+      align-items: center
+      justify-content: center
+      .error
+        margin-top: 1rem
+        font-size: 1.7rem
+        font-weight: bold
+        color: #fc5757
+      h2
+        margin: 0 1rem
+      input
+        width: 2rem
+        height: 2rem
+      .subject
+        width: fit-content
+        height: fit-content
+        padding: 0.5rem 1.5rem
+        color: red

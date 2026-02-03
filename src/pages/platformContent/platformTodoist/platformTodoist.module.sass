@@ -442,6 +442,10 @@ $color-gray: #999
       gap: .5rem
       &__title
         font-size: 1.8rem
+      &__select
+        display: none
+        &.active
+          display: block
     .clearBtn
       align-self: flex-end
     .lastSelect
@@ -764,6 +768,8 @@ $color-gray: #999
     background: #3737d4
 
 .redirect
+  background: white
+  padding: 2rem
   display: flex
   flex-direction: column
   gap: 2rem

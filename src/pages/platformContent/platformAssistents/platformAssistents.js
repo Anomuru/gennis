@@ -1,16 +1,16 @@
 import classNames from "classnames";
-import React, {useEffect, useMemo, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate, useParams} from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import Confirm from "../../../components/platform/platformModals/confirm/confirm";
 import ConfimReason from "../../../components/platform/platformModals/confirmReason/confimReason";
 import Button from "../../../components/platform/platformUI/button";
 import Modal from "../../../components/platform/platformUI/modal";
 import Search from "../../../components/platform/platformUI/search";
 import Table from "../../../components/platform/platformUI/table";
-import {BackUrl, headers} from "../../../constants/global";
-import {useHttp} from "../../../hooks/http.hook";
-import {fetchAssistant, onDeleteAssistant} from "../../../slices/assistantSlice";
+import { BackUrl, headers } from "../../../constants/global";
+import { useHttp } from "../../../hooks/http.hook";
+import { fetchAssistant, onDeleteAssistant } from "../../../slices/assistantSlice";
 
 import cls from "../platformParentsList/platformParentsList.module.sass";
 
@@ -18,7 +18,7 @@ export const PlatformAssistants = () => {
 
     const { locationId } = useParams();
     const dispatch = useDispatch();
-    const { data , loading, error } = useSelector(state => state.assistantSlice);
+    const { data, loading, error } = useSelector(state => state.assistantSlice);
     const [search, setSearch] = useState("")
     const [active, setActive] = useState(false)
     const navigate = useNavigate()
@@ -39,7 +39,7 @@ export const PlatformAssistants = () => {
 
 
     const searchedUsers = useMemo(() => {
-        return data.filter(item =>
+        return data?.filter(item =>
             item.name.toLowerCase().includes(search.toLowerCase()) ||
             item.surname.toLowerCase().includes(search.toLowerCase())
         )
@@ -47,6 +47,7 @@ export const PlatformAssistants = () => {
 
 
     const renderUsers = () => {
+        console.log(searchedUsers, "searchedUsers");
 
         return searchedUsers?.map((item, i) => (
             <tr
@@ -54,26 +55,33 @@ export const PlatformAssistants = () => {
             >
                 <td>{i + 1}</td>
                 <td
-                    onClick={() => navigate(`parentSection/${item.id}`)}
+                    onClick={() => navigate(`../profile/${item.id}/info`)}
                 >{item?.name}</td>
                 <td>{item?.surname}</td>
                 <td>{item?.phone}</td>
                 <td>{item?.subjects.map(item => item)}</td>
                 <td>{item?.date}</td>
                 <td>{item?.location?.name}</td>
-                {!active && <td>
-                    <i onClick={() => {
-                        setActiveModal(true)
-                        setActiveUser(item)
-                    }} className={classNames(cls.delete, 'fa fa-trash')} />
-                </td>}
+                <td>
+                    {
+                        item.can_delete ? (
+                            <i
+                                onClick={() => {
+                                    setActiveModal(true)
+                                    setActiveUser(item)
+                                }}
+                                className={classNames(cls.delete, 'fa fa-trash')}
+                            />
+                        ) : null
+                    }
+                </td>
             </tr>
         ))
     }
 
     const onDelete = () => {
 
-        request(`${BackUrl}teacher/assistent/crud/${activeUser.id}`, "DELETE", null, headers())
+        request(`${BackUrl}teacher/assistent/crud/${activeUser.id}/`, "DELETE", null, headers())
             .then(res => {
                 setActiveModal(false)
                 setIsConfirm(false)
@@ -95,29 +103,29 @@ export const PlatformAssistants = () => {
 
             <Table>
                 <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Ismi</th>
-                    <th>Familyasi</th>
-                    <th>Telefon raqami</th>
-                    <th>Fani</th>
-                    <th>Tug'ulgan kuni</th>
-                    <th>Joylashuvi</th>
-                    <th />
+                    <tr>
+                        <th>No</th>
+                        <th>Ismi</th>
+                        <th>Familyasi</th>
+                        <th>Telefon raqami</th>
+                        <th>Fani</th>
+                        <th>Tug'ulgan kuni</th>
+                        <th>Joylashuvi</th>
+                        <th />
 
-                </tr>
+                    </tr>
                 </thead>
                 <tbody>
-                {renderUsers()}
+                    {renderUsers()}
                 </tbody>
 
             </Table>
 
             <Modal setActiveModal={setActiveModal} activeModal={activeModal}>
-                <Confirm getConfirm={setIsConfirm} setActive={setActiveModal} text={"Rostanham o'chirmoqchimisiz?"} />
+                <Confirm getConfirm={active ? onDelete : setIsConfirm} setActive={setActiveModal} text={active ? "Rostanham qaytarmoqchimisiz?" : "Rostanham o'chirmoqchimisiz?"} />
             </Modal>
             {
-                isConfirm === "yes" ?
+                (isConfirm === "yes" && !active) ?
                     <Modal
                         setActiveModal={setActiveModal}
                         activeModal={activeModal}

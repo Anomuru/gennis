@@ -1832,25 +1832,6 @@ const PlatformTodoist = () => {
 
                                 <div className={styles.viewContent}>
                                     <div className={styles.infoGrid}>
-                                        <div className={styles.infoGrid__desc}>
-                                            <strong>Description:</strong>
-                                            <p className={styles.desc}>
-                                                {
-                                                    selectedTask.description.length > 30
-                                                        ? `${selectedTask.description.slice(0, 30)}...`
-                                                        : selectedTask.description
-                                                }
-                                            </p>
-                                            {
-                                                selectedTask.description.length > 30 && (
-                                                    <div className={styles.fullDesc}>
-                                                        <p>
-                                                            {selectedTask.description}
-                                                        </p>
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
                                         <div>
                                             <strong>Departmant:</strong>
                                             <p>{categoryList.filter(item => item.id === selectedTask.category)[0]?.name}</p>
@@ -1884,6 +1865,17 @@ const PlatformTodoist = () => {
                                         <div>
                                             <strong>Recurring:</strong>
                                             <p>{selectedTask.is_recurring ? `Yes (${selectedTask.recurring_type})` : "No"}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.viewContent__tags}>
+                                        <strong className={styles.tagsTitle}>Description:</strong>
+                                        <div
+                                            className={classNames(styles.tagsContainer, {
+                                                [styles.none]: selectedTask.tags.length === 0
+                                            })}
+                                        >
+                                            {selectedTask.description}
                                         </div>
                                     </div>
 
@@ -2535,6 +2527,12 @@ const PlatformTodoist = () => {
                     <div className={styles.tags}>
                         <span className={styles.tags__title}>Tags</span>
                         <AnimatedMulti
+                            extraClass={classNames(
+                                styles.tags__select,
+                                {
+                                    [styles.active]: isFilter
+                                })
+                            }
                             title={"Tags"}
                             options={tagsList}
                             onChange={setSelectedTags}

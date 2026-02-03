@@ -1,32 +1,38 @@
 import cls from "../style.module.sass"
 import InputForm from "components/platform/platformUI/inputForm";
-import React, {useEffect, useState} from "react";
-import {useForm} from "react-hook-form";
-import {BackUrl, headers} from "constants/global";
-import {useHttp} from "hooks/http.hook";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { BackUrl, headers } from "constants/global";
+import { useHttp } from "hooks/http.hook";
 import Input from "components/platform/platformUI/input";
 
-import Select, {SelectForm} from "components/platform/platformUI/select";
+import Select, { SelectForm } from "components/platform/platformUI/select";
 import classNames from "classnames";
 import Button from "components/platform/platformUI/button";
-import {setMessage} from "slices/messageSlice";
-import {useDispatch, useSelector} from "react-redux";
+import { setMessage } from "slices/messageSlice";
+import { useDispatch, useSelector } from "react-redux";
 import DefaultLoaderSmall from "components/loader/defaultLoader/defaultLoaderSmall";
+import { fetchTeachersByLocationWithoutPagination } from "slices/teachersSlice";
 
 export const RegisterAssistant = ({
-                                    locations,
-                                    subjects,
-                                    genders,
-                                    deleteSub,
-                                    onChangeSub,
-                                    selectedSubjects,
-                                    language,
-                                    setSelectedSubjects,
-                                    setSubjects
-                                }) => {
+    locations,
+    subjects,
+    genders,
+    deleteSub,
+    onChangeSub,
+    selectedSubjects,
+    language,
+    setSelectedSubjects,
+    setSubjects
+}) => {
+
+    const dispatch = useDispatch()
+    const { location } = useSelector(state => state.me)
+    // const { teachers } = useSelector(state => state.teachers)
+
     const {
         register,
-        formState: {errors},
+        formState: { errors },
         handleSubmit,
         clearErrors,
         setError,
@@ -36,21 +42,20 @@ export const RegisterAssistant = ({
         mode: "onBlur"
     })
     const [loading, setLoading] = useState(false)
-    const {request} = useHttp()
+    const { request } = useHttp()
     const [activeError, setActiveError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isCheckLen, setIsCheckLen] = useState(false)
     const [isCheckPass, setIsCheckPass] = useState(false)
     const [password, setPassword] = useState("12345678")
-    const {location} = useSelector(state => state.me)
     const [selectedSubjectId, setSelectedSubjectId] = useState("all");
     const [lang, setLang] = useState(1)
-
-
-    const dispatch = useDispatch()
+    const [teachers, setTeachers] = useState([])
 
     const [confirmPassword, setConfirmPassword] = useState("12345678")
     const [selectedLocation, setSelectedLocation] = useState(location)
+    const [selectedTeacher, setSelectedTeacher] = useState(location)
+    const [selectedSubject, setSelectedSubject] = useState()
 
     const [selectedGender, setSelectedGender] = useState(genders)
     const checkUsername = (username) => {
@@ -63,7 +68,7 @@ export const RegisterAssistant = ({
                         type: "manual",
                         message: "username band"
 
-                    }, {shouldFocus: true})
+                    }, { shouldFocus: true })
                     setActiveError(true)
                     setErrorMessage("Username band")
                 } else {
@@ -71,6 +76,13 @@ export const RegisterAssistant = ({
                 }
             })
     }
+
+    useEffect(() => {
+        if (selectedSubject && selectedLocation) {
+            request(`${BackUrl}teacher/assistent/get_teacher/${selectedSubject}/${selectedLocation}`, "GET", null, headers())
+                .then(res => setTeachers(res.teachers))
+        }
+    }, [selectedSubject, selectedLocation])
 
     const onCheckLength = (value) => {
         setIsCheckLen(value?.length < 8)
@@ -86,11 +98,13 @@ export const RegisterAssistant = ({
 
         const res = {
             ...data,
-            selectedSubjects,
+            // selectedSubjects,
             location: selectedLocation,
             language: lang,
             password,
             password_confirm: confirmPassword,
+            teacher: selectedTeacher,
+            selectedSubjects: selectedSubject
             // sex: selectedGender
         }
         console.log(res)
@@ -123,8 +137,8 @@ export const RegisterAssistant = ({
 
     return (
         <form className={cls.form}
-              id="form"
-              onSubmit={handleSubmit(onSubmit)}
+            id="form"
+            onSubmit={handleSubmit(onSubmit)}
         >
 
             <InputForm
@@ -135,12 +149,12 @@ export const RegisterAssistant = ({
                 required
             />
             {activeError ? <span className={cls.form__error}>
-                              Username band
-                          </span> :
+                Username band
+            </span> :
                 errors?.username &&
                 <span className={cls.form__error}>
-                                     {errors?.username?.message}
-                          </span>}
+                    {errors?.username?.message}
+                </span>}
             <InputForm
                 register={register}
                 name={"name"}
@@ -170,6 +184,13 @@ export const RegisterAssistant = ({
                 register={register}
                 name={"phone"}
                 title={"Telefon raqam"}
+                type={"number"}
+                required
+            />
+            <InputForm
+                register={register}
+                name={"percentage"}
+                title={"Ulush"}
                 type={"number"}
                 required
             />
@@ -204,18 +225,35 @@ export const RegisterAssistant = ({
                 cols="30"
                 rows="10"
             />
-            <Select title={"O'quv markazi joylashuvi"} defaultValue={selectedLocation} options={locations}
-                    onChangeOption={setSelectedLocation}/>
+            <Select
+                title={"O'quv markazi joylashuvi"}
+                defaultValue={selectedLocation}
+                options={locations}
+                onChangeOption={setSelectedLocation}
+            />
             <SelectForm
                 title={"Fan"}
-                options={[{ id: "all", name: "Tanlang" }, ...subjects]}
-                value={selectedSubjectId}
-                onChangeOption={(val) => {
-                    setSelectedSubjectId(val);
-                    onChangeSub(val);
-                }}
+                options={[
+                    { id: "all", name: "Tanlang" },
+                    ...subjects
+                ]}
+                value={selectedSubject}
+                onChangeOption={setSelectedSubject}
             />
-            {
+            <Select
+                title={"O'qituvchi tanlang"}
+                defaultValue={selectedTeacher}
+                options={[
+                    { id: "all", name: "Tanlang" },
+                    ...teachers
+                        .map(item => ({
+                            id: item.id,
+                            name: `${item.name} ${item.surname}`
+                        }))
+                ]}
+                onChangeOption={setSelectedTeacher}
+            />
+            {/* {
                 selectedSubjects.length > 0
                     ?
                     <div className={cls.place}>
@@ -236,11 +274,11 @@ export const RegisterAssistant = ({
                     </div>
                     :
                     null
-            }
+            } */}
 
             {/*<Select title={"Ta'lim vaqti"} defaultValue={selectedShift} options={shifts} onChangeOption={setSelectedShift}/>*/}
 
-            {loading ? <DefaultLoaderSmall/> :  <Button type={"submit"} formId={"form"}>Yakunlash</Button>}
+            {loading ? <DefaultLoaderSmall /> : <Button type={"submit"} formId={"form"}>Yakunlash</Button>}
 
         </form>
     );
