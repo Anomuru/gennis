@@ -229,11 +229,11 @@ const NewTaskManager = () => {
             post = { lead_id: id }
         } else if (activeCategory === "debtors") {
             postURL = "task_debts/call_to_debt"
-            post = { student_id: id, phone }
+            post = { student_id: id, phone: "901101664" }
             setSelectedPerson(prev => ({ ...prev, phone }))
         } else {
             postURL = "task_new_students/call_to_new_student"
-            post = { student_id: id, phone }
+            post = { student_id: id, phone: "901101664" }
             setSelectedPerson(prev => ({ ...prev, phone }))
         }
         dispatch(onCallLoading(true))
@@ -703,23 +703,19 @@ const SwitchButton = ({ isCompleted, setIsCompleted, setSearchValue }) => {
 };
 
 
+// ============================================================================
+// КОМПОНЕНТ КОММЕНТАРИЯ
+// ============================================================================
+
 const CommentCard = ({ comment, activeCategory }) => {
     const { request } = useHttp()
     const navigate = useNavigate()
     const audioRef = useRef(null)
 
-    // const [audioSrc, setAudioSrc] = useState(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [progress, setProgress] = useState(0)
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0)
-
-    // useEffect(() => {
-    //     if (isPlaying && comment?.audio_url) {
-    //         request(`${BackUrl}media/${comment?.audio_url.slice(1, 999)}`, "GET", null, headers())
-    //             .then(res => console.log(res))
-    //     }
-    // }, [isPlaying,comment?.audio_url])
 
     const audioSrc = comment?.audio_url
         ? BackUrlForDoc + comment.audio_url
@@ -771,20 +767,29 @@ const CommentCard = ({ comment, activeCategory }) => {
         setProgress(value)
     }
 
+    // ✅ ИСПРАВЛЕННАЯ ФУНКЦИЯ форматирования времени
     const formatTime = (time = 0) => {
         const min = Math.floor(time / 60)
         const sec = Math.floor(time % 60)
         return `${min}:${sec < 10 ? "0" : ""}${sec}`
     }
 
+    // ✅ ИСПРАВЛЕННАЯ ФУНКЦИЯ для получения длительности из comment.duration
+    const getFormattedDuration = () => {
+        if (duration > 0) {
+            // Если аудио загружено, используем реальную длительность
+            return formatTime(duration);
+        }
+
+        // Иначе используем duration из API
+        const durationInSeconds = Number(comment.duration || 0);
+        return formatTime(durationInSeconds);
+    }
+
     return (
         <div className={styles.column}>
             <div className={styles.commentCard}>
                 <div className={styles.commentHeader}>
-                    {/*<strong>*/}
-                    {/*    Telefon qilingan: {comment.added_date} / {comment.to_date}*/}
-                    {/*</strong>*/}
-
                     <strong>
                         {comment.name} {comment.surname}
                         {" "}
@@ -799,16 +804,6 @@ const CommentCard = ({ comment, activeCategory }) => {
 
                     <div className={styles.icons}>
                         <div className={styles.icons__options}>
-                            {/* STOP */}
-                            {/*<i*/}
-                            {/*    className={classNames(*/}
-                            {/*        "fa-solid fa-stop",*/}
-                            {/*        styles.icons__audio*/}
-                            {/*    )}*/}
-                            {/*    onClick={stopAudio}*/}
-                            {/*/>*/}
-
-                            {/* PLAY / PAUSE */}
                             <i
                                 className={classNames(
                                     "fa-solid fa-list-ul",
@@ -846,23 +841,12 @@ const CommentCard = ({ comment, activeCategory }) => {
                     Comment: {comment.comment || ""}
                 </div>
 
-                {/* TIME + SEEK */}
+                {/* ✅ ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ */}
                 {
                     comment?.audio_url && (
                         <div className={styles.audio}>
                             <p className={styles.audio__subTitle}>
-                                {formatTime(currentTime)}
-                                {" / "}
-                                {
-                                    duration
-                                        ? formatTime(duration)
-                                        : `${comment.duration >= 60 ? Math.floor(comment.duration / 60) : "0"}:${comment.duration
-                                            ? (Number(comment.duration) - (60 * Math.floor(comment.duration / 60)))
-                                                < 10
-                                                ? `0${comment.duration}`
-                                                : Number(comment.duration) - (60 * Math.floor(comment.duration / 60))
-                                            : "00"}`
-                                }
+                                {formatTime(currentTime)} / {getFormattedDuration()}
                             </p>
 
                             <input

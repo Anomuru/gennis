@@ -73,22 +73,6 @@ const PlatformTodoist = () => {
     const { request } = useHttp()
     const { register, handleSubmit, setValue } = useForm()
 
-    // const locationId = useSelector(getUserBranchId)
-    // const level = useSelector(getUserLevel)
-    // const userId = useSelector(getUserId)
-    // const teachers = useSelector(getTeacherData)
-    // const employees = useSelector(getEmployersData)
-    // const tags = useSelector(getTaskTags)
-    // const tagsLoading = useSelector(getTaskTagsLoading)
-    // const tasks = useSelector(getTasks)
-    // const tasksLoading = useSelector(getTaskLoading)
-    // const tasksProfileLoading = useSelector(getTaskProfileLoading)
-    // const statusList = useSelector(getTaskStatusList)
-    // const categoryList = useSelector(getTaskCategoryList)
-    // const recurringTypes = useSelector(getTaskRecurringTypes)
-    // const notificationsList = useSelector(getTaskNotificationsList)
-    // const notificationsLoading = useSelector(getTaskNotificationLoading)
-    // const { id: userId, level } = useSelector(state => state.me)
 
     const { id: userId, level } = useSelector(state => state.me)
     const { teachers } = useSelector(state => state.teachers)
@@ -126,6 +110,7 @@ const PlatformTodoist = () => {
     const [activeTaskType, setActiveTaskType] = useState("myTasks")
     const [activeNotificationType, setActiveNotificationType] = useState("executor")
     const [modalType, setModalType] = useState(null)
+    const [onCreate, setOnCreate] = useState(false)
     const [nestedModalType, setNestedModalType] = useState(null)
     const [selectedTask, setSelectedTask] = useState(null)
     const [selectedTag, setSelectedTag] = useState(null)
@@ -203,21 +188,24 @@ const PlatformTodoist = () => {
 
     // Modal handlers
     const openCreateTaskModal = () => {
-        setFormData({
-            title: "",
-            description: "",
-            executor_ids: [],
-            reviewer_id: userId,
-            creator_id: userId,
-            category: "admin",
-            tags: [],
-            status: "not_started",
-            deadline_datetime: "",
-            is_recurring: false,
-            recurring_type: "daily",
-            repeat_every: 1,
-        })
+        if (!onCreate) {
+            setFormData({
+                title: "",
+                description: "",
+                executor_ids: [],
+                reviewer_id: userId,
+                creator_id: userId,
+                category: "admin",
+                tags: [],
+                status: "not_started",
+                deadline_datetime: "",
+                is_recurring: false,
+                recurring_type: "daily",
+                repeat_every: 1,
+            })
+        }
         setModalType("createTask")
+        setOnCreate(true)
     }
 
     const openEditTaskModal = (task) => {
@@ -227,6 +215,7 @@ const PlatformTodoist = () => {
             tags: task.tags && task.tags.map(item => ({ value: item.id, label: item.name }))
         })
         setModalType("editTask")
+        setOnCreate(false)
     }
 
     const openChangeStatusModal = (task) => {
@@ -1557,7 +1546,10 @@ const PlatformTodoist = () => {
                 {/* Create/Edit Task Modal */}
                 {
                     (modalType === "createTask" || modalType === "editTask") && (
-                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                        <div
+                            className={styles.modalBackdrop}
+                        // onClick={() => setModalType(null)}
+                        >
                             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                                 <h2 className={styles.modalTitle}>{modalType === "createTask" ? "Create Task" : "Edit Task"}</h2>
                                 <div className={styles.formGroup}>
@@ -1573,6 +1565,7 @@ const PlatformTodoist = () => {
                                 <div className={styles.formGroup}>
                                     <label>Description</label>
                                     <textarea
+                                        style={{ height: "150px" }}
                                         value={formData.description || ""}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                         placeholder="Task description"
@@ -1674,6 +1667,19 @@ const PlatformTodoist = () => {
                                                                             active={isEpmloyeesSelect}
                                                                         >
                                                                             Ishchilar
+                                                                        </Button>
+                                                                        <Button
+                                                                            onClickBtn={() => {
+                                                                                setIsEpmloyeesSelect(false)
+                                                                                setIsTeachersSelect(false)
+                                                                                setFormData({
+                                                                                    ...formData,
+                                                                                    executor_ids: []
+                                                                                })
+                                                                            }}
+                                                                        // active={}
+                                                                        >
+                                                                            Clear
                                                                         </Button>
                                                                     </>
                                                                 )
@@ -1868,10 +1874,10 @@ const PlatformTodoist = () => {
                                         </div>
                                     </div>
 
-                                    <div className={styles.viewContent__tags}>
-                                        <strong className={styles.tagsTitle}>Description:</strong>
+                                    <div className={styles.viewContent__desc}>
+                                        <strong className={styles.descTitle}>Description:</strong>
                                         <div
-                                            className={classNames(styles.tagsContainer, {
+                                            className={classNames(styles.descContainer, {
                                                 [styles.none]: selectedTask.tags.length === 0
                                             })}
                                         >
@@ -2121,11 +2127,11 @@ const PlatformTodoist = () => {
                                     </div>
                                 </div>
 
-                                <div className={styles.formActions}>
+                                {/* <div className={styles.formActions}>
                                     <button className={styles.btnCancel} onClick={() => setModalType(null)}>
                                         Close
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     )

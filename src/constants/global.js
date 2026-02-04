@@ -4,15 +4,15 @@ export const ClassroomUrl = `https://classroom.gennis.uz/`
 //
 
 // export const BackUrlForDoc = `http://26.196.249.247:5002/`
-export const BackUrlForDoc = `http://100.94.144.113:5002/`
-export const BackUrl = `${BackUrlForDoc}api/`
+// export const BackUrlForDoc = `http://100.94.144.113:5002/`
+// export const BackUrl = `${BackUrlForDoc}api/`
 
 // export const ClassroomUrl = `http://localhost:3000/`
 // export const ClassroomUrlForDoc = "http://26.12.122.72:5001/"
 //
-// export const BackUrl = "https://admin.gennis.uz/api/"
-// export const BackUrlForDoc = "https://admin.gennis.uz/"
-//
+export const BackUrl = "https://admin.gennis.uz/api/"
+export const BackUrlForDoc = "https://admin.gennis.uz/"
+
 
 //
 // export const BackUrl = "/api/"
