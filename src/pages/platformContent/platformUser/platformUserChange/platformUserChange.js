@@ -62,6 +62,7 @@ const PlatformUserChange = () => {
 
 
     const checkUserRole = useMemo(() => {
+
         let data = {
             activeToChange: null,
             extraInfo: null,
@@ -69,14 +70,14 @@ const PlatformUserChange = () => {
         }
         if (role === userRole) {
             data.activeToChange = activeToChange
-            data.extraInfo = extraInfo
+            data.extraInfo = { ...extraInfo, level: { value: user.level } }
             data.contract = contract_url
             return data
         }
         if (role === ROLES.Admin || role === ROLES.Director || role === ROLES.Programmer) {
 
             data.activeToChange = user.activeToChange
-            data.extraInfo = { ...user.info, address: { value: user.address } }
+            data.extraInfo = { ...user.info, address: { value: user.address }, level: { value: user.level } }
             data.contract = user.contract_url
             return data
         }

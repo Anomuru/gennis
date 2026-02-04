@@ -1,4 +1,4 @@
-import {configureStore} from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 
 import me from "slices/meSlice";
 import message from "slices/messageSlice";
@@ -31,7 +31,8 @@ import teacherInfo from "slices/teacherInfoSlice";
 import capitalCategory from "slices/capitalCategorySlice";
 import taskManager from "slices/taskManagerSlice";
 import accountantSlice from "slices/accountantSlice";
-import {slice} from "../pages/webSite/test/register";
+import { slice } from "../pages/webSite/test/register";
+import assistantSlice from "../slices/assistantSlice";
 import blockTestSlice from "../slices/blockTestSlice";
 import otchotSlice from "../slices/otchotSlice";
 import billSlice from "../slices/billSlice";
@@ -44,6 +45,9 @@ import currentFilterSlice from "slices/currentFilterSlice";
 import teacherEquipmentsSlice from "slices/teacherEquipmentsSlice";
 import newAccountingSlice from "pages/platformContent/platformAccounting2.0/model/accountingSlice"
 import groupsAttendanceSlice from "slices/groupsAttendanceSlice";
+import accountingProfileSlice from "slices/accountingProfileSlice";
+import todoistSlice from "slices/todoistSlice";
+import taskManagerModalSlice from "slices/taskManagerModalSlice";
 
 const stringMiddlewere = () => (next) => (action) => {
     if (typeof action === 'string') {
@@ -99,7 +103,11 @@ const store = configureStore({
         currentFilterSlice,
         groupsAttendanceSlice,
         teacherEquipmentsSlice,
-        newAccountingSlice
+        newAccountingSlice,
+        accountingProfileSlice,
+        todoistSlice,
+        taskManagerModalSlice,
+        assistantSlice
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(

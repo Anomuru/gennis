@@ -165,6 +165,26 @@ export const AccountingAddOverhead = ({setActive}) => {
 
                 }
 
+                <label htmlFor="date">
+                    <div>
+                        <span className="name-field">Sanasi</span>
+                        <input
+                            defaultValue={""}
+                            id="date"
+                            className="input-fields"
+                            type={"date"}
+                            {...register("date", {
+                                required: "Iltimos to'ldiring",
+                            })}
+                        />
+                    </div>
+                    {
+                        errors?.date &&
+                        <span className="error-field">
+                            {errors?.date?.message}
+                        </span>
+                    }
+                </label>
 
                 <label htmlFor="price">
                     <div>
@@ -189,19 +209,19 @@ export const AccountingAddOverhead = ({setActive}) => {
                 <div>
                     {renderedPaymentType}
                 </div>
-                {
-                    overheadTools?.length >= 2 ?
-                        <Select
-                            name={"month"}
-                            title={"Oy"}
-                            defaultValue={month}
-                            onChangeOption={setMonth}
-                            options={overheadTools}
-                        /> :
-                        null
-                }
+                {/*{*/}
+                {/*    overheadTools?.length >= 2 ?*/}
+                {/*        <Select*/}
+                {/*            name={"month"}*/}
+                {/*            title={"Oy"}*/}
+                {/*            defaultValue={month}*/}
+                {/*            onChangeOption={setMonth}*/}
+                {/*            options={overheadTools}*/}
+                {/*        /> :*/}
+                {/*        null*/}
+                {/*}*/}
 
-                {renderedDays}
+                {/*{renderedDays}*/}
 
                 <input className="input-submit" type="submit" value="Tasdiqlash"/>
 

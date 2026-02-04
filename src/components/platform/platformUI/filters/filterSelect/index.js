@@ -1,19 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from "components/platform/platformUI/select";
-import {useDispatch, useSelector} from "react-redux";
-import {setSelectOption} from "slices/filtersSlice";
-import {useHttp} from "hooks/http.hook";
-import {BackUrl, headers} from "constants/global";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectOption } from "slices/filtersSlice";
+import { useHttp } from "hooks/http.hook";
+import { BackUrl, headers } from "constants/global";
 
-const FilterSelect = React.memo(({options, activeFilter, name, onChangeActiveFilter}) => {
+const FilterSelect = React.memo(({ options, activeFilter, name, onChangeActiveFilter }) => {
     const [option, setOption] = useState(null)
-    const {filters, activeFilters} = useSelector(state => state.filters)
+    const { filters, activeFilters } = useSelector(state => state.filters)
 
 
     const dispatch = useDispatch()
     useEffect(() => {
         if (option) {
-            dispatch(setSelectOption({activeFilter: activeFilter, selectedOption: option}))
+            dispatch(setSelectOption({ activeFilter: activeFilter, selectedOption: option }))
         }
     }, [option, activeFilter, dispatch])
 
@@ -31,7 +31,7 @@ const FilterSelect = React.memo(({options, activeFilter, name, onChangeActiveFil
 
     useEffect(() => {
         if (optionGroup) {
-            dispatch(setSelectOption({activeFilter: "group", selectedOption: optionGroup}))
+            dispatch(setSelectOption({ activeFilter: "group", selectedOption: optionGroup }))
         }
     }, [optionGroup])
     // useEffect(() => {
@@ -40,7 +40,7 @@ const FilterSelect = React.memo(({options, activeFilter, name, onChangeActiveFil
     //     }
     // } , [optionDate])
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     useEffect(() => {
         if (activeFilters.teacher) {
             request(`${BackUrl}group/groups_by_teacher/${activeFilters.teacher}`, "GET", null, headers())
@@ -50,18 +50,30 @@ const FilterSelect = React.memo(({options, activeFilter, name, onChangeActiveFil
         }
     }, [activeFilters?.teacher])
 
-    console.log(activeFilters , "active filter")
+    function sortByIsDeleted(items) {
+        return items.sort((a, b) => Number(a.is_deleted) - Number(b.is_deleted));
+    }
+
+
     return (
         <div>
 
-            <Select all={true} defaultValue={activeFilters[activeFilter]} onChangeOption={onChangeOption}
-                    options={options} name={"select-filter"} title={name}/>
+            <Select
+                all={true}
+                defaultValue={activeFilters[activeFilter]}
+                onChangeOption={onChangeOption}
+                options={sortByIsDeleted(
+                    [...options].map(item => item.is_deleted ? { ...item, color: "red" } : item)
+                )}
+                name={"select-filter"}
+                title={name}
+            />
 
 
-            { name === "O'qtuvchi" && <div style={{marginTop: "10px"}}>
+            {name === "O'qtuvchi" && <div style={{ marginTop: "10px" }}>
                 <h2>Gruhlar:</h2>
                 <div>
-                    <Select all={true} defaultValue={optionGroup} onChangeOption={setOptionGroup} options={optionDate}/>
+                    <Select all={true} defaultValue={optionGroup} onChangeOption={setOptionGroup} options={optionDate} />
                 </div>
             </div>}
         </div>

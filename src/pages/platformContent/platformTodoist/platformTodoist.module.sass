@@ -1,0 +1,818 @@
+@import "styles/abstracts/variables"
+
+$color-bg: #f9fafb
+$color-border: #e5e7eb
+$color-text: #1f2937
+$color-text-light: #6b7280
+$color-primary: #3b82f6
+$color-primary-hover: #2563eb
+$color-danger: #ef4444
+$color-danger-hover: #dc2626
+$color-success: #10b981
+$color-gray: #999
+
+.container
+  min-height: 93vh
+  background-color: $color-bg
+  padding: 30px 20px
+
+.header
+  //max-width: 1200px
+  margin: 0 auto 40px
+  display: flex
+  justify-content: space-between
+  align-items: center
+  gap: 20px
+
+.title
+  font-size: 32px
+  font-weight: 600
+  color: $color-text
+  margin: 0
+
+.headerActions
+  display: flex
+  gap: 12px
+
+.section
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.content
+  //max-width: 1200px
+  margin: 0 auto
+  display: flex
+  flex-direction: column
+  gap: 3rem
+
+.sectionHeader
+  margin: 0 0 10px
+  padding-bottom: 12px
+  border-bottom: 2px solid $color-border
+  display: flex
+  justify-content: space-between
+  align-items: flex-end
+  &__filter
+    display: flex
+    gap: 1rem
+  .btnFilter
+    margin: 0
+  .sectionTitle
+    font-size: 20px
+    font-weight: 600
+    color: $color-text
+    display: flex
+    gap: .7rem
+    &__item
+      cursor: pointer
+      font-weight: 300
+      color: $color-text-light
+      position: relative
+      .dott
+        width: .7rem
+        height: .7rem
+        border-radius: 50%
+        background: $color-main-dark
+        position: absolute
+        top: -.1rem
+        right: -.6rem
+        // right: -2rem
+        // transform: translateY(-50%)
+      &.active
+        font-weight: 600
+        color: $color-text
+        border-bottom: 1px solid
+
+.multiTitle
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 1rem
+  &__inner
+    font-size: 1.8rem
+
+.grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))
+  gap: 20px
+  max-height: 41rem
+  overflow-y: auto
+  padding: 0 1rem
+  &.none
+    display: flex
+    justify-content: center
+    padding: 4rem
+  &.loading
+    display: flex
+    justify-content: center
+  &.level
+    max-height: 70rem
+  &__title
+    color: $color-text-light
+
+.card
+  background: white
+  // border: 1px solid $color-border
+  border-radius: 8px
+  padding: 20px
+  display: flex
+  flex-direction: column
+  gap: 12px
+  transition: box-shadow 0.2s ease
+
+  &:hover
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)
+
+.cardHeader
+  display: flex
+  justify-content: space-between
+  align-items: flex-start
+  gap: 12px
+
+.cardTitle
+  font-size: 16px
+  font-weight: 600
+  color: $color-text
+  margin: 0
+  flex: 1
+
+.status
+  font-size: 12px
+  font-weight: 500
+  padding: 4px 8px
+  background-color: #f3f4f6
+  border-radius: 4px
+  text-transform: capitalize
+  cursor: pointer
+
+.cardText
+  font-size: 13px
+  color: $color-text-light
+  margin: 0
+
+.tags
+  display: flex
+  flex-wrap: wrap
+  gap: 6px
+  &__inner
+    font-size: 1.5rem
+    align-self: center
+
+.tag
+  display: inline-block
+  background-color: #eff6ff
+  color: $color-primary
+  padding: 4px 8px
+  border-radius: 4px
+  font-size: 12px
+  font-weight: 500
+
+.cardActions
+  display: flex
+  align-self: flex-end
+  gap: 8px
+  margin-top: auto
+
+.tagsList
+  display: flex
+  flex-direction: column
+  gap: 8px
+  max-height: 25rem
+  overflow-y: auto
+  &.loading
+    display: flex
+    align-items: center
+
+.tagItem
+  background: white
+  border: 1px solid $color-border
+  border-radius: 6px
+  padding: 12px 16px
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.tagName
+  font-size: 14px
+  font-weight: 500
+  color: $color-text
+
+.tagActions
+  display: flex
+  gap: 8px
+
+// Buttons
+.btnPrimary
+  background-color: $color-primary
+  color: white
+  border: none
+  border-radius: 6px
+  padding: 10px 16px
+  font-size: 14px
+  font-weight: 500
+  cursor: pointer
+  transition: background-color 0.2s ease
+  &.disabled
+    background: $color-text-light
+    color: $color-text
+    &:hover
+      background: $color-text-light
+
+  &:hover
+    background-color: $color-primary-hover
+
+.btnSecondary
+  background-color: white
+  color: $color-primary
+  border: 1px solid $color-primary
+  border-radius: 6px
+  padding: 10px 16px
+  font-size: 14px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #eff6ff
+
+.btnCancel
+  background-color: #f3f4f6
+  color: $color-text
+  border: 1px solid $color-border
+  border-radius: 6px
+  padding: 8px 14px
+  font-size: 13px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #e5e7eb
+
+.btnDanger
+  background-color: $color-danger
+  color: white
+  border: none
+  border-radius: 6px
+  padding: 8px 14px
+  font-size: 13px
+  font-weight: 500
+  cursor: pointer
+  transition: background-color 0.2s ease
+
+  &:hover
+    background-color: $color-danger-hover
+
+.btnEdit,
+.btnSmallEdit
+  background-color: #dbeafe
+  color: $color-primary
+  border: none
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #bfdbfe
+
+.btnDelete,
+.btnSmallDelete
+  background-color: #fee2e2
+  color: $color-danger
+  border: none
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #fecaca
+
+.btnView
+  background-color: $color-primary
+  color: white
+  border: none
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: background-color 0.2s ease
+
+  &:hover
+    background-color: $color-primary-hover
+
+.btnRedirected
+  background-color: #fef3c7 // светло-жёлтый
+  color: $color-primary
+  border: none
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #fde68a // чуть темнее при ховере
+
+.btnSmallContainer
+  width: 100%
+  padding: 1.2rem 2rem
+  position: sticky
+  bottom: 0
+  background: white
+
+.btnSmall
+  width: 100%
+  background-color: #f3f4f6
+  color: $color-text
+  border: 1px solid $color-border
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+  margin-top: 8px
+
+  &:hover
+    background-color: #e5e7eb
+
+// Modals
+.modalBackdrop
+  min-width: 31rem
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background-color: rgba(0, 0, 0, 0.5)
+  display: flex
+  justify-content: center
+  align-items: center
+  z-index: 1000
+
+.modal
+  background: white
+  border-radius: 8px
+  padding: 24px
+  max-width: 600px
+  width: 100%
+  max-height: 90vh
+  overflow-y: auto
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15)
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  &__form
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    .tags
+      display: flex
+      flex-wrap: wrap
+    .formDual
+      display: flex
+      justify-content: space-between
+      &__item
+        width: 27rem
+    .recurring
+      display: flex
+      align-items: center
+      justify-content: space-between
+      &__item
+        display: flex
+        align-items: flex-end
+        gap: 1rem
+        .title
+          font-size: 1.6rem
+        .input
+          margin: 0
+      &__select
+        width: 15rem !important
+        margin: 0 !important
+        select
+          min-width: 15rem !important
+    .containerForm
+      display: flex
+      gap: 2rem
+
+.modalLarge
+  background: white
+  border-radius: 8px
+  padding: 24px
+  max-width: 700px
+  width: 90%
+  max-height: 90vh
+  overflow-y: auto
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15)
+
+.modalTitle
+  font-size: 18px
+  font-weight: 600
+  color: $color-text
+  // margin: 0 0 20px
+
+.confirmText
+  font-size: 14px
+  color: $color-text-light
+  margin: 0 0 20px
+
+.filter
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  background: white
+  padding: 2rem
+  &__container
+    display: flex
+    flex-direction: column
+    gap: 1rem
+    .tags
+      display: flex
+      flex-direction: column
+      gap: .5rem
+      &__title
+        font-size: 1.8rem
+      &__select
+        display: none
+        &.active
+          display: block
+    .clearBtn
+      align-self: flex-end
+    .lastSelect
+      margin-top: 1rem
+    .mainInput
+      width: 100% !important
+      select
+        width: 100%
+    .dualInput
+      display: flex
+      gap: 1rem
+      &__inner
+        width: 20rem !important
+
+// Forms
+.formGroup
+  display: flex
+  flex-direction: column
+  gap: 6px
+  // margin-bottom: 16px
+  &__btns
+    display: flex
+  &__item
+    width: 100% !important
+    margin: 0 !important
+
+  label
+    font-size: 13px
+    font-weight: 500
+    color: $color-text
+
+  select
+    //max-width: 270px
+
+  input,
+  textarea,
+  select
+    resize: none
+    border: 1px solid $color-border
+    border-radius: 6px
+    padding: 8px 12px
+    font-size: 13px
+    font-family: inherit
+    transition: border-color 0.2s ease
+
+    &:focus
+      outline: none
+      border-color: $color-primary
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1)
+
+  input[type="checkbox"]
+    width: 16px
+    height: 16px
+    cursor: pointer
+    margin-right: 6px
+
+.formRow
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 12px
+
+.formActions
+  display: flex
+  justify-content: flex-end
+  gap: 12px
+  // margin-top: 20px
+
+// View Content
+.viewContent
+  margin: 20px 0
+  display: flex
+  flex-direction: column
+  gap: 20px
+  &__desc
+    display: flex
+    flex-direction: column
+    gap: 8px
+    // margin-bottom: 20px
+    .descTitle
+      font-size: 14px
+      font-weight: 600
+      color: #2c3e50
+      margin: 0
+    .descContainer
+      padding: 12px 16px
+      background-color: #f8f9fa
+      border: 1px solid #e1e4e8
+      border-radius: 6px
+      font-size: 14px
+      line-height: 1.6
+      color: #24292e
+      max-height: 300px //* Ограничение высоты и скролл */
+      overflow-y: auto
+      word-wrap: break-word //* Улучшенная типографика */
+      word-break: break-word
+      white-space: pre-wrap
+      scrollbar-width: thin //* Кастомный скроллбар */
+      scrollbar-color: #cbd5e0 #f8f9fa
+      &::-webkit-scrollbar
+        width: 6px
+      &::-webkit-scrollbar-track
+        background: #f8f9fa
+        border-radius: 3px
+      &::-webkit-scrollbar-thumb
+        background: #cbd5e0
+        border-radius: 3px
+        transition: background 0.2s
+      &::-webkit-scrollbar-thumb:hover
+        background: #a0aec0
+      &:empty::before
+        content: "No description"
+        color: #a0aec0
+        font-style: italic
+
+  &__tags
+    display: flex
+    flex-direction: column
+    gap: 1rem
+    .tagsTitle
+      font-size: 1.6rem
+      color: $color-text-light
+    .tagsContainer
+      display: flex
+      flex-wrap: wrap
+      gap: 2rem
+      padding: 1rem 2rem
+      border-radius: 1rem
+      border: 1px solid $color-border
+      &.none
+        justify-content: center
+        padding: 2rem
+      .tag
+        font-size: 1.4rem
+        color: $color-text
+        padding: .5rem 1rem
+        border: 1px solid $color-border
+
+.infoGrid
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+  gap: 16px
+
+  &__desc
+    position: relative
+    &:hover .fullDesc
+      display: flex
+      opacity: 1
+    .fullDesc
+      width: 30rem
+      position: absolute
+      top: -5rem
+      right: -30rem
+      background: white
+      border-radius: 1rem
+      border: 1px solid
+      display: none
+      opacity: 0
+
+  div
+    background-color: #f9fafb
+    padding: 12px
+    border-radius: 6px
+
+    strong
+      display: block
+      font-size: 12px
+      color: $color-text-light
+      margin-bottom: 4px
+
+    p
+      font-size: 13px
+      color: $color-text
+      margin: 0
+
+// Collapsibles
+.collapsibleSection
+  border: 1px solid $color-border
+  border-radius: 6px
+  overflow: hidden
+  max-height: 30rem
+  overflow-y: auto
+  position: relative
+
+.collapsibleHeader
+  background-color: #f9fafb
+  padding: 12px 16px
+  cursor: pointer
+  display: flex
+  justify-content: space-between
+  align-items: center
+  font-weight: 500
+  font-size: 13px
+  color: $color-text
+  user-select: none
+  transition: background-color 0.2s ease
+  position: sticky
+  top: 0
+
+  &:hover
+    background-color: #f3f4f6
+
+.collapsibleContent
+  padding: 12px 16px 0 16px
+  display: flex
+  flex-direction: column
+  gap: 12px
+
+.dual
+  display: flex
+  flex-direction: column
+
+.nestedItem
+  background-color: #f9fafb
+  padding: 12px
+  border-radius: 4px
+  display: flex
+  //flex-direction: column
+  justify-content: space-between
+  //align-items: center
+  gap: 12px
+  &__header
+    display: flex
+    flex-direction: column
+    gap: 1rem
+    .info
+      display: flex
+      justify-content: space-between
+      align-items: flex-end
+    .btns
+      display: flex
+      //justify-content: space-between
+      //align-self: flex-end
+      &__title
+        color: $color-text-light
+      &__container
+        display: flex
+        gap: 1rem
+    .innerDual
+      display: flex
+      justify-content: space-between
+  &__content
+    width: 100%
+    height: 20rem
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+  p
+    font-size: 16px
+    color: $color-text
+    margin: 0 0 4px 0
+
+    strong
+      display: block
+
+.nestedFile
+  font-size: 11px
+  color: $color-text-light
+  font-style: italic
+  margin-top: 4px !important
+
+.nestedActions
+  display: flex
+  gap: 6px
+  flex-wrap: wrap
+  justify-content: flex-end
+  &__icon
+    font-size: 2rem
+    align-self: center
+    color: green
+    margin-right: 1rem
+    cursor: pointer
+    &.compledted
+      color: red
+
+@media (max-width: 768px)
+  .header
+    flex-direction: column
+    align-items: stretch
+
+  .headerActions
+    flex-direction: column
+
+  .grid
+    grid-template-columns: 1fr
+
+  .formRow
+    grid-template-columns: 1fr
+
+  .infoGrid
+    grid-template-columns: 1fr
+
+.card
+  width: 100%
+  background: #fff
+  border: 1px solid #ddd
+  padding: 16px
+  margin-bottom: 12px
+  border-radius: 12px
+  box-shadow: 0 3px 8px rgba(0,0,0,.05)
+  transition: .2s
+
+  &.read
+    opacity: .6
+
+  &__btn
+    margin-top: auto
+    display: flex
+    justify-content: space-between
+
+.header
+  display: flex
+  justify-content: space-between
+  margin-bottom: 8px
+
+.role
+  font-weight: 600
+  color: #4a4aff
+
+.date
+  font-size: 14px
+  color: #777
+
+.message
+  margin: 10px 0
+  font-size: 15px
+
+.info
+  display: flex
+  justify-content: space-between
+  margin-bottom: 12px
+
+.mission
+  font-weight: 500
+
+.deadline
+  font-weight: 500
+  color: #d9534f
+  font-size: 1.4rem
+
+.viewBtn
+  padding: 8px 12px
+  border: none
+  border-radius: 8px
+  color: #4a4aff
+  border: 1px solid #4a4aff
+  background: white
+  cursor: pointer
+
+.toggleBtn
+  padding: 8px 12px
+  background: #4a4aff
+  border: none
+  border-radius: 8px
+  color: white
+  cursor: pointer
+  transition: .2s
+
+  &:hover
+    background: #3737d4
+
+.redirect
+  background: white
+  padding: 2rem
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  &__btn
+    align-self: flex-end

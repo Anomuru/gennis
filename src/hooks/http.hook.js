@@ -18,3 +18,22 @@ export const useHttp = () => {
 
     return {request}
 }
+
+export const ParamUrl = (params = {}) => {
+    return Object.entries(params)
+        .filter(([_, value]) =>
+            value !== undefined &&
+            value !== null &&
+            value !== "all" &&
+            value !== ""
+        )
+        .map(([key, value]) => {
+            if (Array.isArray(value)) {
+                // массив → без кодирования запятых
+                return `${encodeURIComponent(key)}=${value.join(",")}`;
+            }
+
+            return `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
+        })
+        .join("&");
+};

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     BarChart, Bar, Line,
     XAxis, YAxis, CartesianGrid,
@@ -13,8 +13,9 @@ import Input from "components/platform/platformUI/input";
 
 import cls from "./platformAdminRating.module.sass";
 import 'react-calendar/dist/Calendar.css';
-import {useDispatch, useSelector} from "react-redux";
-import {fetchAdminRating} from "../../../slices/adminRatingSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAdminRating } from "../../../slices/adminRatingSlice";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const colors = {
     a: '#12C2E9',    // голубой
@@ -44,6 +45,8 @@ const colors3 = {
 const PlatformAdminRating = () => {
 
     const dispatch = useDispatch()
+    const location = useLocation()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const date = new Date()
@@ -64,12 +67,38 @@ const PlatformAdminRating = () => {
     return (
         <div className={cls.adminRating}>
             <div className={cls.adminRating__header}>
-                <div className={cls.switch}>
-                    <RatingHeader
-                        activeSwitch={activeSwitch}
-                        onChangeSwitch={(status) => setActiveSwitch(status)}
-                    />
-                    <h2>{activeSwitch ? "Diagramma" : "Table"}</h2>
+                <div className={cls.wrapper}>
+                    <div className={cls.navButtons}>
+                        <button
+                            className={classNames(
+                                cls.navButton,
+                                {
+                                    [cls.active]: location.pathname.includes("taskManager")
+                                }
+                            )}
+                            onClick={() => navigate("../taskManager")}
+                        >
+                            Task manager
+                        </button>
+                        <button
+                            className={classNames(
+                                cls.navButton,
+                                {
+                                    [cls.active]: location.pathname.includes("adminRanking")
+                                }
+                            )}
+                            onClick={() => navigate("../adminRanking")}
+                        >
+                            Admin ranking
+                        </button>
+                    </div>
+                    <div className={cls.switch}>
+                        <RatingHeader
+                            activeSwitch={activeSwitch}
+                            onChangeSwitch={(status) => setActiveSwitch(status)}
+                        />
+                        <h2>{activeSwitch ? "Diagramma" : "Table"}</h2>
+                    </div>
                 </div>
                 {
                     !activeSwitch &&
@@ -92,24 +121,24 @@ const PlatformAdminRating = () => {
             <div
                 className={classNames(
                     cls.adminRating__container, {
-                        [cls.boxes]: activeSwitch
-                    }
+                    [cls.boxes]: activeSwitch
+                }
                 )}
             >
                 {
                     activeSwitch
                         ? <>
-                            <AdminRating/>
-                            <NewStudentsRating/>
-                            <LeadRating/>
-                            <DebtorsRating/>
-                            <FormattedCalendar/>
+                            <AdminRating />
+                            <NewStudentsRating />
+                            <LeadRating />
+                            <DebtorsRating />
+                            <FormattedCalendar />
                         </>
                         : <>
-                            <AdminRatingTable/>
-                            <NewStudentsRatingTable/>
-                            <LeadRatingTable/>
-                            <DebtorsRatingTable/>
+                            <AdminRatingTable />
+                            <NewStudentsRatingTable />
+                            <LeadRatingTable />
+                            <DebtorsRatingTable />
                         </>
                 }
             </div>
@@ -185,14 +214,14 @@ const AdminRatingTable = () => {
             <h2 className={cls.adminRating__title}>Admins</h2>
             <Table className={cls.inner}>
                 <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Filial nomi</th>
-                    <th>Vazifalar statistikasi</th>
-                </tr>
+                    <tr>
+                        <th>№</th>
+                        <th>Filial nomi</th>
+                        <th>Vazifalar statistikasi</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {renderList()}
+                    {renderList()}
                 </tbody>
             </Table>
         </div>
@@ -230,7 +259,7 @@ const NewStudentsRating = () => {
 
     const renderActiveShape = (props) => {
         const RADIAN = Math.PI / 180;
-        const {cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value} = props;
+        const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
         const sin = Math.sin(-RADIAN * midAngle);
         const cos = Math.cos(-RADIAN * midAngle);
         const sx = cx + (outerRadius + 10) * cos;
@@ -264,10 +293,10 @@ const NewStudentsRating = () => {
                     outerRadius={outerRadius + 10}
                     fill={fill}
                 />
-                <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none"/>
-                <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none"/>
+                <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
+                <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
                 <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor}
-                      fill="#333">{`PV ${value}`}</text>
+                    fill="#333">{`PV ${value}`}</text>
                 <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
                     {`(Rate ${(percent * 100).toFixed(2)}%)`}
                 </text>
@@ -319,14 +348,14 @@ const NewStudentsRatingTable = () => {
             <h2 className={cls.adminRating__title}>New Student</h2>
             <Table className={cls.inner}>
                 <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Filial nomi</th>
-                    <th>Yangi o'quvchilar</th>
-                </tr>
+                    <tr>
+                        <th>№</th>
+                        <th>Filial nomi</th>
+                        <th>Yangi o'quvchilar</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {renderList()}
+                    {renderList()}
                 </tbody>
             </Table>
         </div>
@@ -424,16 +453,16 @@ const LeadRatingTable = () => {
             <h2 className={cls.adminRating__title}>Lead</h2>
             <Table className={cls.inner}>
                 <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Filial nomi</th>
-                    <th>Leads</th>
-                    <th>Completed leads</th>
-                    <th>Not completed leads</th>
-                </tr>
+                    <tr>
+                        <th>№</th>
+                        <th>Filial nomi</th>
+                        <th>Leads</th>
+                        <th>Completed leads</th>
+                        <th>Not completed leads</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {renderList()}
+                    {renderList()}
                 </tbody>
             </Table>
         </div>
@@ -520,8 +549,8 @@ const DebtorsRating = () => {
                 >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
-                    <YAxis/>
-                    <Tooltip/>
+                    <YAxis />
+                    <Tooltip />
 
                     <Bar dataKey="debtors">
                         {
@@ -533,7 +562,7 @@ const DebtorsRating = () => {
                     <Bar dataKey="completed_tasks">
                         {
                             data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.fill}/>
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
                             ))
                         }
                     </Bar>
@@ -564,14 +593,14 @@ const DebtorsRatingTable = () => {
             <h2 className={cls.adminRating__title}>Qarzdorlar</h2>
             <Table className={cls.inner}>
                 <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Filial nomi</th>
-                    <th>Qarzdorlar</th>
-                </tr>
+                    <tr>
+                        <th>№</th>
+                        <th>Filial nomi</th>
+                        <th>Qarzdorlar</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {renderList()}
+                    {renderList()}
                 </tbody>
             </Table>
         </div>
@@ -644,7 +673,7 @@ const FormattedCalendar = () => {
 }
 
 
-const RatingHeader = ({disabled = false, activeSwitch, onChangeSwitch}) => {
+const RatingHeader = ({ disabled = false, activeSwitch, onChangeSwitch }) => {
     return (
         <div className={cls.mainBody}>
             <button

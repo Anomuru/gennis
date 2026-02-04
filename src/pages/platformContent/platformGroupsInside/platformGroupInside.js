@@ -1,16 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from "classnames";
 
 import cls from "./platformGroupInside.module.sass"
-import {Link, Route, useNavigate, useParams, Routes, Navigate, NavLink, Outlet} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {fetchGroup, setActiveBtn} from "slices/groupSlice";
+import { Link, Route, useNavigate, useParams, Routes, Navigate, NavLink, Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchGroup, setActiveBtn } from "slices/groupSlice";
 import Modal from "components/platform/platformUI/modal";
 import Confirm from "components/platform/platformModals/confirm/confirm";
 import CheckPassword from "components/platform/platformModals/checkPassword/CheckPassword";
 import RequireAuthChildren from "components/requireAuthChildren/requireAuthChildren";
-import {BackUrl, BackUrlForDoc, headers, ROLES} from "constants/global";
-import {useHttp} from "hooks/http.hook";
+import { BackUrl, BackUrlForDoc, headers, ROLES } from "constants/global";
+import { useHttp } from "hooks/http.hook";
 import user_img from "assets/user-interface/user_image.png";
 import BackButton from "../../../components/platform/platformUI/backButton/backButton";
 import ObserveTeacherLesson from "pages/platformContent/platformGroupsInside/observeTeacherLesson/ObserveTeacherLesson";
@@ -27,43 +27,45 @@ const PlatformListAttendance = React.lazy(() => import('./listAttendance/listAtt
 const PlatformChangeGroupInfo = React.lazy(() => import('./changeGroupInfo/changeGroupInfo'));
 const PlatformChangeGroupTime = React.lazy(() => import('./changeGroupTime/changeGroupTime'));
 const PlatformChangeGroupTeacher = React.lazy(() => import('./changeGroupTeacher/changeGroupTeacher'));
+const PlatformChangeGroupAssistent = React.lazy(() => import('./changeGroupAssistent/changeGroupAssistent'));
 const PlatformChangeGroupStudents = React.lazy(() => import('./changeGroupStudents/changeGroupStudents'));
 const PlatformAddToGroup = React.lazy(() => import('./addToGroup/addToGroup'));
 const PlatformMoveToGroup = React.lazy(() => import('./moveToGroup/moveToGroup'));
 const PlatformGroupTime = React.lazy(() => import('pages/platformContent/platformTimeTable/group'));
 
 const PlatformGroupInside = () => {
-    const {groupId} = useParams()
+    const { groupId } = useParams()
 
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(fetchGroup(groupId))
-    },[groupId])
+    }, [groupId])
 
     return (
         <Routes>
-            <Route path="info" element={<GroupInfo groupId={groupId}/>}>
-                <Route path={'information'} element={<Info/>}/>
-                <Route path={'addition'} element={<Addition/>}/>
+            <Route path="info" element={<GroupInfo groupId={groupId} />}>
+                <Route path={'information'} element={<Info />} />
+                <Route path={'addition'} element={<Addition />} />
             </Route>
-            <Route path="makeAttendance" element={<PlatformMakeAttendance/>}/>
-            <Route path="listAttendance" element={<PlatformListAttendance/>}/>
-            <Route path="changeGroupInfo" element={<PlatformChangeGroupInfo/>}/>
-            <Route path="changeGroupTime" element={<PlatformChangeGroupTime/>}/>
-            <Route path="changeGroupTeacher" element={<PlatformChangeGroupTeacher/>}/>
-            <Route path="changeGroupStudents" element={<PlatformChangeGroupStudents/>}/>
-            <Route path="addToGroup" element={<PlatformAddToGroup/>}/>
-            <Route path="groupTime" element={<PlatformGroupTime/>}/>
-            <Route path="moveToGroup/:oldGroupId/:newGroupId" element={<PlatformMoveToGroup/>}/>
-            <Route path="lessonPlan" element={<LessonPlan backBtn={true}/>}/>
-            <Route path="observeTeacherLesson/*" element={<ObserveTeacherLesson/>}/>
-            <Route path="observedTeacherLessons" element={<ObservedTeacherLessons/>}/>
-            <Route path="test" element={<GroupTest/>}/>
+            <Route path="makeAttendance" element={<PlatformMakeAttendance />} />
+            <Route path="listAttendance" element={<PlatformListAttendance />} />
+            <Route path="changeGroupInfo" element={<PlatformChangeGroupInfo />} />
+            <Route path="changeGroupTime" element={<PlatformChangeGroupTime />} />
+            <Route path="changeGroupTeacher" element={<PlatformChangeGroupTeacher />} />
+            <Route path="changeGroupAssistent" element={<PlatformChangeGroupAssistent />} />
+            <Route path="changeGroupStudents" element={<PlatformChangeGroupStudents />} />
+            <Route path="addToGroup" element={<PlatformAddToGroup />} />
+            <Route path="groupTime" element={<PlatformGroupTime />} />
+            <Route path="moveToGroup/:oldGroupId/:newGroupId" element={<PlatformMoveToGroup />} />
+            <Route path="lessonPlan" element={<LessonPlan backBtn={true} />} />
+            <Route path="observeTeacherLesson/*" element={<ObserveTeacherLesson />} />
+            <Route path="observedTeacherLessons" element={<ObservedTeacherLessons />} />
+            <Route path="test" element={<GroupTest />} />
 
             <Route
                 path="*"
                 element={
-                    <Navigate to="info/information" replace/>
+                    <Navigate to="info/information" replace />
                 }
             />
         </Routes>
@@ -71,7 +73,7 @@ const PlatformGroupInside = () => {
 }
 
 
-const GroupInfo = ({groupId}) => {
+const GroupInfo = ({ groupId }) => {
     const {
         btns,
         groupName,
@@ -81,7 +83,7 @@ const GroupInfo = ({groupId}) => {
         isTime,
         msg
     } = useSelector(state => state.group)
-    const {isCheckedPassword} = useSelector(state => state.me)
+    const { isCheckedPassword } = useSelector(state => state.me)
 
     const [activeOptions, setActiveOptions] = useState(false)
     const [activeChangeModal, setActiveChangeModal] = useState(false)
@@ -93,8 +95,8 @@ const GroupInfo = ({groupId}) => {
         return btns.map(btn => {
             return (
                 <NavLink
-                    className={({isActive}) =>
-                         isActive ? `${cls.subheader__linksItem} ${cls.active}` : cls.subheader__linksItem
+                    className={({ isActive }) =>
+                        isActive ? `${cls.subheader__linksItem} ${cls.active}` : cls.subheader__linksItem
                     }
                     to={btn.name}
                     onClick={() => activateBtn(btn.id)}
@@ -130,7 +132,7 @@ const GroupInfo = ({groupId}) => {
                 return (
                     <Link to={`../../../${link.link}/${locationId}/${groupId}`} className={cls.option}>
                         <span className={cls.icon}>
-                            <i className={`fas ${link.iconClazz}`}/>
+                            <i className={`fas ${link.iconClazz}`} />
                         </span>
                         <span>{link.title}</span>
                     </Link>
@@ -150,7 +152,7 @@ const GroupInfo = ({groupId}) => {
                         className={cls.option}
                     >
                         <span className={cls.icon}>
-                            <i className={`fas ${link.iconClazz}`}/>
+                            <i className={`fas ${link.iconClazz}`} />
                         </span>
                         <span>{link.title}</span>
                     </div>
@@ -159,13 +161,7 @@ const GroupInfo = ({groupId}) => {
         })
     }, [changeModal, groupId, links, locationId])
 
-    const [isActive, setIsActive] = useState(false)
-
-    const onHandleClick = () => {
-        setIsActive(!isActive)
-    }
-
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     const getConfirmDelete = (name) => {
         if (name === "yes") {
@@ -178,7 +174,7 @@ const GroupInfo = ({groupId}) => {
     const dispatch = useDispatch()
 
     const activateBtn = (id) => {
-        dispatch(setActiveBtn({id}))
+        dispatch(setActiveBtn({ id }))
     }
 
     const renderedBtns = renderBtns()
@@ -197,32 +193,10 @@ const GroupInfo = ({groupId}) => {
         <div className={cls.insideGroup}>
             <header className={cls.header}>
                 <div>
-                    <BackButton/>
+                    <BackButton />
                 </div>
                 <div>
-                    <span>
-                            <svg aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="none"
-                                 viewBox="0 0 24 24">
-  <path stroke="white" stroke-linecap="round" stroke-width="2"
-        d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-</svg>
-                        {
-                            msg?.length > 0 ? <p className={cls.error_status} onClick={onHandleClick}>{ isActive === true ? "x"  : msg?.length}</p> :
-                                <p className={cls.status}>
-                                    <svg className="w-[35px] h-[35px] text-gray-800 dark:text-white" aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                         viewBox="0 0 24 24">
-                                        <path stroke="white" stroke-linecap="round" stroke-linejoin="round"
-                                              stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
-                                    </svg>
-
-
-                                </p>
-                        }
-                        </span>
-                    <h1 style={{fontSize: "3rem"}}>{groupName}</h1>
-
+                    <h2>{groupName}</h2>
                 </div>
                 <div>
                     <RequireAuthChildren allowedRules={[ROLES.Admin, ROLES.Director, ROLES.Programmer]}>
@@ -231,7 +205,7 @@ const GroupInfo = ({groupId}) => {
                             className={cls.headerBtn}
                         >
 
-                        <i className="fas fa-ellipsis-v"/>
+                            <i className="fas fa-ellipsis-v" />
 
                             <div
                                 className={classNames(cls.modalOptions, {
@@ -244,22 +218,11 @@ const GroupInfo = ({groupId}) => {
                     </RequireAuthChildren>
                 </div>
             </header>
-            <div className={classNames(cls.error, { [cls.active]: isActive === true})}>
-                <div className={cls.error__header}>
-                    <span className={cls.error__header__span}>
-                        <svg className="w-6 h-6 text-white" fill="none" width="35" height="35" stroke="white" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                    </span>
-                    <h1>Muhim eslatmalar</h1>
-                </div>
+            <div className={cls.error}>
                 <h1>{!isTime ? "Guruhga dars jadvali belgilanmagan !" : null}</h1>
-                <ul className={cls.error__list}>
-                    {msg && msg?.map(item => (
-                        <li>{item}</li>
-                    ))}
-                </ul>
-
+                {msg && msg?.map(item => (
+                    <h1>{item}</h1>
+                ))}
 
             </div>
 
@@ -273,17 +236,17 @@ const GroupInfo = ({groupId}) => {
             {/*    <Route path={'information'} element={<Info/>}/>*/}
             {/*    <Route path={'addition'} element={<Addition/>}/>*/}
             {/*</Routes>*/}
-            <Outlet/>
+            <Outlet />
 
             <RequireAuthChildren allowedRules={[ROLES.Admin, ROLES.Director, ROLES.Programmer]}>
                 <Modal activeModal={activeCheckPassword} setActiveModal={() => setActiveCheckPassword(false)}>
-                    <CheckPassword/>
+                    <CheckPassword />
                 </Modal>
                 {
                     activeChangeModalName === "deleteGroup" && isCheckedPassword ?
                         <Modal activeModal={activeChangeModal} setActiveModal={() => setActiveChangeModal(false)}>
                             <Confirm setActive={setActiveChangeModal} text={"Gruppani ochirishni hohlaysizmi ?"}
-                                     getConfirm={getConfirmDelete}/>
+                                getConfirm={getConfirmDelete} />
                         </Modal> : null
                 }
             </RequireAuthChildren>

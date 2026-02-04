@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {useLocation} from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
     deleteAccDataItem,
     fetchAccData,
@@ -10,17 +10,17 @@ import {
     onChangeFetchedDataType,
     changePaymentType,
 } from "slices/accountingSlice";
-import {fetchFilters} from "slices/filtersSlice";
-import {BackUrl, headers} from "constants/global";
-import {useHttp} from "hooks/http.hook";
-import {getUIPageByPath, setPagePosition} from "slices/uiSlice";
+import { fetchFilters } from "slices/filtersSlice";
+import { BackUrl, headers } from "constants/global";
+import { useHttp } from "hooks/http.hook";
+import { getUIPageByPath, setPagePosition } from "slices/uiSlice";
 import useFilteredData from "pages/platformContent/platformAccounting/useFilteredData";
-import {setMessage} from "slices/messageSlice";
+import { setMessage } from "slices/messageSlice";
 import Button from "components/platform/platformUI/button";
 import AccountingTable from "components/platform/platformUI/tables/accountingTable";
-import Pagination, {ExtraPagination} from "components/platform/platformUI/pagination";
-import {useForm} from "react-hook-form";
-import {fetchDataToChange} from "slices/dataToChangeSlice";
+import Pagination, { ExtraPagination } from "components/platform/platformUI/pagination";
+import { useForm } from "react-hook-form";
+import { fetchDataToChange } from "slices/dataToChangeSlice";
 import Select from "components/platform/platformUI/select";
 import Modal from "components/platform/platformUI/modal";
 import CheckPassword from "components/platform/platformModals/checkPassword/CheckPassword";
@@ -29,7 +29,7 @@ import filters from "components/platform/platformUI/filters";
 const SampleAccounting = React.lazy(() => import("components/platform/platformSamples/sampleAccaunting/SampleAccounting"))
 
 
-const Overhead = ({locationId, path}) => {
+const Overhead = ({ locationId, path }) => {
 
     const {
         data,
@@ -42,9 +42,9 @@ const Overhead = ({locationId, path}) => {
     const [isChangedData, setIsChangedData] = useState(false)
     const [isDeleted, setIsDeleted] = useState(false)
 
-    const {pathname} = useLocation()
+    const { pathname } = useLocation()
 
-    const {isCheckedPassword} = useSelector(state => state.me)
+    const { isCheckedPassword } = useSelector(state => state.me)
     const [activeChangeModal, setActiveChangeModal] = useState(false)
     const [activeChangeModalName, setActiveChangeModalName] = useState("")
     const [activeCheckPassword, setActiveCheckPassword] = useState(false)
@@ -55,9 +55,9 @@ const Overhead = ({locationId, path}) => {
     let PageSize = useMemo(() => 50, [])
 
     const dispatch = useDispatch()
-    const {request} = useHttp()
+    const { request } = useHttp()
 
-    const {activeFilters} = useSelector(state => state.filters)
+    const { activeFilters } = useSelector(state => state.filters)
 
     useEffect(() => {
         setCurrentPage(1);
@@ -79,13 +79,13 @@ const Overhead = ({locationId, path}) => {
 
 
             dispatch(fetchFilters(newData))
-            dispatch(onChangeFetchedDataType({type: path}))
+            dispatch(onChangeFetchedDataType({ type: path }))
         }
     }, [locationId])
 
 
     useEffect(() => {
-        dispatch(onChangeAccountingPage({value: path}))
+        dispatch(onChangeAccountingPage({ value: path }))
     }, [])
 
 
@@ -142,21 +142,21 @@ const Overhead = ({locationId, path}) => {
 
         const route = "overhead/"
 
-            dispatch(fetchAccData({
-                data: data,
-                isArchive: !!data.archive,
-                PageSize,
-                currentPage,
-                activeFilters,
-                locationId,
-                route,
-                deleted: data.deleted
-            }));
+        dispatch(fetchAccData({
+            data: data,
+            isArchive: !!data.archive,
+            PageSize,
+            currentPage,
+            activeFilters,
+            locationId,
+            route,
+            deleted: data.deleted
+        }));
 
 
 
-        dispatch(onChangeFetchedDataType({type: path}));
-    }, [btns, isChangedData , activeFilters , currentPage])
+        dispatch(onChangeFetchedDataType({ type: path }));
+    }, [btns, isChangedData, activeFilters, currentPage])
 
     useEffect(() => {
         if (oldPage) {
@@ -186,9 +186,9 @@ const Overhead = ({locationId, path}) => {
 
     const onDelete = (data) => {
 
-        const {id} = data
+        const { id } = data
 
-        dispatch(deleteAccDataItem({id: id}))
+        dispatch(deleteAccDataItem({ id: id }))
         request(`${BackUrl}account/delete_overhead/${id}`, "POST", JSON.stringify(data), headers())
             .then(res => {
                 if (res.success) {
@@ -201,7 +201,7 @@ const Overhead = ({locationId, path}) => {
                         locationId,
                         type: "overhead"
                     }
-                    dispatch(fetchAccData({data: data, PageSize, currentPage}));
+                    dispatch(fetchAccData({ data: data, PageSize, currentPage }));
                 } else {
                     dispatch(setMessage({
                         msg: "Serverda hatolik",
@@ -225,7 +225,7 @@ const Overhead = ({locationId, path}) => {
                         type: "success",
                         active: true
                     }))
-                    dispatch(changePaymentType({id: id, typePayment: value}))
+                    dispatch(changePaymentType({ id: id, typePayment: value }))
                 } else {
                     dispatch(setMessage({
                         msg: "Serverda hatolik",
@@ -254,7 +254,7 @@ const Overhead = ({locationId, path}) => {
 
     const setChangedBtns = (id, active) => {
         if (!active) setIsChangedData(true)
-        dispatch(onChangeAccountingBtns({id}))
+        dispatch(onChangeAccountingBtns({ id }))
     }
     const changeModal = (name) => {
         setActiveChangeModalName(name)
@@ -314,7 +314,7 @@ const Overhead = ({locationId, path}) => {
 
     const onChangedPage = (page) => {
         setCurrentPage(page)
-        dispatch(setPagePosition({path: pathname, page: page}))
+        dispatch(setPagePosition({ path: pathname, page: page }))
     }
 
 
@@ -339,7 +339,7 @@ const Overhead = ({locationId, path}) => {
             <SampleAccounting
                 links={links}
             >
-                <div style={{height: "43vh", overflow: "auto"}}>
+                <div style={{ height: "43vh", overflow: "auto" }}>
                     <AccountingTable
                         sum={sum}
                         // cache={true}
@@ -361,7 +361,7 @@ const Overhead = ({locationId, path}) => {
 
 
                 <Modal activeModal={activeCheckPassword} setActiveModal={() => setActiveCheckPassword(false)}>
-                    <CheckPassword/>
+                    <CheckPassword />
                 </Modal>
                 {
                     activeChangeModalName === "overhead" && isCheckedPassword ?
@@ -383,17 +383,17 @@ const Overhead = ({locationId, path}) => {
 
 
 const CreatOverhead = ({
-                           locationId,
-                           setMsg,
-                           setTypeMsg,
-                           setActiveMessage,
-                           setActiveChangeModal,
-                           currentPage,
-                           pageSize
-                       }) => {
+    locationId,
+    setMsg,
+    setTypeMsg,
+    setActiveMessage,
+    setActiveChangeModal,
+    currentPage,
+    pageSize
+}) => {
     const {
         register,
-        formState: {errors},
+        formState: { errors },
         handleSubmit,
         reset
     } = useForm({
@@ -401,8 +401,8 @@ const CreatOverhead = ({
     })
 
 
-    const {dataToChange} = useSelector(state => state.dataToChange)
-    const {data} = useSelector(state => state.accounting)
+    const { dataToChange } = useSelector(state => state.dataToChange)
+    const { data } = useSelector(state => state.accounting)
     const [day, setDay] = useState(null)
     const [month, setMonth] = useState(null)
     const [selectedCommunal, setSelectedComunal] = useState(null)
@@ -417,8 +417,8 @@ const CreatOverhead = ({
         return dataToChange?.payment_types?.map((item, index) => {
             return (
                 <label key={index} className="radioLabel" htmlFor="">
-                    <input className="radio" {...register("typePayment", {required: true})} type="radio"
-                           value={item.id}/>
+                    <input className="radio" {...register("typePayment", { required: true })} type="radio"
+                        value={item.id} />
                     <span>{item.name}</span>
                 </label>
             )
@@ -449,7 +449,7 @@ const CreatOverhead = ({
     const renderedDays = renderDate()
     const renderedPaymentType = renderPaymentType()
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     const onSubmit = (data, e) => {
         e.preventDefault()
@@ -483,7 +483,7 @@ const CreatOverhead = ({
                         locationId,
                         type: "overhead"
                     }
-                    dispatch(fetchAccData({data: data, PageSize: pageSize, currentPage}));
+                    dispatch(fetchAccData({ data: data, PageSize: pageSize, currentPage }));
                 } else {
                     dispatch(setMessage({
                         msg: res.msg,
@@ -531,8 +531,8 @@ const CreatOverhead = ({
                             {
                                 errors?.typeItem &&
                                 <span className="error-field">
-                            {errors?.typeItem?.message}
-                        </span>
+                                    {errors?.typeItem?.message}
+                                </span>
                             }
                         </label>
                         : null
@@ -577,7 +577,7 @@ const CreatOverhead = ({
 
                 {renderedDays}
 
-                <input className="input-submit" type="submit" value="Tasdiqlash"/>
+                <input className="input-submit" type="submit" value="Tasdiqlash" />
 
 
             </form>

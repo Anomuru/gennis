@@ -1,0 +1,145 @@
+.container
+    // min-height: 100svh
+    background-color: var(--background)
+
+.header
+    border-bottom: 1px solid var(--border)
+    background-color: var(--card)
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+.headerContent
+    // max-width: 1400px
+    margin: 0 auto
+    padding: 1.5rem 1rem
+    width: 100%
+
+.title
+    font-size: 3rem
+    font-weight: 700
+    color: var(--foreground)
+    margin: 0
+
+.subtitle
+    margin-top: 0.25rem
+    font-size: 1.8rem
+    color: var(--muted-foreground)
+    margin-bottom: 0
+
+.mainContent
+    // max-width: 1400px
+    margin: 0 auto
+    padding: 2rem 1rem
+    width: 100%
+
+.filterSection
+    margin-bottom: 2rem
+    border-radius: 0.5rem
+    border: 1px solid var(--border)
+    background-color: var(--card)
+
+.filterHeader
+    border-bottom: 1px solid var(--border)
+    padding: 1.5rem
+
+.filterTitle
+    font-size: 2rem
+    font-weight: 600
+    color: var(--foreground)
+    margin: 0
+
+.filterDescription
+    margin-top: 0.25rem
+    font-size: 1.4rem
+    color: var(--muted-foreground)
+    margin-bottom: 0
+
+.filterButtons
+    padding: 1.5rem
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    // gap: 0.75rem
+    &__btns
+        display: flex
+        gap: 1rem
+    &__input
+        margin: 0
+        width: 30rem
+
+.filterBtn
+    padding: 0.5rem 1.5rem
+    font-size: 1.6rem
+    font-weight: 500
+    border-radius: 0.5rem
+    border: 1px solid var(--border)
+    background-color: var(--background)
+    color: var(--foreground)
+    cursor: pointer
+    transition: all 0.2s ease
+
+    &:hover
+        border-color: var(--primary)
+
+.filterBtnActive
+    background-color: var(--primary)
+    color: var(--primary-foreground)
+    border-color: var(--primary)
+
+.filterStatus
+    padding: 1.5rem
+    // margin-top: 1rem
+    font-size: 0.875rem
+    color: var(--muted-foreground)
+
+.filterStatusActive
+    font-weight: 600
+    color: var(--foreground)
+    text-transform: capitalize
+
+.categoryGrid
+    display: grid
+    gap: 1rem
+    grid-template-columns: 1fr
+
+    @media (min-width: 768px)
+        grid-template-columns: repeat(2, 1fr)
+
+    @media (min-width: 1024px)
+        grid-template-columns: repeat(3, 1fr)
+
+.categoryCard
+    cursor: pointer
+    border-radius: 0.5rem
+    border: 2px solid var(--border)
+    background-color: var(--card)
+    transition: all 0.3s ease
+
+    &:hover
+        border-color: var(--primary)
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1)
+
+.categoryCardHeader
+    border-bottom: 1px solid var(--border)
+    padding: 1.5rem
+
+.categoryCardTitle
+    font-size: 1.8rem
+    font-weight: 600
+    color: var(--foreground)
+    margin: 0
+
+.categoryCardSubtitle
+    margin-top: 0.25rem
+    font-size: 1.2rem
+    color: var(--muted-foreground)
+    margin-bottom: 0
+
+.categoryCardContent
+    padding: 1.5rem
+
+    p
+        font-size: 1.4rem
+        color: var(--muted-foreground)
+        margin: 0

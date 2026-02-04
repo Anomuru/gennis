@@ -1,6 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {useHttp} from "hooks/http.hook";
-import {BackUrl, headers} from "constants/global";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { useHttp } from "hooks/http.hook";
+import { BackUrl, headers } from "constants/global";
 
 const initialState = {
 
@@ -47,13 +47,17 @@ const initialState = {
     completedStatus: "idle",
     profileStatus: "idle",
 
-
+    callStatus: "idle",
+    callState: "idle",
+    callId: null,
+    audioId: null,
+    message: null
 }
 
 export const fetchNewStudentsData = createAsyncThunk(
     'taskManager/fetchNewStudentsData',
     async (id) => {
-        const {request} = useHttp();
+        const { request } = useHttp();
         return await request(`${BackUrl}student/task_new_students_calling/${id}`, "GET", null, headers())
     }
 )
@@ -73,9 +77,9 @@ export const fetchDebtorsData = createAsyncThunk(
     'taskManager/fetchDebtorStudentsData',
     async (data) => {
 
-        const {locationId,date} = data
+        const { locationId, date } = data
 
-        const {request} = useHttp();
+        const { request } = useHttp();
         return await request(`${BackUrl}task_debts/student_debts_progress/${locationId}/${date}`, "GET", null, headers())
     }
 )
@@ -84,9 +88,9 @@ export const fetchCompletedDebtorsData = createAsyncThunk(
     'taskManager/fetchCompletedDebtorsData',
     async (data) => {
 
-        const {locationId,date} = data
+        const { locationId, date } = data
 
-        const {request} = useHttp();
+        const { request } = useHttp();
         return await request(`${BackUrl}task_debts/student_debts_completed/${locationId}/${date}`, "GET", null, headers())
     }
 )
@@ -95,8 +99,8 @@ export const fetchCompletedDebtorsData = createAsyncThunk(
 export const fetchNewStudentsTaskData = createAsyncThunk(
     'taskManager/fetchNewStudentsTaskData',
     async (data) => {
-        const {locationId,date} = data
-        const {request} = useHttp();
+        const { locationId, date } = data
+        const { request } = useHttp();
 
         return await request(`${BackUrl}task_new_students/task_new_students/${locationId}/${date}`, "GET", null, headers())
     }
@@ -105,8 +109,8 @@ export const fetchNewStudentsTaskData = createAsyncThunk(
 export const fetchCompletedNewStudentsTaskData = createAsyncThunk(
     'taskManager/fetchCompletedNewStudentsTaskData',
     async (data) => {
-        const {locationId,date} = data
-        const {request} = useHttp();
+        const { locationId, date } = data
+        const { request } = useHttp();
 
         return await request(`${BackUrl}task_new_students/completed_new_students/${locationId}/${date}`, "GET", null, headers())
     }
@@ -116,8 +120,8 @@ export const fetchCompletedNewStudentsTaskData = createAsyncThunk(
 export const fetchLeadsData = createAsyncThunk(
     'taskManager/fetchLeadsData',
     async (data) => {
-        const {locationId,date} = data
-        const {request} = useHttp();
+        const { locationId, date } = data
+        const { request } = useHttp();
 
         return await request(`${BackUrl}task_leads/task_leads/${locationId}/${date}`, "GET", null, headers())
     }
@@ -126,8 +130,8 @@ export const fetchLeadsData = createAsyncThunk(
 export const fetchCompletedLeadsData = createAsyncThunk(
     'taskManager/fetchCompletedLeadsData',
     async (data) => {
-        const {locationId,date} = data
-        const {request} = useHttp();
+        const { locationId, date } = data
+        const { request } = useHttp();
 
         return await request(`${BackUrl}task_leads/completed_leads/${locationId}/${date}`, "GET", null, headers())
     }
@@ -135,12 +139,10 @@ export const fetchCompletedLeadsData = createAsyncThunk(
 
 export const fetchUserDataWithHistory = createAsyncThunk(
     'taskManager/fetchUserDataWithHistory',
-    async (data) => {
+    async ({ url }) => {
 
-        const {id,type} = data
-
-        const {request} = useHttp();
-        return await request(`${BackUrl}task_debts/get_comment/${id}/${type}`, "GET", null, headers())
+        const { request } = useHttp();
+        return await request(`${BackUrl}${url}`, "GET", null, headers())
     }
 )
 
@@ -174,7 +176,11 @@ const TaskManagerSlice = createSlice({
 
 
         onDelDebtors: (state, action) => {
-            state.unCompleted.debtors = [...state.unCompleted.debtors.filter(item => item.id !== action.payload.id)]
+            if (action.payload.type === "debtors") {
+                state.unCompleted.debtors = [...state.unCompleted.debtors.filter(item => item.student !== action.payload.id)]
+            } else {
+                state.unCompleted.students = [...state.unCompleted.students.filter(item => item.id !== action.payload.id)]
+            }
 
             console.log(action.payload.id)
         },
@@ -184,7 +190,13 @@ const TaskManagerSlice = createSlice({
             state.allProgress = action.payload.allProgress
         },
 
-
+        callStart: (state, action) => {
+            state.callStatus = action.payload.callStatus
+            state.callState = action.payload.callState
+            state.callId = action.payload.callId
+            state.audioId = action.payload.audioId
+            state.message = action.payload.message
+        }
 
     },
     extraReducers: builder => {
@@ -213,7 +225,7 @@ const TaskManagerSlice = createSlice({
                 state.progressStatus = "loading"
             })
             .addCase(fetchCompletedDebtorsData.fulfilled, (state, action) => {
-                state.completed.debtors = action.payload.students || []
+                state.completed.debtors = action.payload.records || []
                 state.allProgress = action.payload.task_daily_statistics
                 state.progress = action.payload.task_statistics
                 state.isTable = action.payload.table
@@ -252,7 +264,7 @@ const TaskManagerSlice = createSlice({
                 state.progressStatus = "loading"
             })
             .addCase(fetchCompletedNewStudentsTaskData.fulfilled, (state, action) => {
-                state.completed.students = action.payload.students || []
+                state.completed.students = action.payload.records || []
                 state.allProgress = action.payload.task_daily_statistics
                 state.progress = action.payload.task_statistics
                 state.isTable = action.payload.table || false
@@ -291,10 +303,10 @@ const TaskManagerSlice = createSlice({
                 state.progressStatus = "loading"
             })
             .addCase(fetchCompletedLeadsData.fulfilled, (state, action) => {
-                state.completed.leads = action.payload.leads || []
+                state.completed.leads = action.payload.lead_infos || []
                 state.allProgress = action.payload.task_daily_statistics
                 state.progress = action.payload.task_statistics
-                state.isTable = action.payload.table || false
+                state.isTable = true
                 state.completedStatus = "success"
                 state.progressStatus = "success"
             })
@@ -328,7 +340,7 @@ const TaskManagerSlice = createSlice({
                 state.profileStatus = "loading"
             })
             .addCase(fetchUserDataWithHistory.fulfilled, (state, action) => {
-                state.profile = {...action.payload.info,comments: action.payload.comments,invitations: action.payload.invitations}
+                state.profile = { ...action.payload.info, comments: action.payload.comments, invitations: action.payload.invitations }
                 state.profileStatus = "success"
             })
             .addCase(fetchUserDataWithHistory.rejected, (state) => {
@@ -338,40 +350,40 @@ const TaskManagerSlice = createSlice({
 
 
 
-            // .addCase(fetchNewStudentsData.pending, (state) => {
-            //     state.profileStatus = "loading"
-            // })
-            // .addCase(fetchNewStudentsData.fulfilled, (state, action) => {
-            //     state.profile = action.payload
-            //     state.profileStatus = "success"
-            // })
-            // .addCase(fetchNewStudentsData.rejected, (state) => {
-            //     state.profileStatus = "error"
-            // })
-            //
+        // .addCase(fetchNewStudentsData.pending, (state) => {
+        //     state.profileStatus = "loading"
+        // })
+        // .addCase(fetchNewStudentsData.fulfilled, (state, action) => {
+        //     state.profile = action.payload
+        //     state.profileStatus = "success"
+        // })
+        // .addCase(fetchNewStudentsData.rejected, (state) => {
+        //     state.profileStatus = "error"
+        // })
+        //
 
 
 
 
 
-            // .addCase(fetchLeadsData.pending, (state) => {
-            //     state.leadsStatus = "loading"
-            // })
-            // .addCase(fetchLeadsData.fulfilled, (state, action) => {
-            //     state.leads = action.payload.leads
-            //     state.completedLeads = action.payload.completed_tasks
-            //     state.leadsStatus = "success"
-            // })
-            // .addCase(fetchLeadsData.rejected, (state) => {
-            //     state.leadsStatus = "error"
-            // })
+        // .addCase(fetchLeadsData.pending, (state) => {
+        //     state.leadsStatus = "loading"
+        // })
+        // .addCase(fetchLeadsData.fulfilled, (state, action) => {
+        //     state.leads = action.payload.leads
+        //     state.completedLeads = action.payload.completed_tasks
+        //     state.leadsStatus = "success"
+        // })
+        // .addCase(fetchLeadsData.rejected, (state) => {
+        //     state.leadsStatus = "error"
+        // })
 
 
 
     }
 })
 
-const {actions, reducer} = TaskManagerSlice
+const { actions, reducer } = TaskManagerSlice
 export default reducer
 
 export const {
@@ -392,5 +404,7 @@ export const {
     onDelLeads,
     onChangeProgress,
     onDelDebtors,
-    onDelNewStudents
+    onDelNewStudents,
+
+    callStart
 } = actions

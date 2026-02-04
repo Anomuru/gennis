@@ -1,0 +1,868 @@
+.container
+   display: flex
+   flex-direction: column
+   height: 100vh
+   background-color: #f5f5f5
+   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
+
+// Header
+.header
+   background-color: #87ceeb
+   padding: 16px 24px
+   display: flex
+   justify-content: space-between
+   align-items: center
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+
+.headerLeft
+   display: flex
+   align-items: center
+   gap: 24px
+
+.menuToggle
+   background: none
+   border: none
+   cursor: pointer
+   padding: 8px
+   display: flex
+   align-items: center
+   justify-content: center
+   color: white
+
+.logo
+   display: flex
+   align-items: center
+   gap: 12px
+   font-weight: 600
+   font-size: 24px
+   color: white
+
+.logoIcon
+   font-size: 28px
+
+.logoText
+   color: white
+
+.headerRight
+   display: flex
+   align-items: center
+   gap: 16px
+   color: white
+   font-weight: 500
+
+.userName
+   color: white
+
+// Main Layout
+.mainContent
+   display: flex
+   flex: 1
+   height: 100%
+   // overflow: hidden
+
+// Left Sidebar
+.sidebar
+   width: 70px
+   background-color: #f0f0f0
+   border-right: 1px solid #e0e0e0
+   padding: 16px 8px
+   display: flex
+   flex-direction: column
+
+.sidebarNav
+   display: flex
+   flex-direction: column
+   gap: 16px
+
+.sidebarButton
+   width: 50px
+   height: 50px
+   border-radius: 12px
+   border: none
+   background-color: white
+   cursor: pointer
+   display: flex
+   align-items: center
+   justify-content: center
+   color: #666
+   transition: all 0.2s
+   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+
+   &:hover
+      background-color: #e8f4f8
+      color: #333
+
+// Main Content
+.main
+   flex: 1
+   overflow-y: auto
+   padding: 24px
+   background-color: white
+   &__table
+      max-height: 60rem
+      overflow-y: auto
+      display: flex
+      flex-direction: column
+      gap: 1rem
+      padding: 0 2rem
+   &__loader
+      width: 100%
+      height: 100%
+      display: flex
+      align-items: center
+
+.topNav
+   display: flex
+   justify-content: space-between
+   align-items: center
+   margin-bottom: 24px
+
+.navButtons
+   display: flex
+   gap: 12px
+
+.navButton
+   padding: 8px 16px
+   border: 1px solid #ddd
+   background-color: white
+   border-radius: 8px
+   cursor: pointer
+   font-size: 14px
+   transition: all 0.2s
+
+   &:hover
+      background-color: #f5f5f5
+
+   &.active
+      background-color: #e3f2fd
+      border-color: #1976d2
+      color: #1976d2
+
+.inProgressButton
+   padding: 8px 24px
+   background-color: #ff9800
+   color: white
+   border: none
+   border-radius: 24px
+   cursor: pointer
+   font-weight: 600
+   display: flex
+   align-items: center
+   gap: 8px
+   transition: all 0.2s
+
+   &:hover
+      background-color: #f57c00
+
+// Search Section
+.searchSection
+   margin-bottom: 24px
+
+.searchBox
+   display: flex
+   align-items: center
+   gap: 12px
+   padding: 12px 16px
+   background-color: #f9f9f9
+   border: 1px solid #e0e0e0
+   border-radius: 12px
+   width: 100%
+   max-width: 400px
+   color: #999
+
+.searchInput
+   border: none
+   background: none
+   outline: none
+   flex: 1
+   font-size: 14px
+   color: #333
+
+   &::placeholder
+      color: #999
+
+// Category Tabs
+.categoryTabs
+   margin-bottom: 24px
+   position: relative
+
+.categoryTitle
+   font-size: 18px
+   font-weight: 600
+   margin-bottom: 12px
+   color: #333
+
+.tabsContainer
+   display: flex
+   gap: 16px
+
+.tab
+   padding: 8px 0
+   border: none
+   background: none
+   cursor: pointer
+   border-bottom: 2px solid transparent
+   font-size: 14px
+   color: #999
+   transition: all 0.2s
+   display: flex
+   flex-direction: column
+   align-items: center
+   gap: 4px
+
+   &:hover
+      color: #666
+
+   &.activeTab
+      color: #333
+      border-bottom-color: #333
+
+.tabCount
+   font-size: 12px
+   color: #999
+
+.totalCount
+   position: absolute
+   right: 0
+   top: 20px
+   font-size: 32px
+   font-weight: 300
+   color: #ff9800
+
+.scroll
+   width: 100%
+   display: flex
+   gap: 3rem
+   overflow: hidden
+   padding: 1rem
+
+   &__inner
+      display: flex
+      align-items: center
+      gap: 3rem
+      cursor: w-resize
+
+// Cards Grid
+.cardsGrid
+   display: flex
+   // display: grid
+   // grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))
+   gap: 16px
+   // overflow-y: auto
+   // max-height: calc(100vh - 350px)
+   // padding-right: 8px
+
+   &::-webkit-scrollbar
+      width: 8px
+
+   &::-webkit-scrollbar-track
+      background: transparent
+
+   &::-webkit-scrollbar-thumb
+      background: #ddd
+      border-radius: 4px
+
+// Card Styles
+.card
+   min-width: 32rem
+   min-height: 24.5rem
+   border-radius: 16px
+   padding: 16px
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)
+   transition: all 0.2s
+
+   &.cardRed
+      border: 2px solid #ee5a52
+      // background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)
+      color: #333
+
+   &.cardYellow
+      border: 2px solid #f5b61d
+      // background: linear-gradient(135deg, #ffd93d 0%, #f5b61d 100%)
+      color: #333
+
+   // .cardGreen
+   //    background: linear-gradient(135deg, #5ec454 0%, #4db83a 100%)
+   //    color: white
+
+   &.cardGray
+      // background: #e0e0e0
+      border: 2px solid #e0e0e0
+      color: #333
+
+   &:hover
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12)
+      transform: translateY(-2px)
+
+.cardHeader
+   display: flex
+   justify-content: space-between
+   align-items: flex-start
+   margin-bottom: 12px
+   .icons
+      display: flex
+      align-items: center
+      gap: 1rem
+      &__audio
+         font-size: 2rem
+         color: black
+         cursor: pointer
+         z-index: 1 !important
+
+.avatar
+   width: 60px
+   height: 60px
+   border-radius: 50%
+   background-color: #f5f5f5
+   cursor: pointer
+
+.phoneButton
+   background: none
+   border: none
+   cursor: pointer
+   padding: 4px
+   display: flex
+   align-items: center
+   justify-content: center
+   transition: all 0.2s
+
+   svg
+      color: inherit
+
+.cardContent
+   margin-bottom: 12px
+
+.cardName
+   font-size: 14px
+   font-weight: 600
+   margin-bottom: 6px
+   word-break: break-word
+   cursor: pointer
+
+.debtAmount
+   font-size: 18px
+   font-weight: 700
+   color: inherit
+
+.subject
+   font-size: 13px
+   opacity: 0.9
+
+.regDate
+   font-size: 13px
+   opacity: 0.9
+
+.cardFooter
+   margin-top: auto
+   font-size: 14px
+   display: flex
+   flex-direction: column
+   gap: 6px
+
+.footerItem
+   display: flex
+   justify-content: space-between
+   gap: 8px
+   opacity: 0.85
+
+.label
+   font-weight: 500
+   opacity: 0.7
+
+.value
+   text-align: right
+   word-break: break-word
+
+// Right Sidebar
+.rightSidebar
+   width: 320px
+   background-color: #f9f9f9
+   border-left: 1px solid #e0e0e0
+   padding: 24px 16px
+   overflow-y: auto
+   display: flex
+   flex-direction: column
+   align-items: center
+   gap: 2rem
+
+   &::-webkit-scrollbar
+      width: 6px
+
+   &::-webkit-scrollbar-track
+      background: transparent
+
+   &::-webkit-scrollbar-thumb
+      background: #ddd
+      border-radius: 3px
+
+// Calendar Widget
+.calendarWidget
+   width: 100%
+   background-color: white
+   border-radius: 12px
+   padding: 16px
+   // margin-bottom: 24px
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05)
+
+.calendarHeader
+   display: flex
+   justify-content: space-between
+   align-items: center
+   margin-bottom: 16px
+   font-size: 14px
+   font-weight: 600
+
+button
+   background: none
+   border: none
+   cursor: pointer
+   padding: 4px
+   display: flex
+   align-items: center
+   justify-content: center
+   color: #666
+
+   &:hover
+      color: #333
+
+.calendarDays
+   display: grid
+   grid-template-columns: repeat(7, 1fr)
+   gap: 6px
+
+.dayHeader
+   text-align: center
+   font-size: 11px
+   font-weight: 600
+   color: #999
+   padding: 8px 0
+
+.calendarDay
+   aspect-ratio: 1
+   display: flex
+   align-items: center
+   justify-content: center
+   border-radius: 6px
+   font-size: 12px
+   background-color: #f5f5f5
+   color: #666
+
+   &.today
+      background-color: #2196f3
+      color: white
+      font-weight: 600
+
+// Stats Widget
+.statsWidget
+   width: 100%
+   display: flex
+   justify-content: space-around
+   background-color: white
+   border-radius: 12px
+   padding: 16px
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05)
+
+.statItem
+   text-align: center
+   // margin-bottom: 20px
+
+   &:last-child
+      margin-bottom: 0
+
+.statCircle
+   width: 100px
+   height: 100px
+   border-radius: 50%
+   background-color: #e3f2fd
+   display: flex
+   align-items: center
+   justify-content: center
+   margin: 0 auto 8px
+
+.statValue
+   font-size: 28px
+   font-weight: 700
+   color: #1976d2
+
+.statLabel
+   font-size: 13px
+   color: #666
+   display: block
+
+// Responsive Design
+@media (max-width: 1440px)
+   .rightSidebar
+      width: 280px
+
+@media (max-width: 1024px)
+   .rightSidebar
+      width: 240px
+
+   .cardsGrid
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))
+
+   .main
+      padding: 16px
+
+@media (max-width: 768px)
+   .mainContent
+      flex-direction: column
+
+   .rightSidebar
+      width: 100%
+      max-height: 300px
+      border-left: none
+      border-top: 1px solid #e0e0e0
+      padding: 16px
+
+   .cardsGrid
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))
+      max-height: calc(100vh - 500px)
+
+   .sidebar
+      flex-direction: row
+      width: 100%
+      height: auto
+      padding: 8px
+      border-right: none
+      border-bottom: 1px solid #e0e0e0
+
+   .sidebarNav
+      flex-direction: row
+      justify-content: center
+      width: 100%
+
+table
+   tr
+   td:hover
+      .popup
+         visibility: visible
+         opacity: 1
+.popup
+   width: max-content
+   max-width: 30rem
+   visibility: hidden
+   opacity: 0
+   background-color: grey
+   padding: .5rem 1rem
+   border-radius: 5px
+   position: absolute
+   top: 70%
+   left: 30%
+   transform: translateX(-50%)
+   z-index: 200
+   color: white
+   transition: all .1s
+.table_results
+   position: relative
+   // height: calc(100vh - 50rem)
+   // overflow: auto
+   &::-webkit-scrollbar
+      width: 5px
+
+      display: none
+      border-radius: 10px
+      background-color: #726666
+   .tableHeader
+      position: sticky
+      top: 0
+      background: white
+      z-index: 5
+      border-bottom: 1px solid black
+
+.audioModal
+   display: flex
+   flex-direction: column
+   gap: 1rem
+   background: white
+   padding: 2rem
+   &__inner
+      width: 22rem
+      padding: 1rem 0
+      border-radius: 1rem
+      border: 1px solid
+      font-size: 1.8rem
+      display: flex
+      justify-content: center
+      gap: .7rem
+   &__loader
+    // height: 7.5rem
+      width: 100%
+      display: flex
+      justify-content: center
+      align-items: center
+
+.container
+   width: 420px
+   height: 240px
+   display: flex
+   flex-direction: column
+   align-items: center
+   justify-content: center
+   background: #ffffff
+   border-radius: 12px
+   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08)
+   gap: 24px
+
+.loaderWrapper
+   position: relative
+   width: 80px
+   height: 80px
+   display: flex
+   align-items: center
+   justify-content: center
+
+.loaderBg
+   fill: none
+   stroke: #e5e7eb
+   stroke-width: 6
+
+.loaderCircle
+   fill: none
+   stroke: #3b82f6
+   stroke-width: 6
+   stroke-linecap: round
+   stroke-dasharray: 60 190
+   transform-origin: center
+   animation: rotate 1.5s linear infinite
+   transition: opacity 0.3s ease, stroke 0.3s ease
+
+   &.fadeOut
+      opacity: 0
+
+@keyframes rotate
+   0%
+      transform: rotate(0deg)
+   100%
+      transform: rotate(360deg)
+
+.checkmark
+   width: 100%
+   height: 100%
+   position: absolute
+   top: 0
+   left: 0
+   opacity: 0
+   transform: scale(0.5)
+   transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+
+   &.show
+      opacity: 1
+      transform: scale(1)
+
+.checkmarkPath
+   fill: none
+   stroke: #10b981
+   stroke-width: 8
+   stroke-linecap: round
+   stroke-linejoin: round
+   stroke-dasharray: 100
+   stroke-dashoffset: 100
+   animation: drawCheck 0.5s ease forwards
+
+   .checkmark.show &
+      animation: drawCheck 0.5s ease forwards
+
+   .checkmark:not(.show) &
+      animation: none
+      stroke-dashoffset: 100
+
+@keyframes drawCheck
+   to
+      stroke-dashoffset: 0
+
+.statusText
+   margin: 0
+   font-size: 16px
+   font-weight: 500
+   color: #374151
+   text-align: center
+   transition: opacity 0.3s ease
+
+$gap: 16px
+
+.parent
+   width: 8px
+   height: 40px
+   position: relative
+   display: flex
+   justify-content: center
+   align-items: center
+   transition: opacity .3s
+   &.fadeOut
+      opacity: 0
+
+   &::after, &::before
+      content: ''
+      width: 8px
+      height: 40px
+      border-radius: 4px
+      background: currentColor
+      position: absolute
+      top: 50%
+      transform: translateY(-50%)
+      box-sizing: border-box
+      animation: animloader 0.6s linear infinite alternate
+
+   &::before
+      left: -($gap * 2) // -32px
+      animation-delay: 0s
+
+   &::after
+      left: ($gap * 2) // 32px
+      animation-delay: .2s
+
+.loader
+   width: 8px
+   height: 40px
+   border-radius: 4px
+   background: currentColor
+   position: relative
+   box-sizing: border-box
+   animation: animloader 0.5s .1s linear infinite alternate
+
+   &::before, &::after
+      content: ''
+      width: 8px
+      height: 40px
+      border-radius: 4px
+      background: currentColor
+      position: absolute
+      top: 50%
+      transform: translateY(-50%)
+      animation: animloader 0.55s linear infinite alternate
+
+   &::before
+      left: -$gap // -16px
+      animation-delay: .15s
+
+   &::after
+      left: $gap // 16px
+      animation-delay: .25s
+
+@keyframes animloader
+   0%
+      height: 48px
+   100%
+      height: 6px
+
+.switchBox
+   display: flex
+   align-items: center
+   height: 40px
+   border-radius: 50px
+   justify-content: space-between
+
+.switch
+   display: flex
+   align-items: center
+   justify-content: start
+   gap: 30px
+   width: 220px
+   height: 40px
+   border-radius: 50px
+   cursor: pointer
+   padding: 10px
+   transition: background-color 0.3s ease
+   color: white
+
+.inProgress
+   background-color: #ff8c42
+
+.completed
+   background-color: #34c9eb
+
+.icon__handler
+   width: 30px
+   height: 30px
+   background: white
+   border-radius: 50%
+   display: flex
+   margin-left: 1.7px
+   margin-top: -4px
+   align-items: center
+   justify-content: center
+   transition: 0.3s ease-in-out
+   user-select: none
+
+.icon__handlerSucces
+   width: 30px
+   height: 30px
+   background: white
+   border-radius: 50%
+   display: flex
+   margin-left: 16.3rem
+   margin-top: -4px
+   align-items: center
+   justify-content: center
+   transition: 0.3s ease-in-out
+   user-select: none
+
+.iconButton
+   width: 23px
+   height: 23px
+   margin-right: 10px
+
+.buttonIcon
+   width: 20px
+   height: 20px
+   object-fit: cover
+
+.textContent
+   font-size: 18px
+   user-select: none
+   transition: 0.3s ease-in-out
+
+.textContentSucces
+   font-size: 18px
+   margin-left: -45px
+   transition: 0.3s ease-in-out
+
+
+.column
+   display: flex
+   flex-direction: column
+   border: 1px solid gray
+   padding: 1rem
+   border-radius: 1rem
+   //padding-bottom: 1.5rem
+
+.commentHeader
+   margin-bottom: 8px
+   color: #333
+   font-size: 18px
+   display: flex
+   justify-content: space-between
+   align-items: center
+
+   .icons
+      display: flex
+      gap: 1rem
+
+      &__options
+         display: flex
+         gap: .75rem
+
+      &__audio
+         font-size: 2rem
+         color: black
+         cursor: pointer
+
+.commentText
+   color: #555
+   font-size: 16px
+   line-height: 1.5
+   word-wrap: break-word
+
+.audio
+   display: flex
+   flex-direction: column
+   gap: .5rem
+   margin-top: .5rem
+
+   &__subTitle
+      font-size: 14px
+      font-weight: 600
+      color: #444
+
+

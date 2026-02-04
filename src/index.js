@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from "./components/app/App"
-import {Provider} from "react-redux"
+import { Provider } from "react-redux"
 
 import "./styles/style.sass"
-import {BrowserRouter as Router} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import store from "./store";
-import {DevSupport} from "@react-buddy/ide-toolbox";
-import {ComponentPreviews, useInitial} from "dev";
+import { DevSupport } from "@react-buddy/ide-toolbox";
+import { ComponentPreviews, useInitial } from "dev";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -19,7 +19,7 @@ root.render(
                     ComponentPreviews={ComponentPreviews}
                     useInitialHook={useInitial}
                 >
-                    <App/>
+                    <App />
                 </DevSupport>
             </Provider>
         </Router>

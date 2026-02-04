@@ -1,9 +1,10 @@
 
 import { useMemo } from "react";
-// export const ClassroomUrl = `https://classroom.gennis.uz"/`
+export const ClassroomUrl = `https://classroom.gennis.uz/`
 //
 
 // export const BackUrlForDoc = `http://26.196.249.247:5002/`
+// export const BackUrlForDoc = `http://100.94.144.113:5002/`
 // export const BackUrl = `${BackUrlForDoc}api/`
 
 // export const ClassroomUrl = `http://localhost:3000/`
@@ -11,9 +12,9 @@ import { useMemo } from "react";
 //
 export const BackUrl = "https://admin.gennis.uz/api/"
 export const BackUrlForDoc = "https://admin.gennis.uz/"
+
+
 //
-
-
 // export const BackUrl = "/api/"
 // export const BackUrlForDoc = "/"
 export const ClassroomUrlForDoc = "https://classroom.gennis.uz/"
@@ -72,6 +73,14 @@ export const requireMenuItems = (id) => {
             location: true,
             children: true,
             roles: [ROLES.Admin, ROLES.Director]
+        },
+        {
+            to: "todoist",
+            name: "To do",
+            classIcon: "fa-circle-check",
+            location: true,
+            children: true,
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant]
         },
         // {
         //     to: "adminRating",
@@ -154,12 +163,12 @@ export const requireMenuItems = (id) => {
         //     classIcon: "fa-address-book",
         //     roles: [ROLES.Admin,ROLES.Director]
         // },
-        {
-            to: "/",
-            name: "Website",
-            classIcon: "fa-edit",
-            roles: [ROLES.Smm, ROLES.Director]
-        },
+        // {
+        //     to: "/",
+        //     name: "Website",
+        //     classIcon: "fa-edit",
+        //     roles: [ROLES.Smm, ROLES.Director]
+        // },
         {
             to: "lead",
             name: "Lead",
@@ -387,12 +396,12 @@ export const requireMenuItems = (id) => {
         //     ],
         //     roles: [ROLES.Admin,ROLES.Director,ROLES.Programmer]
         // },
-        {
-            to: "developerTools",
-            name: "Developer Toold",
-            classIcon: "fa-laptop-code",
-            roles: [ROLES.Director]
-        },
+        //{
+        //    to: "developerTools",
+        //    name: "Developer Toold",
+        //    classIcon: "fa-laptop-code",
+        //    roles: [ROLES.Director]
+        //},
         {
             to: `myGroups/${id}`,
             name: "Mening Guruhlarim",

@@ -8,13 +8,15 @@ import {fetchDataToChange} from "slices/dataToChangeSlice";
 import {useAuth} from "hooks/useAuth";
 import {setMessage} from "slices/messageSlice";
 import Select from "components/platform/platformUI/select";
+import Input from "../../../../../components/platform/platformUI/input";
 
 const Payment = () => {
 
     const {userId} = useParams()
     const {dataToChange} = useSelector(state => state.dataToChange)
     const [day, setDay] = useState(null)
-    const [month, setMonth] = useState(null)
+    // const [month, setMonth] = useState(null)
+    // const [date, setDate] = useState(null)
 
 
     const {
@@ -41,6 +43,9 @@ const Payment = () => {
 
     const onSubmit = (data) => {
 
+        console.log(data.date)
+
+        const [year, month, day] = data.date.split("-")
         const newData = {
             type: "payment",
             ...data,
@@ -83,27 +88,27 @@ const Payment = () => {
         })
     }, [dataToChange?.payment_types, register])
 
-    const renderDate = useCallback(() => {
-        return dataToChange?.data_days?.map((item, index) => {
-            if (item.value === month) {
-                return (
-                    <div className="date__item" key={index}>
-                        <Select
-                            number={true}
-                            name={"day"}
-                            title={"Kun"}
-                            defaultValue={day}
-                            onChangeOption={setDay}
-                            options={item?.days}
-                        />
-                    </div>
-                )
-            }
-        })
-    }, [dataToChange?.data_days, month, day])
+    // const renderDate = useCallback(() => {
+    //     return dataToChange?.data_days?.map((item, index) => {
+    //         if (item.value === month) {
+    //             return (
+    //                 <div className="date__item" key={index}>
+    //                     <Select
+    //                         number={true}
+    //                         name={"day"}
+    //                         title={"Kun"}
+    //                         defaultValue={day}
+    //                         onChangeOption={setDay}
+    //                         options={item?.days}
+    //                     />
+    //                 </div>
+    //             )
+    //         }
+    //     })
+    // }, [dataToChange?.data_days, month, day])
 
 
-    const renderedDays = renderDate()
+    // const renderedDays = renderDate()
 
 
     const renderedPaymentTypes = renderPaymentType()
@@ -113,22 +118,43 @@ const Payment = () => {
         <div className="formBox">
             <h1>Tolov</h1>
             <form action="" onSubmit={handleSubmit(onSubmit)}>
-                {
-                    dataToChange?.data_days?.length >= 2 ?
-                        <Select
-                            name={"month"}
-                            title={"Oy"}
-                            defaultValue={month}
-                            onChangeOption={setMonth}
-                            options={dataToChange?.data_days}
-                        /> :
-                        null
-                }
+                {/*{*/}
+                {/*    dataToChange?.data_days?.length >= 2 ?*/}
+                {/*        <Select*/}
+                {/*            name={"month"}*/}
+                {/*            title={"Oy"}*/}
+                {/*            defaultValue={month}*/}
+                {/*            onChangeOption={setMonth}*/}
+                {/*            options={dataToChange?.data_days}*/}
+                {/*        /> :*/}
+                {/*        null*/}
+                {/*}*/}
 
-                {renderedDays}
+                {/*{renderedDays}*/}
+
                 <div>
                     {renderedPaymentTypes}
                 </div>
+                <label htmlFor="date">
+                    <div>
+                        <span className="name-field">To'lov sanasi</span>
+                        <input
+                            type="date"
+                            defaultValue={""}
+                            id="date"
+                            className="input-fields"
+                            {...register("date", {
+                                required: "Iltimos to'ldiring",
+                            })}
+                        />
+                    </div>
+                    {
+                        errors?.date &&
+                        <span className="error-field">
+                            {errors?.date?.message}
+                        </span>
+                    }
+                </label>
 
 
                 <label htmlFor="payment">

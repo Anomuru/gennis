@@ -166,21 +166,41 @@ export const AccountingAddCapital = ({setActive}) => {
                         </span>
                     }
                 </label>
+                <label htmlFor="date">
+                    <div>
+                        <span className="name-field">Narxi</span>
+                        <input
+                            defaultValue={""}
+                            id="date"
+                            className="input-fields"
+                            type={"date"}
+                            {...register("date", {
+                                required: "Iltimos to'ldiring",
+                            })}
+                        />
+                    </div>
+                    {
+                        errors?.date &&
+                        <span className="error-field">
+                            {errors?.date?.message}
+                        </span>
+                    }
+                </label>
                 <div>
                     {renderedPaymentType}
                 </div>
-                {
-                    capitalTools?.length >= 2 ?
-                        <Select
-                            name={"month"}
-                            title={"Oy"}
-                            defaultValue={month}
-                            onChangeOption={setMonth}
-                            options={capitalTools}
-                        /> :
-                        null
-                }
-                {renderedDays}
+                {/*{*/}
+                {/*    capitalTools?.length >= 2 ?*/}
+                {/*        <Select*/}
+                {/*            name={"month"}*/}
+                {/*            title={"Oy"}*/}
+                {/*            defaultValue={month}*/}
+                {/*            onChangeOption={setMonth}*/}
+                {/*            options={capitalTools}*/}
+                {/*        /> :*/}
+                {/*        null*/}
+                {/*}*/}
+                {/*{renderedDays}*/}
 
                 <input className="input-submit" type="submit" value="Tasdiqlash"/>
 

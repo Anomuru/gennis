@@ -1,10 +1,10 @@
-import {useSelector} from "react-redux";
-import {newAccountingSelectOptionValue} from "../model/accountingSelector";
-import React, {useState} from "react";
+import { useSelector } from "react-redux";
+import { newAccountingSelectOptionValue } from "../model/accountingSelector";
+import React, { useState } from "react";
 import cls from "pages/platformContent/platformAccounting2.0/accountingTable/accountingTable.module.sass";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeActive}) => {
+export const RenderTd = ({ item, index, setConfirmModal, setItem, setChangeActive }) => {
     const selectOptionValue = useSelector(newAccountingSelectOptionValue)
     const formatNumber = (number) => {
         return number?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
@@ -17,7 +17,7 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
 
         case "bookPayment": {
             return <>
-                <td>{index +1 }</td>
+                <td>{index + 1}</td>
                 <td>{item.name}</td>
                 <td>{formatNumber(item.price)}</td>
                 <td>{item.date}</td>
@@ -31,9 +31,9 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
                 <td className={cls.mono}>
                     <div className={cls.tooltipWrapper}>
                         <span className={cls.text}>
-                          {item?.reason?.length > 20
-                              ? item.reason.slice(0, 20) + "..."
-                              : item.reason}
+                            {item?.reason?.length > 20
+                                ? item.reason.slice(0, 20) + "..."
+                                : item.reason}
                         </span>
                         {item?.reason?.length > 20 && (
                             <span className={cls.tooltip}>{item.reason}</span>
@@ -45,7 +45,35 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
                     {item?.phone}
                 </td>
                 <td>
-                    <div className={cls.debtStudent} style={{boxShadow: `0 0 8px 2px ${item?.moneyType}`}}>
+                    <div className={cls.debtStudent} style={{ boxShadow: `0 0 8px 2px ${item?.moneyType}` }}>
+                        {formatNumber(item?.balance)}
+                    </div>
+                </td>
+            </>
+        }
+
+        case "prepayment": {
+            return <>
+                <td>{index + 1}</td>
+                <td onClick={() => navigate(`../profile/${item?.user_id || item?.id}`)}>{item?.name} {item?.surname}</td>
+                {/* <td className={cls.mono}>
+                    <div className={cls.tooltipWrapper}>
+                        <span className={cls.text}>
+                            {item?.reason?.length > 20
+                                ? item.reason.slice(0, 20) + "..."
+                                : item.reason}
+                        </span>
+                        {item?.reason?.length > 20 && (
+                            <span className={cls.tooltip}>{item.reason}</span>
+                        )}
+                    </div>
+                </td> */}
+                {/* <td className={cls.muted}>{item?.date}</td> */}
+                <td>
+                    {item?.phone}
+                </td>
+                <td>
+                    <div className={cls.debtStudent} style={{ boxShadow: `0 0 8px 2px ${item?.moneyType}` }}>
                         {formatNumber(item?.balance)}
                     </div>
                 </td>
@@ -119,7 +147,7 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
             </>
         }
 
-        case "studentsPayments" : {
+        case "studentsPayments": {
             return <>
                 <td>{index + 1}</td>
                 <td onClick={() => navigate(`../profile/${item?.user_id}`)}>{item?.name}</td>
@@ -148,7 +176,7 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
             </>
         }
 
-        case "teachersSalary" : {
+        case "teachersSalary": {
             return <>
                 <td>{index + 1}</td>
                 <td onClick={() => navigate(`../profile/${item?.user_id}`)}>{item?.name}</td>
@@ -176,7 +204,7 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
                 </td>
             </>
         }
-        case "studentsDiscounts" : {
+        case "studentsDiscounts": {
             return <>
                 <td>{index + 1}</td>
                 <td onClick={() => navigate(`../profile/${item?.user_id}`)}>{item?.name}</td>
@@ -197,7 +225,7 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
             </>
         }
 
-        case "employeesSalary" : {
+        case "employeesSalary": {
             return <>
                 <td>{index + 1}</td>
                 <td onClick={() => navigate(`../profile/${item?.user_id}`)}>{item?.name}</td>
@@ -226,7 +254,7 @@ export const RenderTd = ({item, index , setConfirmModal , setItem , setChangeAct
             </>
         }
 
-        case "capital" : {
+        case "capital": {
             return <>
                 <td>{index + 1}</td>
                 <td>{item?.name}</td>

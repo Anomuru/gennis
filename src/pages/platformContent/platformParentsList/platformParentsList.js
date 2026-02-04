@@ -1,8 +1,8 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchParentsData, onDeleteParent} from 'slices/parentSectionSlice';
-import {useNavigate, useParams} from 'react-router-dom';
-import {fetchFilters} from 'slices/filtersSlice';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchParentsData, onDeleteParent } from 'slices/parentSectionSlice';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchFilters } from 'slices/filtersSlice';
 import cls from "./platformParentsList.module.sass";
 import Table from "components/platform/platformUI/table";
 import Search from "components/platform/platformUI/search";
@@ -11,14 +11,14 @@ import classNames from "classnames";
 import Confirm from "components/platform/platformModals/confirm/confirm";
 import Modal from "components/platform/platformUI/modal";
 import ConfimReason from "components/platform/platformModals/confirmReason/confimReason";
-import {useHttp} from "hooks/http.hook";
-import {BackUrl, headers} from "constants/global";
+import { useHttp } from "hooks/http.hook";
+import { BackUrl, headers } from "constants/global";
 
 
 const PlatformParentsList = () => {
-    const {locationId} = useParams();
+    const { locationId } = useParams();
     const dispatch = useDispatch();
-    const {parents, loading, error} = useSelector(state => state.parentSlice);
+    const { parents, loading, error } = useSelector(state => state.parentSlice);
     const [search, setSearch] = useState("")
     const [active, setActive] = useState(false)
     const navigate = useNavigate()
@@ -26,13 +26,13 @@ const PlatformParentsList = () => {
     const [activeUser, setActiveUser] = useState(null)
 
 
-    const [activeModal , setActiveModal] = useState(false)
+    const [activeModal, setActiveModal] = useState(false)
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     useEffect(() => {
         if (locationId) {
-            dispatch(fetchParentsData({locationId, type: active}));
+            dispatch(fetchParentsData({ locationId, type: active }));
             // dispatch(fetchFilters());
         }
     }, [dispatch, locationId, active]);
@@ -54,7 +54,7 @@ const PlatformParentsList = () => {
             >
                 <td>{i + 1}</td>
                 <td
-                    onClick={() => navigate(`../parentSection/${item.id}`)}
+                    onClick={() => navigate(`parentSection/${item.id}`)}
                 >{item?.name}</td>
                 <td>{item?.surname}</td>
                 <td>{item?.phone}</td>
@@ -65,7 +65,7 @@ const PlatformParentsList = () => {
                     <i onClick={() => {
                         setActiveModal(true)
                         setActiveUser(item)
-                    }} className={classNames(cls.delete, 'fa fa-trash')}/>
+                    }} className={classNames(cls.delete, 'fa fa-trash')} />
                 </td>}
             </tr>
         ))
@@ -75,7 +75,7 @@ const PlatformParentsList = () => {
         setActiveModal(false)
         setIsConfirm(false)
         dispatch(onDeleteParent(activeUser.id))
-        request(`${BackUrl}parent/crud/${activeUser.id}`,"DELETE", null, headers())
+        request(`${BackUrl}parent/crud/${activeUser.id}`, "DELETE", null, headers())
             .catch(err => {
                 console.log(err)
             })
@@ -83,7 +83,7 @@ const PlatformParentsList = () => {
     }
     return (
         <div className={cls.wrapper}>
-            <Search search={search} setSearch={setSearch}/>
+            <Search search={search} setSearch={setSearch} />
             <Button onClickBtn={() => setActive(!active)} extraClass={classNames(cls.wrapper__button, {
                 [cls.wrapper__button_active]: active
             })}>Deleted</Button>
@@ -91,34 +91,34 @@ const PlatformParentsList = () => {
 
             <Table>
                 <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Ismi</th>
-                    <th>Familyasi</th>
-                    <th>Telefon raqami</th>
-                    <th>Manzil</th>
-                    <th>Tug'ulgan kuni</th>
-                    <th>Joylashuvi</th>
-                    <th/>
+                    <tr>
+                        <th>No</th>
+                        <th>Ismi</th>
+                        <th>Familyasi</th>
+                        <th>Telefon raqami</th>
+                        <th>Manzil</th>
+                        <th>Tug'ulgan kuni</th>
+                        <th>Joylashuvi</th>
+                        <th />
 
-                </tr>
+                    </tr>
                 </thead>
                 <tbody>
-                {renderUsers()}
+                    {renderUsers()}
                 </tbody>
 
             </Table>
 
-           <Modal setActiveModal={setActiveModal} activeModal={activeModal}>
-               <Confirm getConfirm={setIsConfirm} setActive={setActiveModal} text={"Rostanham o'chirmoqchimisiz?"}/>
-           </Modal>
+            <Modal setActiveModal={setActiveModal} activeModal={activeModal}>
+                <Confirm getConfirm={setIsConfirm} setActive={setActiveModal} text={"Rostanham o'chirmoqchimisiz?"} />
+            </Modal>
             {
                 isConfirm === "yes" ?
                     <Modal
                         setActiveModal={setActiveModal}
                         activeModal={activeModal}
                     >
-                        <ConfimReason getConfirm={onDelete}  reason={true}/>
+                        <ConfimReason getConfirm={onDelete} reason={true} />
                     </Modal> : null
             }
         </div>

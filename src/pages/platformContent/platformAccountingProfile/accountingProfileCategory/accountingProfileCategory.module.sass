@@ -1,0 +1,225 @@
+.container
+    // min-height: 100vh
+    background-color: var(--background)
+
+.nav
+    border-bottom: 1px solid var(--border)
+    background-color: var(--card)
+
+.navContent
+    // max-width: 1400px
+    margin: 0 auto
+    padding: 1rem
+    width: 100%
+
+.breadcrumb
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    font-size: 0.875rem
+    flex-wrap: wrap
+
+.breadcrumbItem
+    font-size: 1.4rem
+    color: var(--muted-foreground)
+
+.breadcrumbSeparator
+    color: var(--muted-foreground)
+
+.breadcrumbItemActive
+    font-size: 1.4rem
+    font-weight: 600
+    color: var(--foreground)
+
+.mainContent
+    // max-width: 1400px
+    margin: 0 auto
+    padding: 2rem 1rem
+    width: 100%
+
+.header
+    margin-bottom: 2rem
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+.title
+    font-size: 2.4rem
+    font-weight: 700
+    color: var(--foreground)
+    margin: 0
+
+.subtitle
+    margin-top: 0.25rem
+    font-size: 0.875rem
+    color: var(--muted-foreground)
+
+.backBtn
+    padding: 0.5rem 1.5rem
+    border-radius: 0.5rem
+    border: 1px solid var(--border)
+    background-color: var(--background)
+    font-size: 1.6rem
+    font-weight: 500
+    color: var(--foreground)
+    cursor: pointer
+    transition: background-color 0.2s ease
+
+    &:hover
+        background-color: var(--muted)
+
+.totalCard
+    margin-bottom: 2rem
+    border-left: 4px solid var(--primary)
+    border-radius: 0.5rem
+    border: 1px solid var(--border)
+    background-color: var(--card)
+
+.detailsCard
+    margin-bottom: 2rem
+    border-radius: 0.5rem
+    border: 1px solid var(--border)
+    background-color: var(--card)
+
+.cardHeader
+    border-bottom: 1px solid var(--border)
+    padding: 1.5rem
+
+.cardLabel
+    font-size: 1.4rem
+    font-weight: 600
+    color: var(--muted-foreground)
+    margin: 0
+
+.cardTitle
+    font-size: 1.6rem
+    font-weight: 600
+    color: var(--foreground)
+    margin: 0
+
+.cardContent
+    padding: 1.5rem
+
+.cardValue
+    font-size: 2.25rem
+    font-weight: 700
+    color: var(--foreground)
+    margin: 0
+
+.filterSection
+    padding: 1.5rem
+    margin-bottom: 2rem
+    border-radius: 0.5rem
+    border: 1px solid var(--border)
+    background-color: var(--card)
+    display: flex
+    justify-content: space-between
+    align-items: center
+// flex-direction: column
+    gap: 1.5rem
+
+.filterHeader
+    // border-bottom: 1px solid var(--border)
+    padding: 1rem 0
+
+.filterTitle
+    font-size: 2rem
+    font-weight: 600
+    color: var(--foreground)
+    margin: 0
+
+.filterDescription
+    margin-top: 0.25rem
+    font-size: 1.4rem
+    color: var(--muted-foreground)
+    margin-bottom: 0
+
+.filterButtons
+    display: flex
+    justify-content: flex-end
+    flex-wrap: wrap
+    // gap: 0.75rem
+    &__btns
+        display: flex
+        gap: 1rem
+    &__input
+        margin: 0
+        width: 30rem
+        height: 4rem
+
+.tableCard
+    margin-bottom: 2rem
+    border-radius: 0.5rem
+    border: 1px solid var(--border)
+    background-color: var(--card)
+
+.tableHeader
+    border-bottom: 1px solid var(--border)
+    padding: 1.5rem
+
+.tableTitle
+    font-size: 1.6rem
+    font-weight: 600
+    color: var(--foreground)
+    margin: 0
+
+.tableContent
+    padding: 1.5rem
+    &.loading
+        display: flex
+        justify-content: center
+        align-items: center
+
+.tableWrapper
+    overflow-x: auto
+    max-height: 35rem
+
+.table
+    width: 100%
+    position: relative
+    &__head
+        position: sticky
+        top: 0
+        background: white
+
+.tableHeaderRow
+    border-bottom: 1px solid var(--border)
+
+.tableHeaderCell
+    padding: 0.75rem 1rem
+    text-align: left
+    font-size: 1.4rem
+    font-weight: 600
+    color: var(--foreground)
+    border-bottom: 1px solid #626262
+
+.tableHeaderCellCenter
+    text-align: center
+
+.tableHeaderCellRight
+    text-align: right
+
+.tableRow
+    border-bottom: 1px solid var(--border)
+    transition: background-color 0.2s ease
+
+    &:hover
+        background-color: rgba(0, 0, 0, 0.03)
+
+.tableCell
+    padding: 0.75rem 1rem
+    font-size: 1.4rem
+    color: var(--foreground)
+    border-bottom: 1px solid var(--border)
+
+.tableCellCenter
+    text-align: center
+
+.tableCellRight
+    text-align: right
+
+.tableCellBold
+    font-weight: 600
+
+.tableCellMuted
+    color: var(--muted-foreground)

@@ -1,6 +1,6 @@
 import RegisterTeacher from "components/register/registerTeacher/registerTeacher";
 import React from "react";
-import {Route, Routes, Navigate} from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 
 import Platform from "components/platform/layout/Platform";
@@ -15,7 +15,7 @@ import "./app.sass"
 import RequireAuth from "components/requireAuth/requireAuth";
 
 import QrCodeRegister from "pages/platformContent/qrCode/qrCodeRegister/qrCodeRegister";
-import {ROLES} from "constants/global";
+import { ROLES } from "constants/global";
 import Register from "pages/registerNew/register";
 import { DeleteAccountForm } from "pages/deleteForm/deleteForm";
 
@@ -24,23 +24,23 @@ const App = () => {
     return (
         <Routes>
             {/*<Route path="/*"  element={<Website/>} />*/}
-            <Route path="/login" element={<Login/>} />
-            <Route path="/register_test" element={<Register/>}/>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register_test" element={<Register />} />
             {/**/}
-            <Route path="/register"  element={<FastRegister/>}/>
-            <Route path="/deleteForm" element={<DeleteAccountForm/>}/>
+            <Route path="/register" element={<FastRegister />} />
+            <Route path="/deleteForm" element={<DeleteAccountForm />} />
             {/*<Route element={<RequireAuth allowedRules={[ROLES.Admin,ROLES.Director]}/>} >*/}
             {/*    <Route path="registerTeacher/*"  element={<RegisterTeacher/>}/>*/}
             {/*    <Route path="registerEmployee/*"  element={<RegisterEmployee/>}/>*/}
             {/*</Route>*/}
 
 
-            <Route element={<RequireAuth allowedRules={[ROLES.Admin,ROLES.Director,ROLES.User,ROLES.Student,ROLES.Teacher,ROLES.Programmer,ROLES.Smm,ROLES.Editor,ROLES.Accountant , ROLES.Main_admin, ROLES.Zavxos]}/>} >
-                <Route path="/platform"  element={<Platform/>} >
-                    <Route path="/platform/*" element={<PlatformContent/>}/>
+            <Route element={<RequireAuth allowedRules={[ROLES.Admin, ROLES.Director, ROLES.User, ROLES.Student, ROLES.Teacher, ROLES.Programmer, ROLES.Smm, ROLES.Editor, ROLES.Accountant, ROLES.Main_admin, ROLES.Zavxos]} />} >
+                <Route path="/platform" element={<Platform />} >
+                    <Route path="/platform/*" element={<PlatformContent />} />
                 </Route>
 
-                <Route path="registerStudent/*"  element={<RegisterUser/>}/>
+                <Route path="registerStudent/*" element={<RegisterUser />} />
 
 
             </Route>

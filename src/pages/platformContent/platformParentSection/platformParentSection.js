@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import cls from 'pages/platformContent/platformParentSection/platformParentSection.module.sass'
 import img from "assets/user-interface/user_image.png";
-import {useForm} from "react-hook-form";
-import {BackUrl, BackUrlForDoc, headers} from "../../../constants/global";
+import { useForm } from "react-hook-form";
+import { BackUrl, BackUrlForDoc, headers } from "../../../constants/global";
 import Input from "../../../components/platform/platformUI/input";
 import Button from "../../../components/platform/platformUI/button";
 import cardBg from "assets/background-img/TaskCardBack3.png"
@@ -15,14 +15,14 @@ import {
     onChangeParentSource,
     onRemoveChildrenFromParent
 } from "../../../slices/parentSectionSlice";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import InputForm from "../../../components/platform/platformUI/inputForm";
 import WebButton from "../../../components/webSite/webSiteUI/webButton/webButton";
-import {fetchNewFilteredStudents} from "../../../slices/newStudentsSlice";
-import {useNavigate, useParams} from "react-router-dom";
-import {fetchStudyingStudents} from "../../../slices/studyingStudentsSlice";
-import {useHttp} from "../../../hooks/http.hook";
-import {setMessage} from "../../../slices/messageSlice";
+import { fetchNewFilteredStudents } from "../../../slices/newStudentsSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchStudyingStudents, fetchStudyingStudentsWithoutPagination } from "../../../slices/studyingStudentsSlice";
+import { useHttp } from "../../../hooks/http.hook";
+import { setMessage } from "../../../slices/messageSlice";
 import Confirm from "../../../components/platform/platformModals/confirm/confirm";
 import ConfimReason from "../../../components/platform/platformModals/confirmReason/confimReason";
 import PlatformSearch from "../../../components/platform/platformUI/search";
@@ -42,7 +42,7 @@ const datas = [
 
 const PlatformParentSection = () => {
 
-    const locationId = localStorage.getItem("location_id")
+    // const locationId = localStorage.getItem("location_id")
     const [childModal, setChildModal] = useState(false)
     const [activeError, setActiveError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
@@ -54,21 +54,25 @@ const PlatformParentSection = () => {
     const [studentId, setStudentId] = useState([]);
     const [filteredStudyingStudents, setFilteredStudyingStudents] = useState([])
     const [search, setSearch] = useState("")
-    const {studyingStudents} = useSelector(state => state.studyingStudents)
-    const {register, handleSubmit,formState: {errors}, setError, setValue} = useForm()
+    const { studyingStudents } = useSelector(state => state.studyingStudents)
+    const { register, handleSubmit, formState: { errors }, setError, setValue } = useForm()
     const dispatch = useDispatch();
-    const {data} = useSelector(state => state.parentSlice)
+    const { data } = useSelector(state => state.parentSlice)
     const children = data.children
-    const {request} = useHttp()
-    const {id} = useParams()
+    const { request } = useHttp()
+    const { id, locationId } = useParams()
     const navigate = useNavigate()
 
-    console.log(children, 'logggg')
+    useEffect(() => {
+        if (locationId)
+            dispatch(fetchStudyingStudentsWithoutPagination({ locationId }))
+    }, [locationId]);
 
     useEffect(() => {
-        dispatch(fetchParentData(id))
-        dispatch(fetchStudyingStudents({locationId}))
-    }, []);
+        if (id)
+            dispatch(fetchParentData(id))
+
+    }, [id])
 
     useEffect(() => {
         if (studyingStudents)
@@ -79,10 +83,10 @@ const PlatformParentSection = () => {
     useEffect(() => {
         setFilteredStudyingStudents(
             studyingStudents.filter(item =>
-                    item.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.surname.toLowerCase().includes(search.toLowerCase()) ||
-                    item.username.toLowerCase().includes(search.toLowerCase())
-                )
+                item.name.toLowerCase().includes(search.toLowerCase()) ||
+                item.surname.toLowerCase().includes(search.toLowerCase()) ||
+                item.username.toLowerCase().includes(search.toLowerCase())
+            )
         )
     }, [search])
 
@@ -94,7 +98,6 @@ const PlatformParentSection = () => {
         }
         setSelectAll(!selectAll);
     };
-    console.log(children)
 
     const handleSelectItem = (id) => {
         if (selectedItems.includes(id)) {
@@ -128,11 +131,11 @@ const PlatformParentSection = () => {
         }
         request(`${BackUrl}checks/check_exist_username/${id}`, "POST", JSON.stringify(body), headers())
             .then(res => {
-                if (res.found === true){
+                if (res.found === true) {
                     setErrorMessage("Username band")
                     setActiveError(true)
 
-                }else {
+                } else {
                     setErrorMessage("Username bo'sh")
                     setActiveError(false)
                 }
@@ -214,7 +217,7 @@ const PlatformParentSection = () => {
 
     const renderCards = () => {
         return children?.map(item => (
-            <div  className={cls.card}>
+            <div className={cls.card}>
                 <div className={cls.card__info}>
                     <div className={cls.card__info__header}>
                         <span>Fan: {item.user.subject}</span>
@@ -246,9 +249,9 @@ const PlatformParentSection = () => {
                         {/*</div>*/}
                     </div>
                 </div>
-                <div onClick={() => navigate(`../studyingStudents/${locationId}/profile/${item.user.id}/info`)} style={{background: `url(${cardBg})`}} className={cls.card__userImgBox}>
+                <div onClick={() => navigate(`../studyingStudents/${locationId}/profile/${item.user.id}/info`)} style={{ background: `url(${cardBg})` }} className={cls.card__userImgBox}>
                     <div className={cls.card__userImgBox__img}>
-                        <img className={cls.card__userImgBox__img__photo} src={userImg} alt=""/>
+                        <img className={cls.card__userImgBox__img__photo} src={userImg} alt="" />
                     </div>
                 </div>
                 {
@@ -256,7 +259,7 @@ const PlatformParentSection = () => {
                         setDeletePortal(true)
                         setStudentId(item.id)
                     }}
-                                       className={cls.card__closeBtn}>X</button> : null
+                        className={cls.card__closeBtn}>X</button> : null
                 }
 
             </div>
@@ -271,8 +274,8 @@ const PlatformParentSection = () => {
                 <td>{item.number}</td>
                 <td>
                     <input type="checkbox"
-                           checked={selectedItems.includes(item.student_id)}
-                           onChange={() => handleSelectItem(item.student_id)}/>
+                        checked={selectedItems.includes(item.student_id)}
+                        onChange={() => handleSelectItem(item.student_id)} />
                 </td>
             </tr>
         ))
@@ -290,18 +293,18 @@ const PlatformParentSection = () => {
                     </div>
                     <Table className={cls.modal__table}>
                         <thead>
-                        <th>№</th>
-                        <th>Ism Familiya</th>
-                        <th>Yosh</th>
-                        <th>Telefon raqam</th>
-                        {/*<th>*/}
-                        {/*    <input className={cls.checkbox} type="checkbox"*/}
-                        {/*           checked={selectAll}*/}
-                        {/*           onChange={handleSelectAll}/>*/}
-                        {/*</th>*/}
+                            <th>№</th>
+                            <th>Ism Familiya</th>
+                            <th>Yosh</th>
+                            <th>Telefon raqam</th>
+                            {/*<th>*/}
+                            {/*    <input className={cls.checkbox} type="checkbox"*/}
+                            {/*           checked={selectAll}*/}
+                            {/*           onChange={handleSelectAll}/>*/}
+                            {/*</th>*/}
                         </thead>
                         <tbody>
-                        {renderTable()}
+                            {renderTable()}
                         </tbody>
                     </Table>
                     <Button extraClass={cls.modal__btn} onClickBtn={onHandleSubmit}>Qo'shmoq</Button>
@@ -317,7 +320,7 @@ const PlatformParentSection = () => {
                 <div className={cls.main__leftBar__profileBox}>
                     <div className={cls.main__leftBar__profileBox__bio}>
                         <img rel="preload" className={cls.main__leftBar__profileBox__bio__img} crossOrigin="Anonymous"
-                             src={img} alt=""/>
+                            src={img} alt="" />
                         <h2>{data.name} {data.surname}</h2>
                         {
                             editable ? (
@@ -325,89 +328,89 @@ const PlatformParentSection = () => {
 
 
                                     <form onSubmit={handleSubmit(onSubmit)}
-                                          className={cls.main__leftBar__profileBox__bio__sources}>
-                                        { errorMessage && <h2 style={{color: activeError ? "red" : "green"}}>{errorMessage}</h2>}
+                                        className={cls.main__leftBar__profileBox__bio__sources}>
+                                        {errorMessage && <h2 style={{ color: activeError ? "red" : "green" }}>{errorMessage}</h2>}
                                         <InputForm clazz={cls.main__leftBar__profileBox__bio__sources__ints}
-                                                   title={'Username'}
-                                                   register={register}
-                                                   name={"username"}
-                                                   onBlur={onCheckUsername}
-                                                   defaultValue={data.username}/>
+                                            title={'Username'}
+                                            register={register}
+                                            name={"username"}
+                                            onBlur={onCheckUsername}
+                                            defaultValue={data.username} />
                                         <InputForm clazz={cls.main__leftBar__profileBox__bio__sources__ints}
-                                                   title={'Ism'}
-                                                   register={register}
-                                                   name={"name"}
-                                                   defaultValue={data.name}/>
+                                            title={'Ism'}
+                                            register={register}
+                                            name={"name"}
+                                            defaultValue={data.name} />
                                         <InputForm clazz={cls.main__leftBar__profileBox__bio__sources__ints}
-                                                   title={'Familya'}
-                                                   name={"surname"}
-                                                   register={register}
-                                                   defaultValue={data.surname}/>
+                                            title={'Familya'}
+                                            name={"surname"}
+                                            register={register}
+                                            defaultValue={data.surname} />
                                         <InputForm clazz={cls.main__leftBar__profileBox__bio__sources__ints}
-                                                   title={'Tel raqam'}
-                                                   name={"phone"}
-                                                   register={register}
-                                                   defaultValue={data.phone}/>
+                                            title={'Tel raqam'}
+                                            name={"phone"}
+                                            register={register}
+                                            defaultValue={data.phone} />
                                         <InputForm clazz={cls.main__leftBar__profileBox__bio__sources__ints}
-                                                   title={'Address'}
-                                                   register={register}
-                                                   name={'address'}
-                                                   defaultValue={data.address}/>
+                                            title={'Address'}
+                                            register={register}
+                                            name={'address'}
+                                            defaultValue={data.address} />
                                         <InputForm clazz={cls.main__leftBar__profileBox__bio__sources__ints}
-                                                   title={'Birthday'}
-                                                   name={'birthday'}
-                                                   register={register}
-                                                   type={'date'}
-                                                   defaultValue={data.date}
+                                            title={'Birthday'}
+                                            name={'birthday'}
+                                            register={register}
+                                            type={'date'}
+                                            defaultValue={data.date}
                                         />
                                         <button className={cls.main__leftBar__profileBox__bio__sources__int}
-                                                children={"Tahrirlash"}></button>
+                                            children={"Tahrirlash"}></button>
                                     </form>
                                     <form onSubmit={handleSubmit(onHandlePassword)}>
                                         <InputForm clazz={cls.main__leftBar__profileBox__bio__sources__ints}
-                                                   title={"Parolni o'zgartirish"}
-                                                   register={register}
-                                                   name={'password'}
-                                                   type={"number"}
-                                                   />
+                                            title={"Parolni o'zgartirish"}
+                                            register={register}
+                                            name={'password'}
+                                            type={"number"}
+                                        />
                                         <button className={cls.main__leftBar__profileBox__bio__sources__int}
-                                                children={"O'zgartirish"}></button>
+                                            children={"O'zgartirish"}></button>
                                     </form>
                                 </>
 
-                                ) :
+                            ) :
                                 (
                                     <div className={cls.main__leftBar__profileBox__bio__source}>
                                         <Input clazz={cls.main__leftBar__profileBox__bio__int}
-                                               title={'Username'}
-                                               onChange={() => "sas"}
-                                               readOnly={true}
-                                               value={data.username}/>
+                                            title={'Username'}
+                                            onChange={() => "sas"}
+                                            readOnly={true}
+                                            value={data.username} />
                                         <Input clazz={cls.main__leftBar__profileBox__bio__int}
-                                               title={'Ism'}
-                                               onChange={() => "sas"}
-                                               readOnly={true}
-                                               value={data.name}/>
+                                            title={'Ism'}
+                                            onChange={() => "sas"}
+                                            readOnly={true}
+                                            value={data.name} />
                                         <Input clazz={cls.main__leftBar__profileBox__bio__int}
-                                               title={'Familiya'}
-                                               onChange={() => "sas"}
-                                               readOnly={true}
-                                               value={data.surname}/>
+                                            title={'Familiya'}
+                                            onChange={() => "sas"}
+                                            readOnly={true}
+                                            value={data.surname} />
                                         <Input clazz={cls.main__leftBar__profileBox__bio__int}
-                                               title={'Tel raqam'}
-                                               onChange={() => "sas"}
-                                               readOnly={true}
-                                               value={data.phone}/>
+                                            title={'Tel raqam'}
+                                            onChange={() => "sas"}
+                                            readOnly={true}
+                                            value={data.phone} />
                                         <Input clazz={cls.main__leftBar__profileBox__bio__int}
-                                               title={'Address'}
-                                               onChange={() => "sas"}
-                                               readOnly={true}
-                                               value={data.address}/>
+                                            title={'Address'}
+                                            onChange={() => "sas"}
+                                            readOnly={true}
+                                            value={data.address} />
                                         <Input clazz={cls.main__leftBar__profileBox__bio__int}
-                                               title={'Birthday'}
-                                               onChange={() => "sas"}
-                                               readOnly={true}
-                                               value={data.date}/>
+                                            title={'Birthday'}
+                                            onChange={() => "sas"}
+                                            readOnly={true}
+                                            value={data.date} />
                                     </div>
                                 )
                         }
@@ -419,10 +422,10 @@ const PlatformParentSection = () => {
                 <div className={cls.main__rightBar__header}>
                     <h1>Farzandim</h1>
                     <Button onClickBtn={onHandleClick} extraClass={cls.main__rightBar__header__editBtn}
-                            children={<i className={"fas fa-pen"}/>}/>
+                        children={<i className={"fas fa-pen"} />} />
                 </div>
                 <Button onClickBtn={onHanle} extraClass={cls.main__rightBar__itemsBox__btn}
-                        children={<i className="fas fa-plus"/>}/>
+                    children={<i className="fas fa-plus" />} />
                 <div className={cls.main__rightBar__itemsBox}>
                     {renderCards()}
 
@@ -445,7 +448,7 @@ const PlatformParentSection = () => {
                                 setIsConfirm(false)
                             }}
                         >
-                            <ConfimReason getConfirm={getConfirm} reason={true}/>
+                            <ConfimReason getConfirm={getConfirm} reason={true} />
                         </Modal> : null
                 }
             </div>

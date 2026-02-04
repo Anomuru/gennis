@@ -1,29 +1,28 @@
-import React, {useCallback, useEffect, useState} from 'react';
-
-
-import "./select.sass"
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from "classnames";
 
+import "./select.sass"
+
 const Select = React.memo(({
-                               id,
-                               name,
-                               options,
-                               title,
-                               onChangeOption,
-                               teachers,
-                               defaultValue,
-                               number,
-                               group,
-                               all,
-                               extra,
-                               keyValue,
-                               autoSelect,
-                               value,
-                               required,
-                               allFromOptions,
-                               keyName,
-                               clazzLabel
-                           }) => {
+    id,
+    name,
+    options,
+    title,
+    onChangeOption,
+    teachers,
+    defaultValue,
+    number,
+    group,
+    all,
+    extra,
+    keyValue,
+    autoSelect,
+    value,
+    required,
+    allFromOptions,
+    keyName,
+    clazzLabel
+}) => {
 
     const [optionsData, setOptionsData] = useState(null)
     const [selectOption, setSelectOption] = useState("")
@@ -77,10 +76,12 @@ const Select = React.memo(({
 
             const value = item[keyValue] || item.value || item.id || item.name || item
             const key = item[keyName] || item.name || item.value || item.year || item
+            const color = item.color ? { color: item.color } : null
 
             if (!item.length)
                 if (item.name?.includes('Hamma') && allFromOptions) {
                     return <option
+                        style={color}
                         disabled={item.disabled}
                         {...extra}
                         key={index}
@@ -91,6 +92,7 @@ const Select = React.memo(({
                 }
             if (teachers) {
                 return <option
+                    style={color}
                     disabled={item.disabled}
                     {...extra}
                     key={index}
@@ -100,6 +102,7 @@ const Select = React.memo(({
                 </option>
             }
             return <option
+                style={color}
                 disabled={item.disabled}
                 {...extra}
                 key={index}
@@ -147,21 +150,21 @@ export default Select;
 
 
 
-export const SelectForm = ({ title, options = [], value, onChangeOption , clazzLabel }) => {
+export const SelectForm = ({ title, options = [], value, onChangeOption, clazzLabel }) => {
     return (
         <label className={classNames(`select-label`, clazzLabel)}>
 
-                <span className="name-field">{title}</span>
-                <select
-                    value={value}
-                    onChange={(e) => onChangeOption(e.target.value)}
-                >
-                    {options.map((item) => (
-                        <option disabled={item?.disabled} key={item.id} value={item.id}>
-                            {item.name}
-                        </option>
-                    ))}
-                </select>
+            <span className="name-field">{title}</span>
+            <select
+                value={value}
+                onChange={(e) => onChangeOption(e.target.value)}
+            >
+                {options.map((item) => (
+                    <option disabled={item?.disabled} key={item.id} value={item.id}>
+                        {item.name}
+                    </option>
+                ))}
+            </select>
 
         </label>
     );

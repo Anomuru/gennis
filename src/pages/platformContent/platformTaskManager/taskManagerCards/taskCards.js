@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import taskCardBack from "../../../../assets/background-img/TaskCardBack.png";
 import taskCardBack2 from "../../../../assets/background-img/TaskCardBack2.png";
 import taskCardBack3 from "../../../../assets/background-img/greenBg.png";
 import taskCardBack4 from "../../../../assets/background-img/blackBg.png";
 import taskCardBack5 from "../../../../assets/background-img/navyBg.png";
 import taskCardBack6 from "../../../../assets/background-img/grayBg.png";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 import classNames from "classnames";
 import cls from "../platformTaskManager.module.sass";
 import unknownUser from "../../../../assets/user-interface/user_image.png";
 
 
-export const TaskCard = ({item, index, activeMenu, click, onDelete, getStudentId, isCompleted, setActiveModal}) => {
+export const TaskCard = ({ item, index, activeMenu, click, onDelete, getStudentId, isCompleted, setActiveModal }) => {
 
 
 
@@ -72,7 +72,7 @@ export const TaskCard = ({item, index, activeMenu, click, onDelete, getStudentId
                         className={classNames("fas fa-trash", cls.icon)}
                         onClick={() => {
                             onDelete(true)
-                            getStudentId({id: item?.id, status: item?.status})
+                            getStudentId({ id: item?.id, status: item?.status })
                         }}
                     /> : null
             }
@@ -92,7 +92,7 @@ export const TaskCard = ({item, index, activeMenu, click, onDelete, getStudentId
                         }
                     </h2>
                 }
-                <h2 style={{color: item.moneyType === "navy" ? "white" : item?.moneyType === "black" ? "white" : ""}}
+                <h2 style={{ color: item.moneyType === "navy" ? "white" : item?.moneyType === "black" ? "white" : "" }}
                     className={cls.username}>{item?.name} {item?.surname}</h2>
                 <ul
                     className={classNames(cls.infoList, {
@@ -148,20 +148,20 @@ export const TaskCard = ({item, index, activeMenu, click, onDelete, getStudentId
             </div>
             <div
                 className={cls.item__image}
-                style={{backgroundImage: style.backImage}}
+                style={{ backgroundImage: style.backImage }}
             >
                 <div
                     className={cls.circle}
                     onClick={
                         () =>
-                            // (item.status === "green" || isCompleted) ? null :
+                        // (item.status === "green" || isCompleted) ? null :
                         {
                             click(item?.id)
                             setActiveModal(true)
                         }
                     }
                 >
-                    <img src={unknownUser} alt=""/>
+                    <img src={unknownUser} alt="" />
                 </div>
             </div>
 

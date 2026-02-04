@@ -1,13 +1,14 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {useHttp} from "hooks/http.hook";
-import {BackUrl, headers, ROLES} from "constants/global";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { useHttp } from "hooks/http.hook";
+import { BackUrl, headers, ROLES } from "constants/global";
 
 const initialState = {
     id: null,
+    level: null,
     username: null,
     role: process.env.NODE_ENV !== "production" ? ROLES.Director : null,
     // role: null,
-    name:null,
+    name: null,
     surname: null,
     location: null,
     selectedLocation: null,
@@ -20,53 +21,53 @@ const initialState = {
     meInfoLoadingStatus: "idle",
     fetchMeStatus: "idle",
     checkingPassword: "idle",
-    meCheckPassword : false,
+    meCheckPassword: false,
     isCheckedPassword: true
 }
 
 
-export const  fetchMe = createAsyncThunk(
+export const fetchMe = createAsyncThunk(
     'user/fetchMe',
     async (refresh_token) => {
-        const {request} = useHttp();
+        const { request } = useHttp();
         const headers = {
             "Authorization": "Bearer " + refresh_token,
             'Content-Type': 'application/json'
         }
-        return await request(`${BackUrl}base/refresh`,"POST",null,headers)
+        return await request(`${BackUrl}base/refresh`, "POST", null, headers)
     }
 )
 
-export const  fetchMyInfo = createAsyncThunk(
+export const fetchMyInfo = createAsyncThunk(
     'user/fetchMyInfo',
     async (id) => {
 
-        const {request} = useHttp();
+        const { request } = useHttp();
 
-        return await request(`${BackUrl}base/my_profile/${id}`,"GET",null,headers())
+        return await request(`${BackUrl}base/my_profile/${id}`, "GET", null, headers())
     }
 )
 
-export const  fetchTeacherSalary = createAsyncThunk(
+export const fetchTeacherSalary = createAsyncThunk(
     'user/fetchMyInfo',
     async (id) => {
-        const {request} = useHttp();
+        const { request } = useHttp();
 
-        return await request(`${BackUrl}/${id}`,"GET",null,headers())
+        return await request(`${BackUrl}/${id}`, "GET", null, headers())
     }
 )
 
 
-export const  fetchCheckPassword = createAsyncThunk(
+export const fetchCheckPassword = createAsyncThunk(
     'user/fetchCheckPassword',
     async (data) => {
-        const {request} = useHttp();
+        const { request } = useHttp();
         const token = sessionStorage.getItem("token")
         const headers = {
-            "Authorization" : "Bearer " + token,
+            "Authorization": "Bearer " + token,
             'Content-Type': 'application/json'
         }
-        return await request(`${BackUrl}checks/check_password`,"POST", JSON.stringify(data),headers)
+        return await request(`${BackUrl}checks/check_password`, "POST", JSON.stringify(data), headers)
     }
 )
 
@@ -76,9 +77,9 @@ const meSlice = createSlice({
     initialState,
     reducers: {
         settingUser(state) {
-          state.userLoadingStatus = true
+            state.userLoadingStatus = true
         },
-        setUser(state,action) {
+        setUser(state, action) {
             state.meLoadingStatus = 'success';
             sessionStorage.setItem('token', action.payload.access_token);
             sessionStorage.setItem('refresh_token', action.payload.refresh_token);
@@ -96,11 +97,11 @@ const meSlice = createSlice({
 
         },
 
-        changePaymentType: (state,action) => {
+        changePaymentType: (state, action) => {
             state.teacherSalary.selectedMonth = state.teacherSalary.selectedMonth.map(item => {
                 if (item.id === action.payload.id) {
                     console.log(action.payload.id)
-                    return {...item, typePayment: action.payload.typePayment}
+                    return { ...item, typePayment: action.payload.typePayment }
                 }
                 return item
             })
@@ -121,11 +122,11 @@ const meSlice = createSlice({
         setLoadingStatus: (state) => {
             state.meLoadingStatus = "error"
         },
-        setSelectedLocation: (state,action) => {
+        setSelectedLocation: (state, action) => {
             localStorage.setItem('selectedLocation', action.payload.id);
             state.selectedLocation = action.payload.id
         },
-        logout: (state,action) => {
+        logout: (state, action) => {
             sessionStorage.removeItem('token');
             sessionStorage.removeItem('refresh_token');
             localStorage.removeItem('user');
@@ -143,10 +144,11 @@ const meSlice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(fetchMe.pending,state => {state.meLoadingStatus = 'loading'} )
-            .addCase(fetchMe.fulfilled,(state, action) => {
+            .addCase(fetchMe.pending, state => { state.meLoadingStatus = 'loading' })
+            .addCase(fetchMe.fulfilled, (state, action) => {
                 state.meLoadingStatus = 'success';
                 state.id = action.payload.id;
+                state.level = action.payload.level;
                 state.username = action.payload.username;
                 state.name = action.payload.name;
                 state.surname = action.payload.surname;
@@ -158,12 +160,13 @@ const meSlice = createSlice({
 
 
             })
-            .addCase(fetchMe.rejected,state => {state.meLoadingStatus = 'error'} )
+            .addCase(fetchMe.rejected, state => { state.meLoadingStatus = 'error' })
 
-            .addCase(fetchMyInfo.pending,state => {state.meInfoLoadingStatus = 'loading'} )
-            .addCase(fetchMyInfo.fulfilled,(state, action) => {
+            .addCase(fetchMyInfo.pending, state => { state.meInfoLoadingStatus = 'loading' })
+            .addCase(fetchMyInfo.fulfilled, (state, action) => {
                 state.meInfoLoadingStatus = 'success';
                 state.id = action.payload.id;
+                state.level = action.payload.level;
                 state.username = action.payload.username;
                 state.name = action.payload.name;
                 state.surname = action.payload.surname;
@@ -175,24 +178,24 @@ const meSlice = createSlice({
                 state.rate = action.payload.rate
                 state.contract_url = action.payload.contract_url
             })
-            .addCase(fetchMyInfo.rejected,state => {state.meInfoLoadingStatus = 'error'} )
+            .addCase(fetchMyInfo.rejected, state => { state.meInfoLoadingStatus = 'error' })
 
-            .addCase(fetchCheckPassword.pending,state => {state.checkingPassword = 'loading'} )
-            .addCase(fetchCheckPassword.fulfilled,(state, action) => {
+            .addCase(fetchCheckPassword.pending, state => { state.checkingPassword = 'loading' })
+            .addCase(fetchCheckPassword.fulfilled, (state, action) => {
                 state.checkingPassword = 'success';
                 if (action.payload.password === true) {
                     state.meCheckPassword = false
                     state.isCheckedPassword = true
                 }
             })
-            .addCase(fetchCheckPassword.rejected,state => {state.checkingPassword = 'error'} )
-            .addDefaultCase(()=> {})
-}
+            .addCase(fetchCheckPassword.rejected, state => { state.checkingPassword = 'error' })
+            .addDefaultCase(() => { })
+    }
 })
 
 
 
-const {actions,reducer} = meSlice;
+const { actions, reducer } = meSlice;
 
 export default reducer
 

@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSelectedLocation} from "slices/meSlice";
 import {fetchLocations} from "slices/locationsSlice";
 import {Logger} from "sass";
+import {TaskManagerModal} from "../../../pages/platformContent/platformTaskManager/taskManagerModal/taskManagerModal";
 
 
 const PlatformMenuBar = ({menuActive, setMenuActive}) => {
