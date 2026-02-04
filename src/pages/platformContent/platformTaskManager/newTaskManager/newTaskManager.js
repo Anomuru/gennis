@@ -229,11 +229,11 @@ const NewTaskManager = () => {
             post = { lead_id: id }
         } else if (activeCategory === "debtors") {
             postURL = "task_debts/call_to_debt"
-            post = { student_id: id, phone: "901101664" }
+            post = { student_id: id, phone }
             setSelectedPerson(prev => ({ ...prev, phone }))
         } else {
             postURL = "task_new_students/call_to_new_student"
-            post = { student_id: id, phone: "901101664" }
+            post = { student_id: id, phone }
             setSelectedPerson(prev => ({ ...prev, phone }))
         }
         dispatch(onCallLoading(true))
