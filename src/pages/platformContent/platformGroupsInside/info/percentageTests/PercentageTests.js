@@ -42,7 +42,7 @@ const PercentageTests = ({ data, assisData }) => {
                             </div>
                             <div className={cls.information__item}>
                                 <span>{assisData.assistentSalary.name}: </span>
-                                <span>{assisData.assistentSalary.value}% </span>
+                                <span>{assisData.assistentSalary.value} </span>
                             </div>
                         </div>
                     </div>

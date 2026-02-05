@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import "./changeGroupAssistent.module.sass"
+import cls from "./changeGroupAssistent.module.sass"
 
 
 import Button from "components/platform/platformUI/button";
@@ -23,6 +23,7 @@ import { useAuth } from "hooks/useAuth";
 import { useHttp } from "hooks/http.hook";
 import { BackUrl, headers } from "constants/global";
 import { setMessage } from "slices/messageSlice";
+import classNames from 'classnames';
 
 
 
@@ -31,6 +32,7 @@ import { setMessage } from "slices/messageSlice";
 
 const ChangeGroupAssistent = () => {
 
+    const { data } = useSelector(state => state.group)
 
     const { groupId } = useParams()
     const [users, setUsers] = useState([])
@@ -49,10 +51,46 @@ const ChangeGroupAssistent = () => {
             })
     }, [groupId])
 
+    const onDelete = () => {
+        request(`${BackUrl}create_group/delete_asistent_group/${data?.assistantID?.value}/${groupId}`, "DELETE", null, headers())
+            .then(res => {
+                // if (res.success) {
+                if (res.success) {
+                    dispatch(setMessage({
+                        msg: res.msg,
+                        type: "success",
+                        active: true
+                    }))
+
+                    request(`${BackUrl}group_change/check_time_assistent/${groupId}/`, "GET", null, headers())
+                        .then(res => {
+                            console.log(res)
+                            // if (res.success) {
+                            setUsers(res.assistent_errors)
+                            // }
+                        })
+                } else {
+                    dispatch(setMessage({
+                        msg: res.msg,
+                        type: "error",
+                        active: true
+                    }))
+                }
+                // }
+            })
+            .catch(() => {
+                dispatch(setMessage({
+                    msg: "Internetingizda yoki serverda hatolik",
+                    type: "error",
+                    active: true
+                }))
+            })
+    }
+
 
     const dispatch = useDispatch()
     const onSubmit = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
 
         const assistentId = users.filter(item => item.radioChecked)[0].id
 
@@ -82,15 +120,29 @@ const ChangeGroupAssistent = () => {
     }
 
     return (
-        <div className="create">
+        <div className={cls.create}>
 
-            <div className="create__header">
-                <form action="" onSubmit={onSubmit}>
+            <div className={cls.create__header}>
+                <Button
+                    type='danger'
+                    disabled={!data?.assistantID?.value}
+                    onClickBtn={onDelete}
+                >
+                    Delete
+                </Button>
+                <Button
+                    active={!isSubmit}
+                    disabled={isSubmit}
+                    onClickBtn={onSubmit}
+                >
+                    Submit
+                </Button>
+                {/* <form action="" onSubmit={onSubmit}>
                     <input disabled={isSubmit} className="input-submit" type="submit" />
-                </form>
+                </form> */}
             </div>
 
-            <div className="create__wrapper">
+            <div className={cls.create__wrapper}>
                 <Teachers setUsers={setUsers} users={users} />
             </div>
         </div>
@@ -154,15 +206,15 @@ const Teachers = ({ users, setUsers }) => {
         });
     }, [filters, users]);
 
-
+    // multiPropsFilter
     const searchedUsers = useMemo(() => {
-        const filteredHeroes = multiPropsFilter?.slice()
+        const filteredHeroes = users?.slice()
         return filteredHeroes?.filter(item =>
             item.name.toLowerCase().includes(search.toLowerCase()) ||
             item.surname.toLowerCase().includes(search.toLowerCase()) ||
             item.username.toLowerCase().includes(search.toLowerCase())
         )
-    }, [multiPropsFilter, search])
+    }, [users, search])
 
 
 
@@ -211,12 +263,12 @@ const Teachers = ({ users, setUsers }) => {
 
 
     return (
-        <section className="section create__section">
-            <header className="section__header">
-                <div key={1}>
+        <section className={classNames(cls.section, cls.create__section)}>
+            <header className={cls.section__header}>
+                <div key={1} className=''>
                     <PlatformSearch search={search} setSearch={setSearch} />
                 </div>
-                <div key={2}>
+                {/* <div key={2}>
                     <Button
                         onClickBtn={() => {
                             setActiveOthers(!activeOthers)
@@ -229,12 +281,12 @@ const Teachers = ({ users, setUsers }) => {
 
                 </div>
 
-                <Filters key={3} filterRef={filterRef} filters={filters} heightOtherFilters={heightOtherFilters} activeOthers={activeOthers} />
+                <Filters key={3} filterRef={filterRef} filters={filters} heightOtherFilters={heightOtherFilters} activeOthers={activeOthers} /> */}
             </header>
 
-            <main className="section__main">
+            <main className={cls.section__main}>
                 {
-                    !users?.length ? <h1 className="error">Asistent yo'q</h1> :
+                    !users?.length ? <h1 className={cls.error}>Asistent yo'q</h1> :
                         <UsersTable
                             fetchUsersStatus={fetchFilteredStudentsStatus}
                             funcsSlice={funcsSlice}
@@ -245,7 +297,7 @@ const Teachers = ({ users, setUsers }) => {
                 }
                 {
                     searchedUsers?.length > pageSize ?
-                        <div className="loadMore">
+                        <div className={cls.loadMore}>
                             <Button onClickBtn={onLoadMore}><i className="fas fa-plus" /></Button>
                         </div> : null
                 }

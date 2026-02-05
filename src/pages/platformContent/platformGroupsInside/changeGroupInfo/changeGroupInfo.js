@@ -157,6 +157,28 @@ const ChangeGroupInfo = () => {
                             </span>
                         }
                     </label>
+                    <label htmlFor="assistentSalary">
+                        <span className="name-field">Asistent ulushi</span>
+                        <input
+                            type="number"
+                            id="assistentSalary"
+                            className="input-fields "
+                            {...register("assistentSalary", {
+                                required: "Iltimos to'ldiring",
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: " Gruppa narxi sonlar dan iborat bo'lishi kerak"
+                                },
+                            })}
+                        // defaultValue={data.information.assistentSalary.value}
+                        />
+                        {
+                            errors?.assistentSalary &&
+                            <span className="error-field">
+                                {errors?.assistentSalary?.message}
+                            </span>
+                        }
+                    </label>
                     <label htmlFor="groupCost">
                         <span className="name-field">Gruppa narxi</span>
                         <input

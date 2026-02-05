@@ -30,7 +30,7 @@ const UsersTable = React.memo(({
         setUsersList(users)
     }, [users])
 
-    console.log(usersList, "usersList1");
+    // console.log(usersList, "usersList1");
 
 
     const navigate = useNavigate()
@@ -71,7 +71,7 @@ const UsersTable = React.memo(({
             }
         }
     }, [checkedUsers])
-    console.log(usersList, "usersList2");
+    // console.log(usersList, "usersList2");
 
     const stringCheck = (name, length = 10) => {
         if (name?.length > length) {
@@ -102,7 +102,7 @@ const UsersTable = React.memo(({
             dispatch(funcsSlice?.setChecked.func({ id }))
         }
     }
-    console.log(usersList, "usersList3");
+    // console.log(usersList, "usersList3");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const onDelete = (id, type) => {
@@ -207,14 +207,17 @@ const UsersTable = React.memo(({
                     }
                     {
                         activeRowsInTable.radio ?
-                            <td>
-                                <input
-                                    name="radio"
-                                    checked={item.radioChecked}
-                                    onChange={() => onChecked(item.id)}
-                                    type="radio"
-                                />
-                            </td> : null
+                            item.color !== "red" ?
+                                <td>
+                                    <input
+                                        name="radio"
+                                        checked={item.radioChecked}
+                                        onChange={() => onChecked(item.id)}
+                                        type="radio"
+                                    />
+                                </td>
+                                : <td />
+                            : null
                     }
                     {
                         activeRowsInTable.delete || item.status ?
