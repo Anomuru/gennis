@@ -149,11 +149,9 @@ const useSubmitCallResult = () => {
                     };
 
             try {
-                console.log('📤 Submitting call result:', { url, payload });
 
                 const response = await request(url, 'POST', JSON.stringify(payload));
 
-                console.log('✅ Submit response:', response);
 
                 callStorage.clearCallState();
 
@@ -189,11 +187,9 @@ const useSubmitCallResult = () => {
                     socketService.leaveUserRoom(user.id);
                 }
                 socketService.disconnect();
-                console.log('🛑 Disconnected from socket after submit');
 
                 return { success: true };
             } catch (error) {
-                console.error('❌ Failed to submit call result:', error);
                 return { success: false, error };
             }
         },
@@ -232,42 +228,30 @@ export const TaskManagerModal = () => {
         const activeCallId = callId || savedState.callId;
         const activeAudioId = audioId || savedState.audioId;
 
-        console.log('🔍 Checking socket connection:', {
-            callId: activeCallId,
-            audioId: activeAudioId,
-            hasCallId: !!activeCallId,
-            hasAudioId: !!activeAudioId,
-        });
 
         // ❗ callId и audioId не могут быть одновременно
         if (activeCallId && activeAudioId) {
-            console.log('❌ Both callId and audioId exist! This should not happen.', activeCallId, activeAudioId);
-            console.log(audioId, 'audioId');
 
             return;
         }
 
         // ✅ Если есть audioId (но НЕТ callId) → НЕ подключаемся к сокету
         if (activeAudioId && !activeCallId) {
-            console.log('✅ audioId exists, no socket connection needed');
             return;
         }
 
         // ✅ Если есть callId → подключаемся к сокету
         if (activeCallId) {
-            console.log('📞 callId exists, connecting to socket...');
 
             const user = JSON.parse(localStorage.getItem('selectedPerson') || '{}');
             const userId = user?.id;
 
             if (!userId) {
-                console.error('❌ No userId found in localStorage');
                 return;
             }
 
             // Подключаемся к сокету если не подключены
             if (!socketService.isConnected()) {
-                console.log('🔌 Connecting to socket:', SOCKET_URL);
                 socketService.connect(SOCKET_URL);
             } else {
                 console.log('✅ Socket already connected');
@@ -275,11 +259,9 @@ export const TaskManagerModal = () => {
 
             // Присоединяемся к комнате пользователя
             socketService.joinUserRoom(userId);
-            console.log('🚪 Joined room:', userId);
 
             // Обработчик событий call_status
             const handleCallStatus = (data) => {
-                console.log('📥 call_status received:', data);
 
                 const {
                     callid,
@@ -381,11 +363,9 @@ export const TaskManagerModal = () => {
                         // ✅ Если успешно → сохраняем audioId и убираем callId
                         if (isSuccess && extractedAudioId) {
                             callStorage.moveToAudioState(extractedAudioId);
-                            console.log('✅ Call succeeded, audioId saved:', extractedAudioId);
                         } else {
                             // ❌ Если не успешно → ставим error state
                             callStorage.setErrorState();
-                            console.log('❌ Call failed');
                         }
                         break;
                     }
@@ -410,7 +390,6 @@ export const TaskManagerModal = () => {
                         callStorage.setErrorState();
                         socketService.leaveUserRoom(userId);
                         socketService.disconnect();
-                        console.log('❌ Call error, disconnected from socket');
                         break;
 
                     default:
@@ -418,7 +397,6 @@ export const TaskManagerModal = () => {
                         return;
                 }
 
-                console.log('📊 Normalized data:', normalized);
 
                 // Обновляем Redux
                 if (normalized.state === 'PENDING') {
@@ -478,11 +456,9 @@ export const TaskManagerModal = () => {
 
             // Подписываемся на события
             socketService.onCallStatus(handleCallStatus);
-            console.log('👂 Listening to call_status events');
 
             // Cleanup
             return () => {
-                console.log('🧹 Cleaning up socket connection');
                 socketService.offCallStatus();
                 socketService.leaveUserRoom(userId);
                 socketService.disconnect();
@@ -490,7 +466,6 @@ export const TaskManagerModal = () => {
         }
 
         // Если нет ни callId, ни audioId → ничего не делаем
-        console.log('⏸️ No active call, no socket connection needed');
 
     }, [callId, audioId, dispatch, person, type]); // ← Зависимости
 
@@ -501,7 +476,6 @@ export const TaskManagerModal = () => {
     useEffect(() => {
         const savedState = callStorage.loadCallState();
 
-        console.log('💾 Loaded saved state:', savedState);
 
         if (!savedState.callId && !savedState.audioId) return;
 
@@ -517,17 +491,13 @@ export const TaskManagerModal = () => {
 
         if (savedState.state && savedState.state !== 'error') {
             if (savedState.callId) {
-                console.log('🔄 Restoring active call:', savedState.callId);
                 dispatch(onCallStart({ ...props, callId: savedState.callId }));
             } else if (savedState.audioId) {
-                console.log('🔄 Restoring with audioId:', savedState.audioId);
                 dispatch(onCallProgressing({ ...props, audioId: savedState.audioId }));
             }
         } else if (savedState.showStatus >= 3) {
-            console.log('⚠️ Showing modal after 3 attempts');
             dispatch(onCallStart(props));
         } else {
-            console.log('🧹 Clearing outdated state');
             callStorage.clearCallState();
         }
     }, [dispatch]);

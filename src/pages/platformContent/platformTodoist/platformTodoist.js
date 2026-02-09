@@ -156,6 +156,7 @@ const PlatformTodoist = () => {
             if (activePage === "task") {
                 setSelectedMultiTask(null)
                 const props = {
+                    location: locationId,
                     status: selectedStatus,
                     created_at: selectedCreate,
                     deadline_after: selectedDeadlineFrom,
@@ -166,7 +167,7 @@ const PlatformTodoist = () => {
                 if (activeTaskType === "myTasks") {
                     dispatch(fetchTasks({ executor: userId, ...props }))
                 } else if (activeTaskType === "givenTask") {
-                    dispatch(fetchTasks({ creator: userId, ...props }))
+                    dispatch(fetchTasks({ creator_id: userId, ...props }))
                 } else {
                     dispatch(fetchTasks({ reviewer: userId, ...props }))
                 }
