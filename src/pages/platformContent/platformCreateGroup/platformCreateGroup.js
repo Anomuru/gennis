@@ -479,8 +479,16 @@ const Users = ({ locationId, setGroupData, groupData, setGetErrors }) => {
                 if (res.success) {
                     setGroupError(res.data.gr_errors)
                     setGetErrors(res.data.gr_errors)
-                    activeType === "students" ? setUsers(res.data.students) : setUsers(res.data.teachers)
-                    setStudents(res.data.students)
+                    activeType === "students" ? setUsers(
+                        res.data.students
+                            .filter(item => item.subjects.length > 0)
+                    ) : setUsers(res.data.teachers)
+                    setStudents(
+                        res.data.students
+                            .filter(item => item.subjects.length > 0)
+                    )
+                    console.log(res.data.students);
+
                     setTeachers(res.data.teachers)
                     setGroupData({
                         teacher: {},
