@@ -10,31 +10,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ KODNI OLISH
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2️⃣ NODE SETUP
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # 3️⃣ DEPENDENCIES
       - name: Install dependencies
         run: npm install
 
+      # 4️⃣ BUILD
       - name: Build project
         run: CI=false npm run build
 
+      # 5️⃣ SERVERDA PATH ICHINI TOZALASH (HAVFSIZ)
+      - name: Clean target directory on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            if [ -d "${{ secrets.TARGET_DIR }}" ]; then
+              find "${{ secrets.TARGET_DIR }}" -mindepth 1 -delete
+            else
+              mkdir -p "${{ secrets.TARGET_DIR }}"
+            fi
+
+      # 6️⃣ YANGI BUILDNINI JOYLASH
       - name: Deploy to Server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.PASSWORD }}
           source: "build/*"
           target: ${{ secrets.TARGET_DIR }}
           strip_components: 1
           overwrite: true
 
+      # 7️⃣ TELEGRAM — SUCCESS
       - name: Send Telegram Notification on Success
         if: success()
         uses: appleboy/telegram-action@v0.1.0
@@ -43,9 +63,11 @@ jobs:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
             ✅ Deploy Successful!
-            Repository: ${{ github.repository }}
+            Repo: ${{ github.repository }}
             Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
 
+      # 8️⃣ TELEGRAM — FAILURE
       - name: Send Telegram Notification on Failure
         if: failure()
         uses: appleboy/telegram-action@v0.1.0
@@ -54,6 +76,7 @@ jobs:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
             ❌ Deploy Failed!
-            Repository: ${{ github.repository }}
+            Repo: ${{ github.repository }}
             Branch: ${{ github.ref_name }}
-            Logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Logs:
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
