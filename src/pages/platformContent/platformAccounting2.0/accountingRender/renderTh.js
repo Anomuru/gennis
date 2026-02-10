@@ -80,6 +80,17 @@ export const RenderTh = () => {
             </>
         }
 
+        case "assistentSalary": {
+            return <>
+                <th>#</th>
+                <th>Ism</th>
+                <th>Familiya</th>
+                <th>To‘lov</th>
+                <th>Sana</th>
+                <th>To‘lov turi</th>
+                <th>O‘chirish</th>
+            </>
+        }
         case "teachersSalary": {
             return <>
                 <th>#</th>
