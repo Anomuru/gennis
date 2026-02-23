@@ -1,0 +1,295 @@
+/* TaskCard.module.css */
+
+.card 
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  display: flex;
+  flex-direction: column;
+
+
+.card:hover 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+
+
+/* Left colored accent bar based on deadline status */
+.accentBar 
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--border-color, #e5e7eb);
+  border-radius: 12px 0 0 12px;
+
+
+/* ── Header ───────────────────────────────────────────── */
+.header 
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 14px 10px 18px;
+
+
+.headerLeft 
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+
+
+.category 
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 1px 6px;
+  width: fit-content;
+
+
+.title 
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+        
+
+.statusBadge 
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+
+
+.statusBadge:hover 
+  opacity: 0.8;
+
+/* ── Meta rows ────────────────────────────────────────── */
+.meta 
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 14px 10px 18px;
+
+.metaRow 
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+
+.metaIcon 
+  font-size: 12px;
+  flex-shrink: 0;
+
+
+.metaLabel 
+  color: #6b7280;
+  font-weight: 500;
+  flex-shrink: 0;
+
+
+.metaValue 
+  color: #374151;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+
+/* Person with avatar */
+.personRow 
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+
+.avatar 
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+
+.multiCount 
+  font-size: 11px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-radius: 10px;
+  padding: 0 5px;
+  font-weight: 600;
+
+
+/* Deadline */
+.deadlineValue 
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+
+.overdueBadge 
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 1px 5px;
+
+
+.daysLeftBadge 
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 1px 5px;
+
+
+/* KPI */
+.kpiRow 
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+
+.kpiWeight 
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 1px 6px;
+
+
+.bonus 
+  font-size: 11px;
+  color: #16a34a;
+
+.penalty 
+  font-size: 11px;
+  color: #dc2626;
+
+
+/* ── Tags ─────────────────────────────────────────────── */
+.tags 
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 14px 10px 18px;
+
+.tag 
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 2px 8px;
+  border: 1px solid #e5e7eb;
+
+
+.tagMore 
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 2px 8px;
+
+
+/* ── Footer ───────────────────────────────────────────── */
+.footer 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px 10px 18px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: auto;
+  gap: 8px;
+
+
+.activity 
+  display: flex;
+  gap: 10px;
+
+
+.activityItem 
+  font-size: 11px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+
+.actions 
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+
+/* Buttons */
+.btnView,
+.btnSecondary,
+.btnEdit,
+.btnDelete 
+  font-size: 11px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+
+.btnView 
+  background: #2563eb;
+  color: #fff;
+
+
+.btnSecondary 
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+
+
+.btnEdit 
+  background: #fef3c7;
+  color: #92400e;
+
+
+.btnDelete 
+  background: #fee2e2;
+  color: #dc2626;
+
+
+.btnView:hover,
+.btnSecondary:hover,
+.btnEdit:hover,
+.btnDelete:hover 
+  opacity: 0.8;
