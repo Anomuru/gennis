@@ -88,6 +88,7 @@ export default function TaskCard({
     }
 
     const isCreator = task.creator?.id === userId;
+    const isExecutor = task.executor?.id === userId;
 
     return (
         <div
@@ -243,7 +244,7 @@ export default function TaskCard({
                     className={styles.actions}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {level !== 4 && (!isMulti) && (
+                    {level !== 4 && (!isMulti) && (isCreator || isExecutor) && (
                         <button
                             className={styles.btnSecondary}
                             onClick={() => onRedirect?.(task)}
