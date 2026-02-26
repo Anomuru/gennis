@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { useForm } from "react-hook-form"
+import {useEffect, useState} from "react"
+import {useDispatch, useSelector} from "react-redux"
+import {useForm} from "react-hook-form"
 import classNames from "classnames"
-import { useParams } from "react-router-dom"
+import {useParams} from "react-router-dom"
 
 import {
     addAttachments,
@@ -38,10 +38,10 @@ import {
     editMultiTask,
     deleteMultiTask
 } from "slices/todoistSlice"
-import { useHttp } from "hooks/http.hook";
-import { BackUrl, BackUrlForDoc, headers, headersImg } from "constants/global"
-import { fetchTeachersByLocationWithoutPagination } from "slices/teachersSlice"
-import { setMessage } from "slices/messageSlice"
+import {useHttp} from "hooks/http.hook";
+import {BackUrl, BackUrlForDoc, headers, headersImg} from "constants/global"
+import {fetchTeachersByLocationWithoutPagination} from "slices/teachersSlice"
+import {setMessage} from "slices/messageSlice"
 import Button from "components/platform/platformUI/button"
 import Select from "components/platform/platformUI/select"
 import Modal from "components/platform/platformUI/modal"
@@ -50,22 +50,22 @@ import DefaultLoaderSmall from "components/loader/defaultLoader/defaultLoaderSma
 import DefaultLoader from "components/loader/defaultLoader/DefaultLoader"
 
 import styles from "./platformTodoist.module.sass"
-import { fetchEmployersDataWithoutPagination } from "slices/employeesSlice"
-import { AnimatedMulti } from "components/platform/platformUI/animatedMulti/animatedMulti"
+import {fetchEmployersDataWithoutPagination} from "slices/employeesSlice"
+import {AnimatedMulti} from "components/platform/platformUI/animatedMulti/animatedMulti"
 import TaskCard from "./taskCard/taskCard"
 import ViewTaskModal from "./viewTaskModal/viewTaskModal"
 import ChangeStatusModal from "./changeStatusModal/changeStatusModal"
 
 const TASK_TYPES = [
-    { id: "myTasks", name: "Menig vazifalarim" },
-    { id: "givenTask", name: "Bergan vazifalarim" },
-    { id: "viewTasks", name: "Tekshirish vazifalari" },
+    {id: "myTasks", name: "Menig vazifalarim"},
+    {id: "givenTask", name: "Bergan vazifalarim"},
+    {id: "viewTasks", name: "Tekshirish vazifalari"},
 ]
 
 const NOTIFICATION_TYPES = [
-    { id: "executor", name: "Menig vazifalarim" },
-    { id: "creator", name: "Bergan vazifalarim" },
-    { id: "reviewer", name: "Tekshirish vazifalari" },
+    {id: "executor", name: "Menig vazifalarim"},
+    {id: "creator", name: "Bergan vazifalarim"},
+    {id: "reviewer", name: "Tekshirish vazifalari"},
 ]
 
 // Константы (вынеси в отдельный файл или вверх компонента)
@@ -85,14 +85,14 @@ const STATUS_PERMISSIONS = {
 const PlatformTodoist = () => {
 
     const dispatch = useDispatch()
-    const { locationId } = useParams()
-    const { request } = useHttp()
-    const { register, handleSubmit, setValue } = useForm()
+    const {locationId} = useParams()
+    const {request} = useHttp()
+    const {register, handleSubmit, setValue} = useForm()
 
 
-    const { id: userId, level } = useSelector(state => state.me)
-    const { teachers } = useSelector(state => state.teachers)
-    const { employees } = useSelector(state => state.employees)
+    const {id: userId, level} = useSelector(state => state.me)
+    const {teachers} = useSelector(state => state.teachers)
+    const {employees} = useSelector(state => state.employees)
     const {
         tasks,
         tags,
@@ -145,8 +145,8 @@ const PlatformTodoist = () => {
         if (locationId) {
             dispatch(fetchTaskTags())
             // dispatch(fetchTeachersData(locationId))
-            dispatch(fetchEmployersDataWithoutPagination({ locationId, level }))
-            dispatch(fetchTeachersByLocationWithoutPagination({ locationId }))
+            dispatch(fetchEmployersDataWithoutPagination({locationId, level}))
+            dispatch(fetchTeachersByLocationWithoutPagination({locationId}))
             // dispatch(fetchEmployersDataWithoutPagination({ branch: locationId, level: userLevel }))
 
         }
@@ -157,6 +157,7 @@ const PlatformTodoist = () => {
             if (activePage === "task") {
                 setSelectedMultiTask(null)
                 const props = {
+                    location: locationId,
                     status: selectedStatus,
                     created_at: selectedCreate,
                     deadline_after: selectedDeadlineFrom,
@@ -165,14 +166,14 @@ const PlatformTodoist = () => {
                     tags: selectedTags.length === 0 ? null : selectedTags.map(item => item.value)
                 }
                 if (activeTaskType === "myTasks") {
-                    dispatch(fetchTasks({ executor: userId, ...props }))
+                    dispatch(fetchTasks({executor: userId, ...props}))
                 } else if (activeTaskType === "givenTask") {
-                    dispatch(fetchTasks({ creator: userId, ...props }))
+                    dispatch(fetchTasks({creator_id: userId, ...props}))
                 } else {
-                    dispatch(fetchTasks({ reviewer: userId, ...props }))
+                    dispatch(fetchTasks({reviewer: userId, ...props}))
                 }
             } else {
-                dispatch(fetchTaskNotifications({ role: activeNotificationType, user_id: userId }))
+                dispatch(fetchTaskNotifications({role: activeNotificationType, user_id: userId}))
             }
         }
     }, [userId, activeTaskType, activePage, activeNotificationType, selectedCreate, selectedDeadlineFrom, selectedDeadlineTo, selectedStatus, selectedCategory, selectedTags])
@@ -195,7 +196,7 @@ const PlatformTodoist = () => {
         if (tags) {
             setTagsList(
                 tags.map(item =>
-                    ({ value: item.id, label: item.name })
+                    ({value: item.id, label: item.name})
                 )
             )
         }
@@ -247,7 +248,7 @@ const PlatformTodoist = () => {
         setSelectedTask(task)
         setFormData({
             ...task,
-            tags: task.tags && task.tags.map(item => ({ value: item.id, label: item.name }))
+            tags: task.tags && task.tags.map(item => ({value: item.id, label: item.name}))
         })
         setModalType("editTask")
         setOnCreate(false)
@@ -257,7 +258,7 @@ const PlatformTodoist = () => {
         setSelectedTask(task)
         setFormData({
             ...task,
-            tags: task.tags && task.tags.map(item => ({ value: item.id, label: item.name }))
+            tags: task.tags && task.tags.map(item => ({value: item.id, label: item.name}))
         })
         setModalType("changeStatus")
     }
@@ -305,7 +306,7 @@ const PlatformTodoist = () => {
 
         dispatch(notificationLoading())
 
-        request(`${BackUrl}notifications/${id}/`, "PATCH", JSON.stringify({ is_read: isRead }), headers())
+        request(`${BackUrl}notifications/${id}/`, "PATCH", JSON.stringify({is_read: isRead}), headers())
             .then(res => {
                 dispatch(editNotification(res))
                 dispatch(setMessage({
@@ -610,7 +611,7 @@ const PlatformTodoist = () => {
     // Tag CRUD operations
     const handleCreateTag = () => {
         dispatch(taskTagsLoading())
-        request(`${BackUrl}tags/`, "POST", JSON.stringify({ name: tagFormData }), headers())
+        request(`${BackUrl}tags/`, "POST", JSON.stringify({name: tagFormData}), headers())
             .then(res => {
                 dispatch(addTag(res))
                 dispatch(setMessage({
@@ -634,7 +635,7 @@ const PlatformTodoist = () => {
 
     const handleEditTag = () => {
         dispatch(taskTagsLoading())
-        request(`${BackUrl}tags/${selectedTag.id}/`, "PATCH", JSON.stringify({ name: tagFormData }), headers())
+        request(`${BackUrl}tags/${selectedTag.id}/`, "PATCH", JSON.stringify({name: tagFormData}), headers())
             .then(res => {
                 dispatch(editTag(res))
                 dispatch(setMessage({
@@ -752,7 +753,7 @@ const PlatformTodoist = () => {
 
         request(`${BackUrl}subtasks/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteSubTasks({ mission_id: selectedTask.id, subtask: nestedFormData.id }))
+                dispatch(deleteSubTasks({mission_id: selectedTask.id, subtask: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     subtasks: selectedTask.subtasks.filter((s) => s.id !== nestedFormData.id),
@@ -778,7 +779,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("subtasks"))
 
-        request(`${BackUrl}subtasks/${id}/`, "PATCH", JSON.stringify({ is_done: !isDone }), headers())
+        request(`${BackUrl}subtasks/${id}/`, "PATCH", JSON.stringify({is_done: !isDone}), headers())
             .then(res => {
                 dispatch(editSubTasks(res))
                 setSelectedTask({
@@ -885,7 +886,7 @@ const PlatformTodoist = () => {
 
         request(`${BackUrl}attachments/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteAttachments({ mission_id: selectedTask.id, attachment: nestedFormData.id }))
+                dispatch(deleteAttachments({mission_id: selectedTask.id, attachment: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     attachments: selectedTask.attachments.filter((s) => s.id !== nestedFormData.id),
@@ -993,7 +994,7 @@ const PlatformTodoist = () => {
 
         request(`${BackUrl}comment/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteComments({ mission_id: selectedTask.id, comment: nestedFormData.id }))
+                dispatch(deleteComments({mission_id: selectedTask.id, comment: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     comments: selectedTask.comments.filter((s) => s.id !== nestedFormData.id),
@@ -1097,7 +1098,7 @@ const PlatformTodoist = () => {
 
         request(`${BackUrl}proofs/${nestedFormData.id}/`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteProofs({ mission_id: selectedTask.id, proof: nestedFormData.id }))
+                dispatch(deleteProofs({mission_id: selectedTask.id, proof: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     proofs: selectedTask.proofs.filter((s) => s.id !== nestedFormData.id),
@@ -1222,7 +1223,7 @@ const PlatformTodoist = () => {
                                     Notifications
                                     {
                                         isHaveNot && (
-                                            <div className={styles.dott} />
+                                            <div className={styles.dott}/>
                                         )
                                     }
                                 </span>
@@ -1273,7 +1274,7 @@ const PlatformTodoist = () => {
                             {
                                 activePage === "task"
                                     ? tasksLoading
-                                        ? <DefaultLoader status={"none"} />
+                                        ? <DefaultLoader status={"none"}/>
                                         : tasks?.length === 0
                                             ? <h1 className={styles.grid__title}>
                                                 {
@@ -1306,7 +1307,7 @@ const PlatformTodoist = () => {
                                                 />
                                             ))
                                     : notificationsLoading
-                                        ? <DefaultLoader status={"none"} />
+                                        ? <DefaultLoader status={"none"}/>
                                         : notificationsList.length === 0
                                             ? <h1 className={styles.grid__title}>Sizga xechqanday xabar yo'q</h1>
                                             : notificationsList.map(item => (
@@ -1333,17 +1334,17 @@ const PlatformTodoist = () => {
                                 >
                                     {
                                         tagsLoading
-                                            ? <DefaultLoader status={"none"} />
+                                            ? <DefaultLoader status={"none"}/>
                                             : tags?.map((tag) => (
                                                 <div key={tag.id} className={styles.tagItem}>
                                                     <span className={styles.tagName}>{tag.name}</span>
                                                     <div className={styles.tagActions}>
                                                         <button className={styles.btnSmallEdit}
-                                                            onClick={() => openEditTagModal(tag)}>
+                                                                onClick={() => openEditTagModal(tag)}>
                                                             Edit
                                                         </button>
                                                         <button className={styles.btnSmallDelete}
-                                                            onClick={() => openDeleteTagModal(tag)}>
+                                                                onClick={() => openDeleteTagModal(tag)}>
                                                             Delete
                                                         </button>
                                                     </div>
@@ -1363,7 +1364,7 @@ const PlatformTodoist = () => {
                     (modalType === "createTask" || modalType === "editTask") && (
                         <div
                             className={styles.modalBackdrop}
-                        // onClick={() => setModalType(null)}
+                            // onClick={() => setModalType(null)}
                         >
                             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                                 <h2 className={styles.modalTitle}>{modalType === "createTask" ? "Create Task" : "Edit Task"}</h2>
@@ -1372,7 +1373,7 @@ const PlatformTodoist = () => {
                                     <input
                                         type="text"
                                         value={formData.title || ""}
-                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        onChange={(e) => setFormData({...formData, title: e.target.value})}
                                         placeholder="Task title"
                                         required
                                     />
@@ -1380,9 +1381,9 @@ const PlatformTodoist = () => {
                                 <div className={styles.formGroup}>
                                     <label>Description</label>
                                     <textarea
-                                        style={{ height: "150px" }}
+                                        style={{height: "150px"}}
                                         value={formData.description || ""}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        onChange={(e) => setFormData({...formData, description: e.target.value})}
                                         placeholder="Task description"
                                         rows={3}
                                     />
@@ -1393,7 +1394,7 @@ const PlatformTodoist = () => {
                                     <AnimatedMulti
                                         extraClass={styles.formGroup__multiSelect}
                                         options={tagsList}
-                                        onChange={(e) => setFormData({ ...formData, tags: e })}
+                                        onChange={(e) => setFormData({...formData, tags: e})}
                                         value={formData.tags}
                                         fontSize={15}
                                     />
@@ -1412,9 +1413,9 @@ const PlatformTodoist = () => {
                                                                 // {value: userId, label: "Me"},
                                                                 ...teachersList
                                                                     .filter(item => item.id !== userId)
-                                                                    .map(item => ({ value: item.id, label: item.name }))
+                                                                    .map(item => ({value: item.id, label: item.name}))
                                                             ]}
-                                                            onChange={(e) => setFormData({ ...formData, executor_ids: e })}
+                                                            onChange={(e) => setFormData({...formData, executor_ids: e})}
                                                             value={
                                                                 formData.executor_ids ?? [{
                                                                     value: selectedTask.executor.id,
@@ -1492,7 +1493,7 @@ const PlatformTodoist = () => {
                                                                                     executor_ids: []
                                                                                 })
                                                                             }}
-                                                                        // active={}
+                                                                            // active={}
                                                                         >
                                                                             Clear
                                                                         </Button>
@@ -1508,7 +1509,7 @@ const PlatformTodoist = () => {
                                                 <label>Reviewer</label>
                                                 <select
                                                     value={typeof formData.reviewer_id === "object" ? formData.reviewer.id : formData.reviewer_id || "none"}
-                                                    onChange={(e) => setFormData({ ...formData, reviewer_id: e.target.value })}
+                                                    onChange={(e) => setFormData({...formData, reviewer_id: e.target.value})}
                                                     required
                                                 >
                                                     <option value={userId}>Me</option>
@@ -1527,7 +1528,7 @@ const PlatformTodoist = () => {
                                     <label>Departmant</label>
                                     <select
                                         value={formData.category || "admin"}
-                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        onChange={(e) => setFormData({...formData, category: e.target.value})}
                                         required
                                     >
                                         {
@@ -1558,7 +1559,7 @@ const PlatformTodoist = () => {
                                     <input
                                         type="date"
                                         value={formData.deadline_datetime || ""}
-                                        onChange={(e) => setFormData({ ...formData, deadline_datetime: e.target.value })}
+                                        onChange={(e) => setFormData({...formData, deadline_datetime: e.target.value})}
                                         required
                                     />
                                 </div>
@@ -1568,7 +1569,7 @@ const PlatformTodoist = () => {
                                         <input
                                             type="checkbox"
                                             checked={formData.is_recurring || false}
-                                            onChange={(e) => setFormData({ ...formData, is_recurring: e.target.checked })}
+                                            onChange={(e) => setFormData({...formData, is_recurring: e.target.checked})}
                                         />
                                         Recurring
                                     </label>
@@ -1579,7 +1580,7 @@ const PlatformTodoist = () => {
                                             <label>Recurring Type</label>
                                             <select
                                                 value={formData.recurring_type || "daily"}
-                                                onChange={(e) => setFormData({ ...formData, recurring_type: e.target.value })}
+                                                onChange={(e) => setFormData({...formData, recurring_type: e.target.value})}
                                             >
                                                 {
                                                     recurringTypes.map(item =>
@@ -1698,10 +1699,10 @@ const PlatformTodoist = () => {
                                         </div>
                                         {
                                             tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button
@@ -1722,10 +1723,10 @@ const PlatformTodoist = () => {
                                         <p className={styles.confirmText}>Are you sure?</p>
                                         {
                                             tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button className={styles.btnDanger} onClick={handleDeleteSubtask}>
@@ -1766,10 +1767,10 @@ const PlatformTodoist = () => {
                                         {
 
                                             tasksProfileLoading && tasksProfileLoading === "attachments"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button
@@ -1792,10 +1793,10 @@ const PlatformTodoist = () => {
                                         {
 
                                             tasksProfileLoading && tasksProfileLoading === "attachments"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button className={styles.btnDanger} onClick={handleDeleteAttachment}>
@@ -1835,10 +1836,10 @@ const PlatformTodoist = () => {
                                         </div>
                                         {
                                             tasksProfileLoading && tasksProfileLoading === "comments"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button
@@ -1859,10 +1860,10 @@ const PlatformTodoist = () => {
                                         <p className={styles.confirmText}>Are you sure?</p>
                                         {
                                             tasksProfileLoading && tasksProfileLoading === "comments"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button className={styles.btnDanger} onClick={handleDeleteComment}>
@@ -1901,10 +1902,10 @@ const PlatformTodoist = () => {
                                         </div>
                                         {
                                             tasksProfileLoading && tasksProfileLoading === "proofs"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button
@@ -1925,10 +1926,10 @@ const PlatformTodoist = () => {
                                         <p className={styles.confirmText}>Are you sure?</p>
                                         {
                                             tasksProfileLoading && tasksProfileLoading === "proofs"
-                                                ? <DefaultLoaderSmall />
+                                                ? <DefaultLoaderSmall/>
                                                 : <div className={styles.formActions}>
                                                     <button className={styles.btnCancel}
-                                                        onClick={() => setNestedModalType(null)}>
+                                                            onClick={() => setNestedModalType(null)}>
                                                         Cancel
                                                     </button>
                                                     <button className={styles.btnDanger} onClick={handleDeleteProof}>
@@ -2009,7 +2010,7 @@ const PlatformTodoist = () => {
                         </div>
                     )
                 }
-            </div >
+            </div>
             <Modal
                 activeModal={isFilter}
                 setActiveModal={setIsFilter}
@@ -2020,7 +2021,7 @@ const PlatformTodoist = () => {
                     <Select
                         title={"Status"}
                         clazzLabel={styles.mainInput}
-                        options={[{ id: "all", name: "Hammasi" }, ...statusList]}
+                        options={[{id: "all", name: "Hammasi"}, ...statusList]}
                         onChangeOption={setSelectedStatus}
                         value={selectedStatus}
                     />
@@ -2049,7 +2050,7 @@ const PlatformTodoist = () => {
                     <Select
                         title={"Departmant"}
                         clazzLabel={classNames(styles.mainInput, styles.lastSelect)}
-                        options={[{ id: "all", name: "Hammasi" }, ...categoryList]}
+                        options={[{id: "all", name: "Hammasi"}, ...categoryList]}
                         onChangeOption={setSelectedCategory}
                         value={selectedCategory}
                     />
@@ -2119,8 +2120,8 @@ const PlatformTodoist = () => {
     )
 }
 
-export function NotificationCard({ data, onToggleRead, onViewTask }) {
-    const { id, message, role, mission, deadline_datetime, is_read, created_at } = data;
+export function NotificationCard({data, onToggleRead, onViewTask}) {
+    const {id, message, role, mission, deadline_datetime, is_read, created_at} = data;
 
     const handleToggle = () => {
 

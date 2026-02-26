@@ -6,11 +6,11 @@ import { BackUrl, headers } from "constants/global";
 
 export const fetchTasks = createAsyncThunk(
     "todoistSlice/fetchTasks",
-    ({ status, creator, executor, reviewer, created_at, deadline, deadline_after, deadline_before, tags, category }) => {
+    ({ status, creator_id, executor, reviewer, created_at, deadline, deadline_after, deadline_before, tags, category, location }) => {
         const { request } = useHttp()
         return request(`${BackUrl}missions/?${ParamUrl({
             status,
-            creator,
+            creator_id,
             executor,
             reviewer,
             created_at,
@@ -18,7 +18,8 @@ export const fetchTasks = createAsyncThunk(
             deadline_after,
             deadline_before,
             tags,
-            category
+            category,
+            location
         })}`, "GET", null, headers())
     }
 )
