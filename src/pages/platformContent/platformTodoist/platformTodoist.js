@@ -84,7 +84,6 @@ const STATUS_PERMISSIONS = {
 
 const PlatformTodoist = () => {
 
-    const formDataImg = new FormData()
     const dispatch = useDispatch()
     const { locationId } = useParams()
     const { request } = useHttp()
@@ -224,22 +223,22 @@ const PlatformTodoist = () => {
 
     // Modal handlers
     const openCreateTaskModal = () => {
-        if (!onCreate) {
-            setFormData({
-                title: "",
-                description: "",
-                executor_ids: [],
-                reviewer_id: userId,
-                creator_id: userId,
-                category: "admin",
-                tags: [],
-                status: "not_started",
-                deadline_datetime: "",
-                is_recurring: false,
-                recurring_type: "daily",
-                repeat_every: 1,
-            })
-        }
+        setFormData({
+            title: "",
+            description: "",
+            executor_ids: [],
+            reviewer_id: userId,
+            creator_id: userId,
+            category: "admin",
+            tags: [],
+            status: "not_started",
+            deadline_datetime: "",
+            is_recurring: false,
+            recurring_type: "daily",
+            repeat_every: 1,
+        })
+        setIsTeachersSelect(false)
+        setIsEpmloyeesSelect(false)
         setModalType("createTask")
         setOnCreate(true)
     }
@@ -348,17 +347,12 @@ const PlatformTodoist = () => {
     }
 
     useEffect(() => {
-        // if (notificationsList.length > 0)
         if (userId) {
-            // NOTIFICATION_TYPES.map(item => {
             request(`${BackUrl}notifications/?user_id=${userId}`, "GET", null, headers())
                 .then(res => {
                     const filtered = res.filter(item => !item.is_read)
-                    if (filtered.length > 0) {
-                        setIsHaveNot(true)
-                    }
+                    setIsHaveNot(filtered.length > 0)
                 })
-            // })
         }
     }, [userId])
 
@@ -378,15 +372,12 @@ const PlatformTodoist = () => {
                                 ...res,
                                 parent: selectedMultiTask.id
                             }))
-                            setSelectedMultiTask(() => {
-                                return ({
-                                    // ...prev,
-                                    ...selectedMultiTask.children.filter(item => item.id !== res.id)[0],
-                                    children: [
-                                        ...selectedMultiTask.children.filter(item => item.id !== res.id),
-                                        res
-                                    ]
-                                })
+                            setSelectedMultiTask({
+                                ...selectedMultiTask,
+                                children: [
+                                    ...selectedMultiTask.children.filter(item => item.id !== res.id),
+                                    res
+                                ]
                             })
                         } else {
                             dispatch(editTask(res))
@@ -497,15 +488,12 @@ const PlatformTodoist = () => {
                                 ...res,
                                 parent: selectedMultiTask.id
                             }))
-                            setSelectedMultiTask(() => {
-                                return ({
-                                    // ...prev,
-                                    ...selectedMultiTask.children.filter(item => item.id !== res.id)[0],
-                                    children: [
-                                        ...selectedMultiTask.children.filter(item => item.id !== res.id),
-                                        res
-                                    ]
-                                })
+                            setSelectedMultiTask({
+                                ...selectedMultiTask,
+                                children: [
+                                    ...selectedMultiTask.children.filter(item => item.id !== res.id),
+                                    res
+                                ]
                             })
                         } else {
                             dispatch(editTask(res))
@@ -545,12 +533,9 @@ const PlatformTodoist = () => {
                         id: selectedTask.id,
                         parent: selectedMultiTask.id
                     }))
-                    setSelectedMultiTask(() => {
-                        return ({
-                            // ...prev,
-                            ...selectedMultiTask.children.filter(item => item.id !== selectedTask.id)[0],
-                            children: selectedMultiTask.children.filter(item => item.id !== selectedTask.id)
-                        })
+                    setSelectedMultiTask({
+                        ...selectedMultiTask,
+                        children: selectedMultiTask.children.filter(item => item.id !== selectedTask.id)
                     })
                 } else {
                     dispatch(deleteTask(selectedTask.id))
@@ -586,15 +571,12 @@ const PlatformTodoist = () => {
                                 ...res,
                                 parent: selectedMultiTask.id
                             }))
-                            setSelectedMultiTask(() => {
-                                return ({
-                                    // ...prev,
-                                    ...selectedMultiTask.children.filter(item => item.id !== res.id)[0],
-                                    children: [
-                                        ...selectedMultiTask.children.filter(item => item.id !== res.id),
-                                        res
-                                    ]
-                                })
+                            setSelectedMultiTask({
+                                ...selectedMultiTask,
+                                children: [
+                                    ...selectedMultiTask.children.filter(item => item.id !== res.id),
+                                    res
+                                ]
                             })
                         } else {
                             dispatch(editTask(res))
@@ -825,6 +807,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("attachments"))
 
+        const formDataImg = new FormData()
         formDataImg.append("note", nestedFormData.note)
         if (nestedFormData.file && typeof nestedFormData.file === "object") {
             formDataImg.append("file", nestedFormData.file)
@@ -863,6 +846,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("attachments"))
 
+        const formDataImg = new FormData()
         formDataImg.append("note", nestedFormData.note)
         if (nestedFormData.file && typeof nestedFormData.file === "object") {
             formDataImg.append("file", nestedFormData.file)
@@ -928,6 +912,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("comments"))
 
+        const formDataImg = new FormData()
         formDataImg.append("text", nestedFormData.text)
         formDataImg.append("user_id", userId)
         if (nestedFormData.comFile && typeof nestedFormData.comFile === "object") {
@@ -969,6 +954,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("comments"))
 
+        const formDataImg = new FormData()
         formDataImg.append("text", nestedFormData.text)
         if (nestedFormData.comFile && typeof nestedFormData.comFile === "object") {
             formDataImg.append("attachment", nestedFormData.comFile)
@@ -1033,6 +1019,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("proofs"))
 
+        const formDataImg = new FormData()
         formDataImg.append("comment", nestedFormData.comment)
         if (nestedFormData.proofFile && typeof nestedFormData.proofFile === "object") {
             formDataImg.append("file", nestedFormData.proofFile)
@@ -1071,6 +1058,7 @@ const PlatformTodoist = () => {
 
         dispatch(taskProfileLoading("proofs"))
 
+        const formDataImg = new FormData()
         formDataImg.append("comment", nestedFormData.comment)
         if (nestedFormData.proofFile && typeof nestedFormData.proofFile === "object") {
             formDataImg.append("file", nestedFormData.proofFile)
@@ -1185,7 +1173,7 @@ const PlatformTodoist = () => {
                 return "#845EF7";        // фиолетовый — одобрено
             case "declined":
                 return "#D6336C";        // тёмно-розовый/красный — отклонено
-            case "recheck":
+            case "re_check":
                 return "#F59F00";        // жёлтый — требует пересмотра
             default:
                 return "#999999";        // fallback
@@ -1463,7 +1451,7 @@ const PlatformTodoist = () => {
                                                                                         : [
                                                                                             ...formData.executor_ids,
                                                                                             ...teachers.map(item => ({
-                                                                                                value: item.id,
+                                                                                                value: item.user_id,
                                                                                                 label: `${item.name} ${item.surname} (${item.subjects[0]})`
                                                                                             }))
                                                                                         ]
@@ -1480,7 +1468,7 @@ const PlatformTodoist = () => {
                                                                                     ...formData,
                                                                                     executor_ids: isEpmloyeesSelect
                                                                                         ? formData.executor_ids.filter(item =>
-                                                                                            !employees.map(e => e.user_id).includes(item.value)
+                                                                                            !employees.map(e => e.id).includes(item.value)
                                                                                         )
                                                                                         : [
                                                                                             ...formData.executor_ids,
