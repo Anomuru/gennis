@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 // import CanvasJSReact from '@canvasjs/react-charts';
 import CanvasJSReact from '@canvasjs/react-stockcharts';
 
 
 import cls from "./platformTeacherRating.module.sass"
 import Select from "components/platform/platformUI/select";
-import {useHttp} from "hooks/http.hook";
-import {BackUrl, headers} from "constants/global";
-import {useParams} from "react-router-dom";
+import { useHttp } from "hooks/http.hook";
+import { BackUrl, headers } from "constants/global";
+import { useParams } from "react-router-dom";
 import BackButton from "components/platform/platformUI/backButton/backButton";
 import Button from "components/platform/platformUI/button";
 
@@ -31,13 +31,13 @@ const PlatformTeachersRating = () => {
     const [attendanceSt, setAttendanceSt] = useState([])
 
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
 
     useEffect(() => {
         request(`${BackUrl}teacher/statistics_dates`, "GET", null, headers())
             .then(res => {
-                setMonths(res.month_list.map(item => ({name: item.month, value: item.date})))
+                setMonths(res.month_list.map(item => ({ name: item.month, value: item.date })))
                 setYears(res.years_list.map(item => item.value))
                 setYear(res.current_year)
                 setMonth(res.current_month)
@@ -46,9 +46,9 @@ const PlatformTeachersRating = () => {
 
     useEffect(() => {
         if (year && year !== "all") {
-            request(`${BackUrl}teacher/statistics_dates`, "POST", JSON.stringify({type_rating: "attendance", year}), headers())
+            request(`${BackUrl}teacher/statistics_dates`, "POST", JSON.stringify({ type_rating: "attendance", year }), headers())
                 .then(res => {
-                    setMonths(res.month_list.map(item => ({name: item.month, value: item.date})))
+                    setMonths(res.month_list.map(item => ({ name: item.month, value: item.date })))
                 })
         }
     }, [year])
@@ -75,7 +75,7 @@ const PlatformTeachersRating = () => {
                     {
                         year !== "all" ?
                             <Select defaultValue={month} all={true} onChangeOption={setMonth} options={months}
-                                    title={"Month"}/> : null
+                                title={"Month"} /> : null
                     }
 
                     {/*<Select title={"Day"}/>*/}
@@ -83,9 +83,10 @@ const PlatformTeachersRating = () => {
 
             </div>
 
-            <AttendanceStatistics month={month} year={year}/>
-            <ObservationStatistics month={month} year={year}/>
-            <DeletedStudentsStatistics month={month} year={year}/>
+            <AttendanceStatistics month={month} year={year} />
+            <ObservationStatistics month={month} year={year} />
+            <LessonPlanStatistics month={month} year={year} />
+            <DeletedStudentsStatistics month={month} year={year} />
         </div>
     );
 };
@@ -93,14 +94,14 @@ const PlatformTeachersRating = () => {
 
 const AttendanceStatistics = (props) => {
 
-    const {locationId} = useParams()
+    const { locationId } = useParams()
 
 
-    const {month, year} = props
+    const { month, year } = props
 
     const [data, setData] = useState([])
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     useEffect(() => {
         if (year) {
@@ -113,6 +114,9 @@ const AttendanceStatistics = (props) => {
                         return {
                             y: item.percentage,
                             label: `${item.name} ${item.surname}`,
+                            indexLabel: `${item.percentage}`,
+                            indexLabelPlacement: "outside",
+                            indexLabelOrientation: "horizontal",
                             x: index++
                         }
                     }))
@@ -135,6 +139,9 @@ const AttendanceStatistics = (props) => {
                         return {
                             label: `${item.name} ${item.surname}`,
                             y: item.percentage,
+                            indexLabel: `${item.percentage}`,
+                            indexLabelPlacement: "outside",
+                            indexLabelOrientation: "horizontal",
                             x: index++
                         }
                     }))
@@ -175,20 +182,20 @@ const AttendanceStatistics = (props) => {
             <h1>Attendance Statistics</h1>
 
             <div className={cls.wrapper}>
-                <CanvasJSStockChart containerProps={{width: '100%', height: '300px'}} options={options}/>
+                <CanvasJSStockChart containerProps={{ width: '100%', height: '300px' }} options={options} />
             </div>
         </div>
     )
 }
 
 const ObservationStatistics = (props) => {
-    const {locationId} = useParams()
+    const { locationId } = useParams()
 
-    const {month, year} = props
+    const { month, year } = props
 
     const [data, setData] = useState([])
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     useEffect(() => {
         if (year) {
@@ -202,10 +209,11 @@ const ObservationStatistics = (props) => {
                         return {
                             y: item.percentage,
                             label: `${item.name} ${item.surname} `,
-                            indexLabel: `${item.observation_len}`,
+                            indexLabel: `${item.percentage}`,
+                            indexLabelPlacement: "outside",
+                            indexLabelOrientation: "horizontal",
                             x: index++,
-                            indexLabelFontColor: "white",
-                            indexLabelPlacement: "inside"
+                            indexLabelFontColor: "black"
                         }
                     }))
                 })
@@ -224,10 +232,11 @@ const ObservationStatistics = (props) => {
                         return {
                             label: `${item.name} ${item.surname}`,
                             y: item.percentage,
-                            indexLabel: `${item.observation_len}`,
+                            indexLabel: `${item.percentage}`,
+                            indexLabelPlacement: "outside",
+                            indexLabelOrientation: "horizontal",
                             x: index++,
-                            indexLabelFontColor: "white",
-                            indexLabelPlacement: "inside"
+                            indexLabelFontColor: "black"
                         }
                     }))
                 })
@@ -266,7 +275,7 @@ const ObservationStatistics = (props) => {
             <h1>Observation Statistics</h1>
 
             <div className={cls.wrapper}>
-                <CanvasJSStockChart containerProps={{width: '100%', height: '300px'}} options={options}/>
+                <CanvasJSStockChart containerProps={{ width: '100%', height: '300px' }} options={options} />
             </div>
         </div>
     )
@@ -275,15 +284,15 @@ const ObservationStatistics = (props) => {
 const DeletedStudentsStatistics = (props) => {
 
 
-    const {locationId} = useParams()
-    const {month, year} = props
+    const { locationId } = useParams()
+    const { month, year } = props
 
     const [data, setData] = useState([])
     const [subData, setSubData] = useState([])
     const [type, setType] = useState("default")
     const [nameItem, setNameItem] = useState()
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     useEffect(() => {
         if (year) {
@@ -329,12 +338,16 @@ const DeletedStudentsStatistics = (props) => {
         setType("teacher")
 
         request(`${BackUrl}teacher/teacher_statistics_deleted_students/${locationId}`, "POST", JSON.stringify({
-            reason_name: e.dataPoint.name, year: year, month: month === "all" ? null : month}), headers())
+            reason_name: e.dataPoint.name, year: year, month: month === "all" ? null : month
+        }), headers())
             .then(res => {
                 setSubData(res.teachers_list.map((item, index) => {
                     return {
                         label: `${item.name} ${item.surname}`,
                         y: item.percentage,
+                        indexLabel: `${item.percentage}`,
+                        indexLabelPlacement: "outside",
+                        indexLabelOrientation: "horizontal",
                         x: index++
                     }
                 }))
@@ -400,14 +413,108 @@ const DeletedStudentsStatistics = (props) => {
             <div className={cls.wrapper}>
                 {
                     type === "default" ?
-                        <CanvasJSChart options={DefaultOptions}/>
+                        <CanvasJSChart options={DefaultOptions} />
                         :
-                        <CanvasJSStockChart ontainerProps={{width: '100%', height: '300px'}} options={TeacherOptions}/>
+                        <CanvasJSStockChart ontainerProps={{ width: '100%', height: '300px' }} options={TeacherOptions} />
                 }
             </div>
         </div>
     )
 }
 
+
+const LessonPlanStatistics = (props) => {
+    const { locationId } = useParams()
+
+    const { month, year } = props
+
+    const [data, setData] = useState([])
+
+    const { request } = useHttp()
+
+    useEffect(() => {
+        if (year) {
+            request(`${BackUrl}teacher/teacher_statistics/${locationId}`, "POST", JSON.stringify({
+                type_rating: "lesson_plan",
+                year
+            }), headers())
+                .then(res => {
+                    setData(res.teachers_list.map((item, index) => {
+                        return {
+                            y: item.percentage,
+                            label: `${item.name} ${item.surname}`,
+                            indexLabel: `${item.percentage}`,
+                            indexLabelPlacement: "outside",
+                            indexLabelOrientation: "horizontal",
+                            x: index++
+                        }
+                    }))
+                })
+        }
+
+    }, [year])
+
+    useEffect(() => {
+
+        if (month) {
+
+            request(`${BackUrl}teacher/teacher_statistics/${locationId}`, "POST", JSON.stringify({
+                type_rating: "lesson_plan",
+                year: year,
+                month: month === "all" ? null : month
+            }), headers())
+                .then(res => {
+                    setData(res.teachers_list.map((item, index) => {
+                        return {
+                            label: `${item.name} ${item.surname}`,
+                            y: item.percentage,
+                            indexLabel: `${item.percentage}`,
+                            indexLabelPlacement: "outside",
+                            indexLabelOrientation: "horizontal",
+                            x: index++
+                        }
+                    }))
+                })
+        }
+
+    }, [month])
+
+
+    const options = {
+        animationEnabled: true,
+        exportEnabled: true,
+        theme: "light1", //"light1", "dark1", "dark2"
+
+
+        rangeSelector: {
+            enabled: false
+        },
+
+        dataPointMaxWidth: 50,
+        charts: [{
+            data: [{
+                dataPoints: data
+            }]
+        }],
+        navigator: {
+            slider: {
+                minimum: 0
+            }
+        }
+    }
+
+    // console.log(options.data[0].dataPoints.length)
+
+
+    return (
+        <div className={cls.rating}>
+            <h1>Lesson Plan Statistics</h1>
+
+            <div className={cls.wrapper}>
+                <CanvasJSStockChart containerProps={{ width: '100%', height: '300px' }} options={options} />
+            </div>
+        </div>
+    )
+}
 
 export default PlatformTeachersRating;

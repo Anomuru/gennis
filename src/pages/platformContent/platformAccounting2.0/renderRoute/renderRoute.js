@@ -1,11 +1,11 @@
-import {useEffect} from "react";
+import { useEffect } from "react";
 import {
     newAccountingSelectOption,
     newAccountingSelectOptionValue
 } from "pages/platformContent/platformAccounting2.0/model/accountingSelector";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 
-export const RenderRoute = ({setRenderRoute}) => {
+export const RenderRoute = ({ setRenderRoute }) => {
     const selectOption = useSelector(newAccountingSelectOptionValue);
 
     const render = (() => {
@@ -21,6 +21,11 @@ export const RenderRoute = ({setRenderRoute}) => {
                     delete: "delete_payment",
                 };
             case "teachersSalary":
+                return {
+                    change: "change_teacher_salary",
+                    delete: "delete_salary_teacher",
+                };
+            case "assistentSalary":
                 return {
                     change: "change_teacher_salary",
                     delete: "delete_salary_teacher",

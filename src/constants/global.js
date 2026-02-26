@@ -80,7 +80,7 @@ export const requireMenuItems = (id) => {
             classIcon: "fa-circle-check",
             location: true,
             children: true,
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant]
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
         },
         // {
         //     to: "adminRating",

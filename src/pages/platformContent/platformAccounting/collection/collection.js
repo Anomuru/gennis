@@ -1,38 +1,38 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Link, useParams} from "react-router-dom";
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useParams } from "react-router-dom";
 import classNames from "classnames";
 import AccountingTable from "components/platform/platformUI/tables/accountingTable";
 
 
 import "./collection.sass"
 import Button from "components/platform/platformUI/button";
-import {useDispatch, useSelector} from "react-redux";
-import {useHttp} from "hooks/http.hook";
-import {fetchCollection} from "slices/accountingSlice";
-import {fetchDataToChange} from "slices/dataToChangeSlice";
-import {useAuth} from "hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { useHttp } from "hooks/http.hook";
+import { fetchCollection } from "slices/accountingSlice";
+import { fetchDataToChange } from "slices/dataToChangeSlice";
+import { useAuth } from "hooks/useAuth";
 
 const Collection = () => {
 
-    const [activeRoute,setActiveRoute] = useState("studentPayment")
-    const [activeFilter,setActiveFilter] = useState("cash")
-    const [accountingData,setAccountingData] = useState([])
-    const [dataResult,setDataResult] = useState(0)
-    const [date,setDate] = useState({
+    const [activeRoute, setActiveRoute] = useState("studentPayment")
+    const [activeFilter, setActiveFilter] = useState("cash")
+    const [accountingData, setAccountingData] = useState([])
+    const [dataResult, setDataResult] = useState(0)
+    const [date, setDate] = useState({
         ot: "",
         do: ""
     })
-    const {locationId} = useParams()
+    const { locationId } = useParams()
 
 
-    const {collection} = useSelector(state => state.accounting)
-    const {dataToChange} = useSelector(state => state.dataToChange)
+    const { collection } = useSelector(state => state.accounting)
+    const { dataToChange } = useSelector(state => state.dataToChange)
 
 
-    
+
     useEffect(() => {
         dispatch(fetchDataToChange(locationId))
-    },[locationId])
+    }, [locationId])
 
 
     useEffect(() => {
@@ -44,7 +44,7 @@ const Collection = () => {
                 setDataResult(collection.data[item].value)
             }
         })
-    },[activeRoute, collection?.data])
+    }, [activeRoute, collection?.data])
 
     const activeRowsInTableStudentPayment = {
         name: true,
@@ -65,6 +65,14 @@ const Collection = () => {
         name: true,
         surname: true,
         payment: true,
+        month: true,
+        date: true,
+    }
+
+    const activeRowsInTableAssistentSalary = {
+        name: true,
+        surname: true,
+        salary: true,
         month: true,
         date: true,
     }
@@ -92,7 +100,7 @@ const Collection = () => {
     }
 
     const changeDate = (e) => {
-        setDate( {
+        setDate({
             ...date,
             [e.target.name]: e.target.value
         })
@@ -134,6 +142,20 @@ const Collection = () => {
                         typeOfMoney={"user"}
                         studentAtt={true}
                         activeRowsInTable={activeRowsInTableEmployeeSalary}
+                        users={accountingData}
+                    />
+                </>
+
+            )
+        }
+        if (activeRoute === "assistentSalary") {
+            return (
+                <>
+                    <h1>{dataResult}</h1>
+                    <AccountingTable
+                        typeOfMoney={"user"}
+                        studentAtt={true}
+                        activeRowsInTable={activeRowsInTableAssistentSalary}
                         users={accountingData}
                     />
                 </>
@@ -183,13 +205,13 @@ const Collection = () => {
 
             )
         }
-    },[activeRoute, accountingData])
+    }, [activeRoute, accountingData])
 
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     useEffect(() => {
-        const newData ={
+        const newData = {
             locationId,
             date,
             activeFilter
@@ -197,8 +219,8 @@ const Collection = () => {
         if (date.do && date.ot && locationId) {
             dispatch(fetchCollection(newData))
         }
-    },[activeFilter, date, locationId])
-    
+    }, [activeFilter, date, locationId])
+
 
     const renderTypes = useCallback(() => {
         if (dataToChange) {
@@ -214,7 +236,7 @@ const Collection = () => {
                 )
             })
         }
-    },[activeFilter, dataToChange])
+    }, [activeFilter, dataToChange])
 
 
     const dispatch = useDispatch()
@@ -263,7 +285,7 @@ const Collection = () => {
                 <div className="collection__btns">
                     <div
                         onClick={() => setActiveRoute("studentPayment")}
-                        className={classNames("collection__btns-item",{
+                        className={classNames("collection__btns-item", {
                             active: activeRoute === "studentPayment"
                         })}
                     >
@@ -271,15 +293,23 @@ const Collection = () => {
                     </div>
                     <div
                         onClick={() => setActiveRoute("teacherSalary")}
-                        className={classNames("collection__btns-item",{
+                        className={classNames("collection__btns-item", {
                             active: activeRoute === "teacherSalary"
                         })}
                     >
                         O'qituvchilar oyliklari
                     </div>
                     <div
+                        onClick={() => setActiveRoute("assistentSalary")}
+                        className={classNames("collection__btns-item", {
+                            active: activeRoute === "assistentSalary"
+                        })}
+                    >
+                        Asistentlar oyligi
+                    </div>
+                    <div
                         onClick={() => setActiveRoute("employeeSalary")}
-                        className={classNames("collection__btns-item",{
+                        className={classNames("collection__btns-item", {
                             active: activeRoute === "employeeSalary"
                         })}
                     >
@@ -287,7 +317,7 @@ const Collection = () => {
                     </div>
                     <div
                         onClick={() => setActiveRoute("overheads")}
-                        className={classNames("collection__btns-item",{
+                        className={classNames("collection__btns-item", {
                             active: activeRoute === "overheads"
                         })}
                     >
@@ -295,7 +325,7 @@ const Collection = () => {
                     </div>
                     <div
                         onClick={() => setActiveRoute("capitals")}
-                        className={classNames("collection__btns-item",{
+                        className={classNames("collection__btns-item", {
                             active: activeRoute === "capitals"
                         })}
                     >
@@ -303,7 +333,7 @@ const Collection = () => {
                     </div>
                     <div
                         onClick={() => setActiveRoute("investments")}
-                        className={classNames("collection__btns-item",{
+                        className={classNames("collection__btns-item", {
                             active: activeRoute === "investments"
                         })}
                     >
@@ -311,7 +341,7 @@ const Collection = () => {
                     </div>
                     <div
                         onClick={() => setActiveRoute("dividends")}
-                        className={classNames("collection__btns-item",{
+                        className={classNames("collection__btns-item", {
                             active: activeRoute === "dividends"
                         })}
                     >
