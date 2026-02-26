@@ -21,7 +21,7 @@ const groupsAttendanceSlice = createSlice({
     name: "groupsAttendanceSlice",
     initialState,
     reducers: {},
-    extraReducers: builder => 
+    extraReducers: builder =>
         builder
             .addCase(fetchGroupsAttendance.pending, (state) => {
                 state.loading = true

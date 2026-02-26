@@ -1,13 +1,13 @@
-import React, {c, useCallback, useEffect, useState} from 'react';
+import React, { c, useCallback, useEffect, useState } from 'react';
 
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import DefaultLoader from "components/loader/defaultLoader/DefaultLoader";
 import user_img from "assets/user-interface/user_image.png"
 
 import "../tables.sass"
 
-import {useLocation, useNavigate} from "react-router-dom";
-import {BackUrl, BackUrlForDoc} from "constants/global";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BackUrl, BackUrlForDoc } from "constants/global";
 
 
 const UsersTable = React.memo(({
@@ -20,21 +20,23 @@ const UsersTable = React.memo(({
     checkedUsers,
     setLinkUser,
     cache
-}) =>  {
+}) => {
 
-    const [usersList,setUsersList] = useState([])
+    const [usersList, setUsersList] = useState([])
     const location = useLocation();
     const dispatch = useDispatch()
 
-    // console.log(usersList)
     useEffect(() => {
         setUsersList(users)
-    },[users])
+    }, [users])
+
+    // console.log(usersList, "usersList1");
+
 
     const navigate = useNavigate()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const LinkToUser = (e,id) => {
+    const LinkToUser = (e, id) => {
         if (cache) {
             navigate(`../profile/${id}`);
         } else {
@@ -56,25 +58,26 @@ const UsersTable = React.memo(({
             setUsersList(users => users.map(item => {
                 const newL = checkedUsers?.filter(user => user.id === item.id)
                 if (newL.length > 0) {
-                    return {...newL[0]}
+                    return { ...newL[0] }
                 } else {
-                    return {...item,checked: false}
+                    return { ...item, checked: false }
                 }
             }))
         } else {
             if (checkedUsers) {
                 setUsersList(users => users?.map(item => {
-                    return {...item,checked: false}
+                    return { ...item, checked: false }
                 }))
             }
         }
-    },[checkedUsers])
+    }, [checkedUsers])
+    // console.log(usersList, "usersList2");
 
-    const stringCheck = (name,length = 10) => {
+    const stringCheck = (name, length = 10) => {
         if (name?.length > length) {
             return (
                 <>
-                    {name.substring(0,length)}...
+                    {name.substring(0, length)}...
                     <div className="popup">
                         {name}
                     </div>
@@ -88,7 +91,7 @@ const UsersTable = React.memo(({
     const onChecked = (id) => {
         setUsersList(users => users.map(item => {
             if (item.id === id) {
-                return {...item,checked: !item.checked}
+                return { ...item, checked: !item.checked }
             }
             return item
         }))
@@ -96,13 +99,14 @@ const UsersTable = React.memo(({
         if (funcsSlice?.setChecked.type === "simpleFunc") {
             funcsSlice?.setChecked.func(id)
         } else {
-            dispatch(funcsSlice?.setChecked.func({id}))
+            dispatch(funcsSlice?.setChecked.func({ id }))
         }
     }
+    // console.log(usersList, "usersList3");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const onDelete = (id,type) => {
-        funcsSlice?.onDelete(id,type)
+    const onDelete = (id, type) => {
+        funcsSlice?.onDelete(id, type)
     }
 
     // useEffect(() => {
@@ -115,21 +119,21 @@ const UsersTable = React.memo(({
 
 
     const renderElements = useCallback(() => {
-        return usersList?.map((item,index) => {
+        return usersList?.map((item, index) => {
 
             const userImg = item.photo_profile ? `${BackUrlForDoc}${item.photo_profile}` : user_img
 
             return (
                 <tr key={index} >
                     <td>{index + 1}</td>
-                    <td className="imgTd" onClick={(e) => LinkToUser(e,item.id)}><img src={userImg} alt="userImg"/></td>
+                    <td className="imgTd" onClick={(e) => LinkToUser(e, item.id)}><img src={userImg} alt="userImg" /></td>
                     {activeRowsInTable.fullname ? <td>{item.name} {item.surname}</td> : ""}
                     {activeRowsInTable.name ? <td>{stringCheck(item.name)}</td> : null}
                     {activeRowsInTable.surname ? <td>{stringCheck(item.surname)}</td> : null}
-                    {activeRowsInTable.username ? <td>{stringCheck(item.username)}</td>: null}
-                    {activeRowsInTable.phone ? <td>{item.phone}</td>: null}
-                    {activeRowsInTable.reason ? <td>{stringCheck(item.reason,30)}</td>: null}
-                    {activeRowsInTable.job ? <td>{item.job}</td>: null}
+                    {activeRowsInTable.username ? <td>{stringCheck(item.username)}</td> : null}
+                    {activeRowsInTable.phone ? <td>{item.phone}</td> : null}
+                    {activeRowsInTable.reason ? <td>{stringCheck(item.reason, 30)}</td> : null}
+                    {activeRowsInTable.job ? <td>{item.job}</td> : null}
                     {activeRowsInTable.age ? <td>{item.age}</td> : null}
                     {activeRowsInTable.reg_date ? <td>{item.reg_date}</td> : null}
                     {activeRowsInTable.deleted_date ? <td>{item.deleted_date}</td> : null}
@@ -137,7 +141,7 @@ const UsersTable = React.memo(({
                     {
                         activeRowsInTable.comment ?
                             <td>
-                                {item.comment?.substring(0,15)}
+                                {item.comment?.substring(0, 15)}
                                 <div className="popup">
                                     {item.comment}
                                 </div>
@@ -148,11 +152,11 @@ const UsersTable = React.memo(({
                             <td>
 
                                 {
-                                    item?.subjects?.map((item,index) =>{
+                                    item?.subjects?.map((item, index) => {
                                         return <span key={index} className="subject">
 
                                             {
-                                                item?.substring(0,8)
+                                                item?.substring(0, 8)
                                             }...
                                         </span>
                                     })
@@ -174,7 +178,7 @@ const UsersTable = React.memo(({
                         activeRowsInTable.shift ?
                             typeof item.shift === "string" ?
                                 <td>
-                                    {item.shift?.substring(0,15)}
+                                    {item.shift?.substring(0, 15)}
                                     <div className="popup">
                                         {item.shift}
                                     </div>
@@ -203,20 +207,23 @@ const UsersTable = React.memo(({
                     }
                     {
                         activeRowsInTable.radio ?
-                            <td>
-                                <input
-                                    name="radio"
-                                    checked={item.radioChecked}
-                                    onChange={() => onChecked(item.id)}
-                                    type="radio"
-                                />
-                            </td> : null
+                            item.color !== "red" ?
+                                <td>
+                                    <input
+                                        name="radio"
+                                        checked={item.radioChecked}
+                                        onChange={() => onChecked(item.id)}
+                                        type="radio"
+                                    />
+                                </td>
+                                : <td />
+                            : null
                     }
                     {
                         activeRowsInTable.delete || item.status ?
                             <td>
                                 <div
-                                    onClick={() => onDelete(item.id,"delete")}
+                                    onClick={() => onDelete(item.id, "delete")}
                                     className="delete"
                                 >
                                     <i className="fas fa-times" />
@@ -227,7 +234,7 @@ const UsersTable = React.memo(({
                         activeRowsInTable.returnDeleted ?
                             <td >
                                 <div
-                                    onClick={() => onDelete(item.id,"returnDeleted")}
+                                    onClick={() => onDelete(item.id, "returnDeleted")}
                                     className="delete"
                                 >
                                     <i className="fas fa-times" />
@@ -251,7 +258,7 @@ const UsersTable = React.memo(({
 
             )
         })
-    },[LinkToUser, activeRowsInTable, onChecked, onDelete, usersList])
+    }, [LinkToUser, activeRowsInTable, onChecked, onDelete, usersList])
 
 
 
@@ -260,7 +267,7 @@ const UsersTable = React.memo(({
     const renderedUsers = renderElements()
 
     if (fetchUsersStatus === "loading") {
-        return <DefaultLoader/>
+        return <DefaultLoader />
     } else if (fetchUsersStatus === "error") {
         console.log('error')
     }
@@ -271,24 +278,24 @@ const UsersTable = React.memo(({
             <table className={pageName}>
                 <thead>
                     <tr className="tbody_th">
-                        <th/>
-                        <th/>
+                        <th />
+                        <th />
                         {activeRowsInTable.fullname ? <th>F.I.O</th> : null}
                         {activeRowsInTable.name ? <th>Ism</th> : null}
-                        {activeRowsInTable.surname ?  <th>Familya</th> : null}
-                        {activeRowsInTable.username ?  <th>Username</th> : null}
-                        {activeRowsInTable.phone ?  <th>Tel.</th> : null}
-                        {activeRowsInTable.reason ?  <th>Sabab</th> : null}
-                        {activeRowsInTable.job ?  <th>Kasb</th> : null}
-                        {activeRowsInTable.age ?  <th>Yoshi</th> : null}
-                        {activeRowsInTable.reg_date ?  <th>Reg. sana</th> : null}
-                        {activeRowsInTable.deleted_date ?  <th>O'chir. sana</th> : null}
-                        {activeRowsInTable.deletedDate ?  <th>O'chir. sana</th> : null}
-                        {activeRowsInTable.comment ?  <th>Izoh</th> : null}
-                        {activeRowsInTable.subjects ?  <th>Fanlar</th> : null}
-                        {activeRowsInTable.subject ?  <th>Fani</th> : null}
-                        {activeRowsInTable.shift ?  <th>Holat</th> : null}
-                        {activeRowsInTable.money ?  <th>Hisobi</th> : null}
+                        {activeRowsInTable.surname ? <th>Familya</th> : null}
+                        {activeRowsInTable.username ? <th>Username</th> : null}
+                        {activeRowsInTable.phone ? <th>Tel.</th> : null}
+                        {activeRowsInTable.reason ? <th>Sabab</th> : null}
+                        {activeRowsInTable.job ? <th>Kasb</th> : null}
+                        {activeRowsInTable.age ? <th>Yoshi</th> : null}
+                        {activeRowsInTable.reg_date ? <th>Reg. sana</th> : null}
+                        {activeRowsInTable.deleted_date ? <th>O'chir. sana</th> : null}
+                        {activeRowsInTable.deletedDate ? <th>O'chir. sana</th> : null}
+                        {activeRowsInTable.comment ? <th>Izoh</th> : null}
+                        {activeRowsInTable.subjects ? <th>Fanlar</th> : null}
+                        {activeRowsInTable.subject ? <th>Fani</th> : null}
+                        {activeRowsInTable.shift ? <th>Holat</th> : null}
+                        {activeRowsInTable.money ? <th>Hisobi</th> : null}
                     </tr>
                 </thead>
                 <tbody>

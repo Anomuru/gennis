@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import Select from "components/platform/platformUI/select";
 import {fetchData} from "slices/registerSlice";
+import {RegisterAssistant} from "./registerAssistant/registerAssistant";
 
 import cls from "./style.module.sass";
 
@@ -43,6 +44,10 @@ const types = [
     {
         id: "parent",
         name: "Ota/ona"
+    },
+    {
+        id: "assistant",
+        name: "Assistant"
     }
 ]
 
@@ -68,7 +73,7 @@ const Register = () => {
     }, [data])
     const onChangeSub = (id) => {
         const filteredSubjects = subjects.filter(item => item.id === +id)
-        console.log(id , "id")
+        console.log(id, "id")
         setSubjects(subjects => {
             return subjects.map(item => {
                 if (item.id === +id) {
@@ -93,7 +98,6 @@ const Register = () => {
         })
         setSelectedSubjects(selectedSubjects?.filter(item => item.id !== +id))
     }
-
 
 
     const renderComponent = () => {
@@ -128,6 +132,18 @@ const Register = () => {
                 />
             case "teacher":
                 return <RegisterTeacher
+                    language={languages}
+                    deleteSub={onDeleteSub}
+                    onChangeSub={onChangeSub}
+                    selectedSubjects={selectedSubjects}
+                    setSelectedSubjects={setSelectedSubjects}
+                    locations={locations} subjects={subjects}
+                    languages={languages}
+                    genders={genders}
+                    setSubjects={setSubjects}
+                />
+            case "assistant" :
+                return <RegisterAssistant
                     language={languages}
                     deleteSub={onDeleteSub}
                     onChangeSub={onChangeSub}

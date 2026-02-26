@@ -10,6 +10,7 @@ import Message from "components/platform/platformMessage";
 import { fetchDataToChange } from "slices/dataToChangeSlice";
 import { useAuth } from "hooks/useAuth";
 import { setMessage } from "slices/messageSlice";
+import Select from 'components/platform/platformUI/select';
 
 const PersonalInfo = React.memo(({ accessData, userId }) => {
 
@@ -37,10 +38,16 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
 
     const { days, months, years } = DatesList()
     const { dataToChange } = useSelector(state => state.dataToChange)
+    // const { user } = useSelector(state => state.usersProfile)
 
+
+    const [teachers, setTeachers] = useState([])
     const [subjects, setSubjects] = useState(null)
     const [selectedSubjects, setSelectedSubjects] = useState([])
     const [shift, setShift] = useState("")
+
+    const [selectedSubject, setSelectedSubject] = useState(null)
+    const [selectedTeacher, setSelectedTeacher] = useState(null)
 
     const { type } = useSelector(state => state.message)
 
@@ -54,6 +61,12 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
 
     useEffect(() => {
         setSubjects(dataToChange.subjects)
+        if (data.teacher && dataToChange) {
+            setSelectedSubject(
+                dataToChange.subjects
+                    ?.filter(item => item.name === extraInfo.subject.value[0]?.name)[0]?.id
+            )
+        }
     }, [dataToChange])
 
 
@@ -64,11 +77,30 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
 
 
     useEffect(() => {
+        if (selectedSubject && user.location_id) {
+            request(`${BackUrl}teacher/assistent/get_teacher/${selectedSubject}/${user.location_id}`, "GET", null, headers())
+                .then(res => {
+                    setTeachers(res.teachers)
+                    setSelectedTeacher(res.teachers[0]?.id)
+                })
+        }
+    }, [selectedSubject, user.location_id])
+
+    useEffect(() => {
+        if (extraInfo.teacher) {
+            setSelectedTeacher(extraInfo.teacher.value)
+        }
+    }, [extraInfo.teacher])
+
+    useEffect(() => {
         dispatch(fetchDataToChange(selectedLocation))
     }, [selectedLocation])
 
     useEffect(() => {
+
         if (extraInfo?.subject?.value?.length && dataToChange?.subjects) {
+            console.log(extraInfo?.subject?.value, "extraInfo?.subject?.value");
+
             const newData = dataToChange?.subjects?.map(sb => ({
                 ...sb,
                 disabled: extraInfo?.subject?.value.some(item => item.name.toLowerCase() === sb.name.toLowerCase())
@@ -78,6 +110,7 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
     }, [extraInfo?.subject?.value?.length, dataToChange?.subjects])
 
     useEffect(() => {
+
         if (subjects?.length) {
             // eslint-disable-next-line array-callback-return
             subjects.map(item => {
@@ -90,6 +123,11 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
             })
         }
     }, [subjects?.length])
+
+    const onChangeSelectedSubject = (data) => {
+        setSelectedSubject(data)
+        setSelectedTeacher(null)
+    }
 
 
     const {
@@ -106,19 +144,39 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
 
     const { role } = useAuth()
 
-    const onSubmit = (data, e) => {
+    const onSubmit = (dataForm, e) => {
         e.preventDefault()
-
-        const newData = {
+        let URL;
+        let METHOD;
+        let newData = {
             type: "info",
-            ...data,
-            selectedSubjects,
+            ...dataForm,
             shift,
             role
+        };
+
+        if (data.teacher) {
+            newData = {
+                ...newData,
+                selectedSubjects: +selectedSubject,
+                teacher: selectedTeacher,
+                shift,
+                role
+            }
+            URL = `teacher/assistent/crud/${user.id}/`
+            METHOD = "PUT"
+            // request(`${BackUrl}`, "POST", null, headers())
+        } else {
+            newData = {
+                ...newData,
+                selectedSubjects,
+            }
+            URL = `student/change_student_info/${userId}`
+            METHOD = "POST"
         }
 
 
-        request(`${BackUrl}student/change_student_info/${userId}`, "POST", JSON.stringify(newData), headers())
+        request(`${BackUrl}${URL}`, METHOD, JSON.stringify(newData), headers())
             .then(res => {
                 if (res.success) {
                     dispatch(setMessage({
@@ -410,6 +468,26 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
                     </label> : null
             }
             {
+                data?.percentage ?
+                    <label htmlFor="surname">
+                        <span className="name-field">Ulush</span>
+                        <input
+                            defaultValue={extraInfo?.percentage?.value}
+                            id="percentage"
+                            className="input-fields"
+                            {...register("percentage", {
+                                required: "Iltimos to'ldiring",
+                            })}
+                        />
+                        {
+                            errors?.percentage &&
+                            <span className="error-field">
+                                {errors?.percentage?.message}
+                            </span>
+                        }
+                    </label> : null
+            }
+            {
                 data?.fathersName ?
                     <label htmlFor="fatherName">
                         <span className="name-field">Otasining ismi</span>
@@ -579,7 +657,7 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
                     </label> : null
             }
             {
-                data?.subject && role !== "a43c33b82" ?
+                data?.subject && role !== "a43c33b82" && !data?.teacher ?
                     <>
 
                         <label htmlFor="subjects">
@@ -606,6 +684,25 @@ const AllLabels = React.memo(({ data, extraInfo, userId }) => {
                                 {renderedSelectedOptions}
                             </div>
                         </div>
+                    </>
+                    : null
+            }
+            {
+                data?.teacher ?
+                    <>
+                        <Select
+                            required
+                            options={subjects}
+                            defaultValue={selectedSubject}
+                            onChangeOption={onChangeSelectedSubject}
+                        />
+                        <Select
+                            required
+                            options={teachers}
+                            defaultValue={extraInfo.teacher.value}
+                            value={selectedTeacher}
+                            onChangeOption={setSelectedTeacher}
+                        />
                     </>
                     : null
             }

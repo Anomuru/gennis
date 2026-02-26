@@ -13,6 +13,7 @@ import { useHttp } from 'hooks/http.hook';
 import socketService from 'services/socketService';
 
 import cls from './taskManagerModal.module.sass';
+import DefaultLoader from 'components/loader/defaultLoader/DefaultLoader';
 
 // ============================================================================
 // КОНСТАНТЫ
@@ -107,8 +108,15 @@ const callStorage = {
     },
 
     incrementShowStatus: () => {
-        const current = localStorage.getItem(STORAGE_KEYS.SHOW_STATUS);
-        localStorage.setItem(STORAGE_KEYS.SHOW_STATUS, String(Number(current || 0) + 1));
+        const current = Number(localStorage.getItem(STORAGE_KEYS.SHOW_STATUS) || 0);
+        // Не увеличиваем больше 5 (защита от бесконечного роста)
+        if (current < 5) {
+            localStorage.setItem(STORAGE_KEYS.SHOW_STATUS, String(current + 1));
+        }
+    },
+
+    resetShowStatus: () => {
+        localStorage.setItem(STORAGE_KEYS.SHOW_STATUS, '0');
     },
 
     moveToAudioState: (audioId) => {
@@ -116,6 +124,8 @@ const callStorage = {
         localStorage.setItem(STORAGE_KEYS.AUDIO_ID, audioId);
         localStorage.setItem(STORAGE_KEYS.CALL_STATUS, 'success');
         localStorage.setItem(STORAGE_KEYS.CALL_STATE, 'success');
+        // ✅ ИСПРАВЛЕНО: используем callStorage.resetShowStatus() вместо this.resetShowStatus()
+        callStorage.resetShowStatus();
     },
 
     setErrorState: () => {
@@ -207,7 +217,7 @@ export const TaskManagerModal = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
 
-    const { isOpen, isActive, person, audioId, callId, status, state, type, msg } = useSelector(
+    const { isOpen, isActive, person, audioId, callId, status, state, type, msg, callLoading } = useSelector(
         (state) => state.taskManagerModalSlice
     );
 
@@ -215,7 +225,51 @@ export const TaskManagerModal = () => {
     const [comment, setComment] = useState('');
     const [date, setDate] = useState('');
 
+    // ✅ НОВОЕ: Флаг для отслеживания восстановления состояния
+    const stateRestoredRef = useRef(false);
+    // ✅ НОВОЕ: Ref для отслеживания текущего userId в сокете
+    const currentUserIdRef = useRef(null);
+
     const { submitCallResult } = useSubmitCallResult();
+
+    // ============================================================================
+    // 🔥 ВОССТАНОВЛЕНИЕ СОСТОЯНИЯ (выполняется один раз)
+    // ============================================================================
+
+    useEffect(() => {
+        // ✅ ИСПРАВЛЕНО: Выполняется только один раз при монтировании
+        if (stateRestoredRef.current) return;
+
+        const savedState = callStorage.loadCallState();
+
+        if (!savedState.callId && !savedState.audioId) return;
+
+        // ✅ Отмечаем, что состояние восстановлено
+        stateRestoredRef.current = true;
+
+        // ✅ Инкрементируем только при восстановлении
+        callStorage.incrementShowStatus();
+
+        const props = {
+            person: savedState.person,
+            callStatus: savedState.status,
+            callState: savedState.state,
+            type: savedState.type,
+            audioId: savedState.audioId
+        };
+
+        if (savedState.state && savedState.state !== 'error') {
+            if (savedState.callId) {
+                dispatch(onCallStart({ ...props, callId: savedState.callId }));
+            } else if (savedState.audioId) {
+                dispatch(onCallProgressing({ ...props, audioId: savedState.audioId }));
+            }
+        } else if (savedState.showStatus >= 3) {
+            dispatch(onCallStart(props));
+        } else {
+            callStorage.clearCallState();
+        }
+    }, []); // ✅ Пустой массив зависимостей - выполнится один раз
 
     // ============================================================================
     // 🔥 SOCKET LOGIC
@@ -224,14 +278,11 @@ export const TaskManagerModal = () => {
     useEffect(() => {
         const savedState = callStorage.loadCallState();
 
-        // Проверяем что есть в localStorage
         const activeCallId = callId || savedState.callId;
         const activeAudioId = audioId || savedState.audioId;
 
-
         // ❗ callId и audioId не могут быть одновременно
         if (activeCallId && activeAudioId) {
-
             return;
         }
 
@@ -242,7 +293,6 @@ export const TaskManagerModal = () => {
 
         // ✅ Если есть callId → подключаемся к сокету
         if (activeCallId) {
-
             const user = JSON.parse(localStorage.getItem('selectedPerson') || '{}');
             const userId = user?.id;
 
@@ -250,11 +300,17 @@ export const TaskManagerModal = () => {
                 return;
             }
 
+            // ✅ ИСПРАВЛЕНО: Отключаем старый сокет перед новым подключением
+            if (currentUserIdRef.current && currentUserIdRef.current !== userId) {
+                socketService.leaveUserRoom(currentUserIdRef.current);
+                socketService.disconnect();
+            }
+
+            currentUserIdRef.current = userId;
+
             // Подключаемся к сокету если не подключены
             if (!socketService.isConnected()) {
                 socketService.connect(SOCKET_URL);
-            } else {
-                console.log('✅ Socket already connected');
             }
 
             // Присоединяемся к комнате пользователя
@@ -262,7 +318,6 @@ export const TaskManagerModal = () => {
 
             // Обработчик событий call_status
             const handleCallStatus = (data) => {
-
                 const {
                     callid,
                     status: callStatus,
@@ -273,14 +328,9 @@ export const TaskManagerModal = () => {
                     error,
                     message,
                     student_id,
-                    result
+                    result,
+                    attempt_count
                 } = data;
-
-                // Фильтр по callId (опционально, если нужно)
-                // if (callid && callid !== activeCallId) {
-                //     console.warn('⚠️ Ignoring different call:', callid);
-                //     return;
-                // }
 
                 let normalized;
 
@@ -364,9 +414,13 @@ export const TaskManagerModal = () => {
                         if (isSuccess && extractedAudioId) {
                             callStorage.moveToAudioState(extractedAudioId);
                         } else {
-                            // ❌ Если не успешно → ставим error state
                             callStorage.setErrorState();
                         }
+
+                        // ✅ ИСПРАВЛЕНО: Отключаемся после завершения
+                        socketService.leaveUserRoom(userId);
+                        socketService.disconnect();
+                        currentUserIdRef.current = null;
                         break;
                     }
 
@@ -382,21 +436,19 @@ export const TaskManagerModal = () => {
                                 callId: callid,
                                 studentId: student_id,
                                 error: error || message || 'Call failed',
-                                attempts: 2,
+                                attempts: attempt_count,
                             },
                         };
 
-                        // ❌ Ошибка → выходим из сокета
                         callStorage.setErrorState();
                         socketService.leaveUserRoom(userId);
                         socketService.disconnect();
+                        currentUserIdRef.current = null;
                         break;
 
                     default:
-                        console.warn('⚠️ Unknown status:', callStatus);
                         return;
                 }
-
 
                 // Обновляем Redux
                 if (normalized.state === 'PENDING') {
@@ -413,7 +465,6 @@ export const TaskManagerModal = () => {
                     );
                 } else if (normalized.state === 'SUCCESS') {
                     if (normalized.result.success) {
-                        // ✅ Успешный звонок
                         dispatch(
                             onCallProgressing({
                                 audioId: normalized.result.audioId,
@@ -426,7 +477,6 @@ export const TaskManagerModal = () => {
                             })
                         );
                     } else {
-                        // ❌ Неуспешный звонок
                         dispatch(
                             onCallProgressing({
                                 person: person || savedState.person,
@@ -439,7 +489,6 @@ export const TaskManagerModal = () => {
                             })
                         );
 
-                        // Удаляем из списка после 2 попыток
                         if (normalized.result.attempts === 2) {
                             const personData = person || savedState.person;
                             const callType = type || savedState.type;
@@ -454,20 +503,28 @@ export const TaskManagerModal = () => {
                 }
             };
 
+            if (typeof socketService.onCallStatus !== 'function') {
+                console.error('❌ socketService.onCallStatus is not a function!', socketService);
+                return;
+            }
+
             // Подписываемся на события
             socketService.onCallStatus(handleCallStatus);
 
-            // Cleanup
+            // ✅ ИСПРАВЛЕНО: Включен cleanup
             return () => {
                 socketService.offCallStatus();
-                socketService.leaveUserRoom(userId);
-                socketService.disconnect();
+                if (currentUserIdRef.current) {
+                    socketService.leaveUserRoom(currentUserIdRef.current);
+                }
+                // Не отключаем сокет здесь полностью, т.к. может быть активный звонок
+                // Отключение происходит в handleCallStatus при завершении/ошибке
             };
         }
 
-        // Если нет ни callId, ни audioId → ничего не делаем
+    }, [callId, audioId, dispatch, person, type]);
 
-    }, [callId, audioId, dispatch, person, type]); // ← Зависимости
+    // ... остальной код остается без изменений
 
     // ============================================================================
     // ВОССТАНОВЛЕНИЕ СОСТОЯНИЯ
@@ -550,13 +607,17 @@ export const TaskManagerModal = () => {
                 )}
 
                 <div className={cls.audioModal__loader}>
-                    <CallStatusLoader msg={msg} status={status} state={state} />
+                    {
+                        callLoading
+                            ? <DefaultLoader />
+                            : <CallStatusLoader msg={msg} status={status} state={state} />
+                    }
                 </div>
 
                 {status === 'success' && state !== 'error' && (
                     <>
-                        <Input title="Koment" placeholder="Koment" value={comment} onChange={setComment} />
-                        <Input type="date" title="Kun" value={date} onChange={setDate} />
+                        <Input required title="Koment" placeholder="Koment" value={comment} onChange={setComment} />
+                        <Input required type="date" title="Kun" value={date} onChange={setDate} />
                         <Button onClickBtn={handleSubmit}>Kiritish</Button>
                     </>
                 )}

@@ -9,7 +9,8 @@ const initialState = {
     type: null,
     status: "idle",
     state: "idle",
-    msg: null
+    msg: null,
+    callLoading: false,
 }
 
 const taskManagerModalSlice = createSlice({
@@ -46,6 +47,10 @@ const taskManagerModalSlice = createSlice({
             state.type = null
             state.status = "idle"
             state.state = "idle"
+        },
+        onCallLoading: (state, action) => {
+            state.callLoading = action.payload
+            state.isOpen = true
         }
     }
 })
@@ -53,7 +58,8 @@ const taskManagerModalSlice = createSlice({
 export const {
     onCallStart,
     onCallProgressing,
-    onCallEnd
+    onCallEnd,
+    onCallLoading
 } = taskManagerModalSlice.actions
 
 export default taskManagerModalSlice.reducer

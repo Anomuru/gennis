@@ -138,6 +138,7 @@ const UserContent = ({ userId }) => {
 
         // eslint-disable-next-line array-callback-return
         return keysUser.map(item => {
+            console.log(item, "item")
             if (item === "info" && user[item].length !== 0) {
                 return (
                     <div className="profile__main-item information">
@@ -239,6 +240,7 @@ const UserContent = ({ userId }) => {
     const info = user?.info
 
 
+    console.log(info, user,)
     return (
         <>
             <div className="profile" onClick={handleClick}>
@@ -274,6 +276,15 @@ const UserContent = ({ userId }) => {
                                 </span>
                                 <h1>{info.username?.value}</h1>
                             </div>
+                            {
+                                info.percentage?.value && <div className="profile__left__info__panel__table">
+                                    <span className="profile__left__info__panel__table__arounder">
+                                        <i style={{ color: "#6D727B", fontSize: "2rem" }} className="fa-regular fa-dollar-sign"></i>
+                                        <h2>Ulush:</h2>
+                                    </span>
+                                    <h1>{info.percentage?.value}%</h1>
+                                </div>
+                            }
                             <div className="profile__left__info__panel__table">
                                 <span className="profile__left__info__panel__table__arounder">
                                     <i style={{ color: "#6D727B", fontSize: "2rem" }} className="fa-regular fa-calendar"></i>
@@ -377,6 +388,7 @@ const UserContent = ({ userId }) => {
 
 
 
+
                         </div>
                     </div>
                 </div>
@@ -429,12 +441,40 @@ const UserContent = ({ userId }) => {
                             </div>
                         ) : null
                     }
-
-
-
+                    {
+                        user.assistent_list?.length > 0
+                            ? (
+                                <div style={{ width: "40%" }} className="profile__right__card">
+                                    <h1>Asistentlar:</h1>
+                                    {
+                                        user.assistent_list.map((item, index) => (
+                                            <Link to={`../../../profile/${item.id}`}>
+                                                <div style={{ display: "flex", alignItems: "center", gap: "1rem", borderBottom: "2px solid #E3E5E8", padding: "1rem" }} className="groups__item">
+                                                    <h1 className="index">{index + 1}.</h1>
+                                                    <img
+                                                        style={{ width: "5rem" }}
+                                                        src={
+                                                            img
+                                                        }
+                                                        alt="teacherImg"
+                                                    />
+                                                    <h1 className="name">{item?.name} {item?.surname}</h1>
+                                                </div>
+                                            </Link>
+                                        ))
+                                    }
+                                </div>
+                            )
+                            : null
+                    }
 
                 </div>
-
+                {user?.rate?.length > 0 && <div className="profile__main-item degree">
+                    <h1>Baholar:</h1>
+                    <div className="degree__container">
+                        <UserDegree data={user?.rate} />
+                    </div>
+                </div>}
 
 
                 {/*<div className="profile__container">*/}
@@ -564,7 +604,7 @@ const UserTest = React.memo(({ data }) => {
 })
 
 const UserDegree = React.memo(({ data }) => {
-
+    console.log(data, "data")
     return data?.map(item => {
         const clazzCircle =
             item.degree >= 5 ? "green" :
