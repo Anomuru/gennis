@@ -106,6 +106,7 @@ const PlatformAdminItem = React.lazy(() => import('./platformAdminItem/platformA
 const PlatformNewAccounting = React.lazy(() => import('./platformAccounting2.0/platformNewAccounting'));
 const PlatformAccountingProfile = React.lazy(() => import("./platformAccountingProfile/platformAccountingProfile"))
 const PlatformTodoist = React.lazy(() => import('./platformTodoist/platformTodoist'))
+const PlatformChats = React.lazy(() => import('./platformChats/platformChats'))
 
 
 
@@ -147,6 +148,7 @@ const PlatformContent = () => {
                     {/* <Route path="oneDay/:locationId" element={<PlatformOneDay/>}/> */}
                     <Route path="adminItem/:locationId/*" element={<PlatformAdminItem />} />
                     <Route path="todoist/:locationId/*" element={<PlatformTodoist />} />
+                    <Route path="chats/:locationId/*" element={<PlatformChats />} />
                     {/* <Route path="storyProfile/:storyId" element={<PlatformTaskManagerProfile />} /> */}
                     {/* </Route> */}
 

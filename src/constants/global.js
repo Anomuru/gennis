@@ -82,6 +82,14 @@ export const requireMenuItems = (id) => {
             children: true,
             roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
         },
+        {
+            to: "chats",
+            name: "Chats",
+            classIcon: "fa-comments",
+            location: true,
+            children: true,
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
+        },
         // {
         //     to: "adminRating",
         //     name: "Admin rating",
