@@ -48,6 +48,7 @@ import groupsAttendanceSlice from "slices/groupsAttendanceSlice";
 import accountingProfileSlice from "slices/accountingProfileSlice";
 import todoistSlice from "slices/todoistSlice";
 import taskManagerModalSlice from "slices/taskManagerModalSlice";
+import chatsSlice from "slices/chatsSlice";
 
 const stringMiddlewere = () => (next) => (action) => {
     if (typeof action === 'string') {
@@ -107,7 +108,8 @@ const store = configureStore({
         accountingProfileSlice,
         todoistSlice,
         taskManagerModalSlice,
-        assistantSlice
+        assistantSlice,
+        chatsSlice
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(
