@@ -80,23 +80,24 @@ const PlatformChats = () => {
                         </div>
 
                         {/* TOP MEMBERS */}
-                        {report.top_members?.length > 0 && (
-                            <div className={cls.reportCard__members}>
-                                <div className={cls.membersTitle}>
-                                    <i className="fas fa-users" style={{ marginRight: '0.5rem' }} />
-                                    Faol a'zolar
-                                </div>
-                                <div className={cls.membersList}>
-                                    {report.top_members.map(member => (
+                        <div className={cls.reportCard__members}>
+                            <div className={cls.membersTitle}>
+                                <i className="fas fa-users" style={{ marginRight: '0.5rem' }} />
+                                Faol a'zolar
+                            </div>
+                            <div className={cls.membersList}>
+                                {report.top_members?.length > 0
+                                    ? report.top_members.map(member => (
                                         <div key={member.rank} className={cls.member}>
                                             <span className={cls.member__rank}>#{member.rank}</span>
                                             <span className={cls.member__name}>{member.display_name}</span>
                                             <span className={cls.member__count}>{member.message_count} ta</span>
                                         </div>
-                                    ))}
-                                </div>
+                                    ))
+                                    : <span style={{ fontSize: '1.3rem', color: '#626262', fontStyle: 'italic' }}>A'zolar yo'q</span>
+                                }
                             </div>
-                        )}
+                        </div>
 
                         {/* AI ANALYSIS */}
                         <div className={cls.reportCard__ai}>

@@ -45,13 +45,15 @@
   overflow: hidden
   display: flex
   flex-direction: column
+  height: 100%
   transition: transform 0.2s ease
 
   &:hover
     transform: translateY(-3px)
 
   &__head
-    background: linear-gradient(135deg, $color-main-dark, $color-main-light)
+    // background: linear-gradient(135deg, $color-main-dark, $color-main-light)
+    background-color: $color-platform-main
     padding: 1.8rem 2rem
     display: flex
     align-items: center
@@ -60,11 +62,13 @@
     .groupName
       font-size: 1.8rem
       font-weight: 600
-      color: $color-white
+      // color: $color-white
+      color: black
 
     .date
       font-size: 1.3rem
-      color: rgba(255,255,255,0.85)
+      // color: rgba(255,255,255,0.85)
+      color: black
       background-color: rgba(255,255,255,0.15)
       padding: 0.3rem 0.9rem
       border-radius: 2rem
@@ -95,6 +99,9 @@
   &__members
     padding: 1.4rem 2rem
     border-bottom: 1px solid $color-grey-light
+    height: 15rem
+    display: flex
+    flex-direction: column
 
     .membersTitle
       font-size: 1.3rem
@@ -142,6 +149,8 @@
 
   &__ai
     padding: 1.4rem 2rem
+    height: 20rem
+    overflow: hidden
 
     .aiTitle
       font-size: 1.3rem
@@ -161,9 +170,10 @@
       font-size: 1.35rem
       color: $color-second
       line-height: 1.7
-      max-height: 10rem
+      max-height: 14rem
       overflow-y: auto
       padding-right: 0.5rem
+      padding-bottom: 1.5rem
 
       &::-webkit-scrollbar
         width: 4px
@@ -187,4 +197,3 @@
 
     &__grid
       grid-template-columns: 1fr
-
