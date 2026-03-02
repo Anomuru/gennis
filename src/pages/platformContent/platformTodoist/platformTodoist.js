@@ -1181,9 +1181,6 @@ const PlatformTodoist = () => {
         }
     };
 
-    console.log(formData, "formData.deadline_datetime")
-    console.log(formData.deadline_datetime.slice(0, 10));
-
 
     return (
         <>
