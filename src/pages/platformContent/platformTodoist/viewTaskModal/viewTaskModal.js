@@ -44,7 +44,7 @@ function PersonChip({ label, name, surname, extra }) {
 function CollapsibleSection({ title, count, sectionKey, activeCollapsibles, toggleCollapsible, children, onAdd, addLabel }) {
     const isOpen = activeCollapsibles.has(sectionKey);
     return (
-        <div className={styles.collapsible}>
+        <div className={classNames(styles.collapsible, { [styles.active]: isOpen })}>
             <button className={styles.collapsibleHeader} onClick={() => toggleCollapsible(sectionKey)}>
                 <span className={styles.collapsibleTitle}>
                     {title}
@@ -53,8 +53,10 @@ function CollapsibleSection({ title, count, sectionKey, activeCollapsibles, togg
                 <span className={classNames(styles.collapsibleArrow, { [styles.open]: isOpen })}>▾</span>
             </button>
             {isOpen && (
-                <div className={styles.collapsibleBody}>
-                    {children}
+                <div className={classNames(styles.collapsibleBody, { [styles.active]: isOpen && !!children })}>
+                    <div className={styles.collapsibleBodyContent}>
+                        {children}
+                    </div>
                     {onAdd && (
                         <button className={styles.addBtn} onClick={onAdd}>
                             + {addLabel}
