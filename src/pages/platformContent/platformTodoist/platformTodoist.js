@@ -1561,7 +1561,7 @@ const PlatformTodoist = () => {
                                     <label>Deadline</label>
                                     <input
                                         type="date"
-                                        value={formData.deadline_datetime.slice(0, 10) || ""}
+                                        value={formData?.deadline_datetime?.slice(0, 10) || ""}
                                         onChange={(e) => setFormData({ ...formData, deadline_datetime: e.target.value })}
                                         required
                                     />
