@@ -229,6 +229,12 @@ export const TaskManagerModal = () => {
     const stateRestoredRef = useRef(false);
     // ✅ НОВОЕ: Ref для отслеживания текущего userId в сокете
     const currentUserIdRef = useRef(null);
+    // Рефы для person и type — чтобы handler не пересоздавался при их изменении
+    const personRef = useRef(person);
+    const typeRef = useRef(type);
+
+    useEffect(() => { personRef.current = person; }, [person]);
+    useEffect(() => { typeRef.current = type; }, [type]);
 
     const { submitCallResult } = useSubmitCallResult();
 
@@ -385,7 +391,7 @@ export const TaskManagerModal = () => {
                             call_status === 'ANSWERED' ||
                             call_status === 'answered';
 
-                        const config = CALL_TYPE_CONFIG[type || savedState.type];
+                        const config = CALL_TYPE_CONFIG[typeRef.current || savedState.type];
                         const extractedAudioId =
                             result?.[config?.audioIdField] ||
                             result?.id ||
@@ -454,8 +460,8 @@ export const TaskManagerModal = () => {
                 if (normalized.state === 'PENDING') {
                     dispatch(
                         onCallProgressing({
-                            person: person || savedState.person,
-                            type: type || savedState.type,
+                            person: personRef.current || savedState.person,
+                            type: typeRef.current || savedState.type,
                             audioId: null,
                             callId: normalized.result.callId,
                             callStatus: 'loading',
@@ -468,19 +474,19 @@ export const TaskManagerModal = () => {
                         dispatch(
                             onCallProgressing({
                                 audioId: normalized.result.audioId,
-                                person: person || savedState.person,
+                                person: personRef.current || savedState.person,
                                 callStatus: 'success',
                                 callState: 'success',
                                 msg: normalized.result.message,
                                 callId: null,
-                                type: type || savedState.type,
+                                type: typeRef.current || savedState.type,
                             })
                         );
                     } else {
                         dispatch(
                             onCallProgressing({
-                                person: person || savedState.person,
-                                type: type || savedState.type,
+                                person: personRef.current || savedState.person,
+                                type: typeRef.current || savedState.type,
                                 audioId: null,
                                 callId: null,
                                 callStatus: 'success',
@@ -490,8 +496,8 @@ export const TaskManagerModal = () => {
                         );
 
                         if (normalized.result.attempts === 2) {
-                            const personData = person || savedState.person;
-                            const callType = type || savedState.type;
+                            const personData = personRef.current || savedState.person;
+                            const callType = typeRef.current || savedState.type;
 
                             if (callType === CALL_TYPES.LEADS) {
                                 dispatch(onDelLeads({ id: personData.id }));
@@ -522,42 +528,7 @@ export const TaskManagerModal = () => {
             };
         }
 
-    }, [callId, audioId, dispatch, person, type]);
-
-    // ... остальной код остается без изменений
-
-    // ============================================================================
-    // ВОССТАНОВЛЕНИЕ СОСТОЯНИЯ
-    // ============================================================================
-
-    useEffect(() => {
-        const savedState = callStorage.loadCallState();
-
-
-        if (!savedState.callId && !savedState.audioId) return;
-
-        callStorage.incrementShowStatus();
-
-        const props = {
-            person: savedState.person,
-            callStatus: savedState.status,
-            callState: savedState.state,
-            type: savedState.type,
-            audioId: savedState.audioId
-        };
-
-        if (savedState.state && savedState.state !== 'error') {
-            if (savedState.callId) {
-                dispatch(onCallStart({ ...props, callId: savedState.callId }));
-            } else if (savedState.audioId) {
-                dispatch(onCallProgressing({ ...props, audioId: savedState.audioId }));
-            }
-        } else if (savedState.showStatus >= 3) {
-            dispatch(onCallStart(props));
-        } else {
-            callStorage.clearCallState();
-        }
-    }, [dispatch]);
+    }, [callId, audioId, dispatch]);
 
     // Синхронизация модального окна
     useEffect(() => {
