@@ -85,6 +85,7 @@ export default function ViewTaskModal({
 }) {
     if (!selectedTask) return null;
 
+    const isFromOffice = selectedTask.creator_name === "from office";
     const status = STATUS_CONFIG[selectedTask.status] ?? { label: selectedTask.status, color: "#6b7280", bg: "#f3f4f6" };
     const daysLeft = selectedTask.days_left ?? 0;
     const isOverdue = daysLeft < 0 && selectedTask.status !== "completed";
@@ -109,8 +110,8 @@ export default function ViewTaskModal({
                     <div className={styles.topBarRight}>
                         <button
                             className={styles.statusBtn}
-                            style={{ color: status.color, background: status.bg }}
-                            onClick={() => onChangeStatus?.(selectedTask)}
+                            style={{ color: status.color, background: status.bg, ...(isFromOffice ? { cursor: "default", opacity: 0.7 } : {}) }}
+                            onClick={() => !isFromOffice && onChangeStatus?.(selectedTask)}
                         >
                             {status.label}
                         </button>
@@ -138,7 +139,11 @@ export default function ViewTaskModal({
                             extra={selectedTask.is_redirected && selectedTask.executor?.id !== selectedTask.redirected_by?.id
                                 ? `← ${selectedTask.redirected_by?.full_name}` : null}
                         />
-                        <PersonChip label="Reviewer" name={selectedTask.reviewer?.name} surname={selectedTask.reviewer?.surname} />
+                        <PersonChip
+                            label="Reviewer"
+                            name={selectedTask.reviewer?.name ?? selectedTask.reviewer_name?.split(" ")[0] ?? "—"}
+                            surname={selectedTask.reviewer?.surname ?? selectedTask.reviewer_name?.split(" ").slice(1).join(" ") ?? ""}
+                        />
                     </div>
 
                     {/* ── Meta grid ── */}
@@ -196,7 +201,7 @@ export default function ViewTaskModal({
                         sectionKey="subtasks"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={() => openNestedModal("createSubtask")}
+                        onAdd={isFromOffice ? null : () => openNestedModal("createSubtask")}
                         addLabel="Add Subtask"
                     >
                         {tasksProfileLoading === "subtasks"
@@ -206,16 +211,19 @@ export default function ViewTaskModal({
                                     <div className={styles.nestedLeft}>
                                         <button
                                             className={classNames(styles.checkBtn, { [styles.checked]: st.is_done })}
-                                            onClick={() => handleCompleteSubtask(st.is_done, st.id)}
+                                            onClick={() => !isFromOffice && handleCompleteSubtask(st.is_done, st.id)}
+                                            style={isFromOffice ? { cursor: "default", opacity: 0.7 } : {}}
                                         >
                                             {st.is_done ? "✓" : ""}
                                         </button>
                                         <span>{st.order}. {st.title}</span>
                                     </div>
-                                    <div className={styles.nestedActions}>
-                                        <button className={styles.btnEdit} onClick={() => openNestedModal("editSubtask", st)}>Edit</button>
-                                        <button className={styles.btnDelete} onClick={() => openNestedModal("deleteSubtask", st)}>Delete</button>
-                                    </div>
+                                    {!isFromOffice && (
+                                        <div className={styles.nestedActions}>
+                                            <button className={styles.btnEdit} onClick={() => openNestedModal("editSubtask", st)}>Edit</button>
+                                            <button className={styles.btnDelete} onClick={() => openNestedModal("deleteSubtask", st)}>Delete</button>
+                                        </div>
+                                    )}
                                 </div>
                             ))
                         }
@@ -228,17 +236,19 @@ export default function ViewTaskModal({
                         sectionKey="attachments"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={() => openNestedModal("createAttachment")}
+                        onAdd={isFromOffice ? null : () => openNestedModal("createAttachment")}
                         addLabel="Add Attachment"
                     >
                         {[...(selectedTask.attachments ?? [])].reverse().map(att => (
                             <div key={att.id} className={styles.mediaItem}>
                                 <div className={styles.mediaHeader}>
                                     <span className={styles.mediaDate}>{att.uploaded_at}</span>
-                                    <div className={styles.nestedActions}>
-                                        <button className={styles.btnEdit} onClick={() => openNestedModal("editAttachment", att)}>Edit</button>
-                                        <button className={styles.btnDelete} onClick={() => openNestedModal("deleteAttachment", att)}>Delete</button>
-                                    </div>
+                                    {!isFromOffice && (
+                                        <div className={styles.nestedActions}>
+                                            <button className={styles.btnEdit} onClick={() => openNestedModal("editAttachment", att)}>Edit</button>
+                                            <button className={styles.btnDelete} onClick={() => openNestedModal("deleteAttachment", att)}>Delete</button>
+                                        </div>
+                                    )}
                                 </div>
                                 {att.note && <p className={styles.mediaNote}>{att.note}</p>}
                                 {att.file_path && (
@@ -255,7 +265,7 @@ export default function ViewTaskModal({
                         sectionKey="comments"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={() => openNestedModal("createComment")}
+                        onAdd={isFromOffice ? null : () => openNestedModal("createComment")}
                         addLabel="Add Comment"
                     >
                         {[...(selectedTask.comments ?? [])].reverse().map(com => (
@@ -268,7 +278,7 @@ export default function ViewTaskModal({
                                         </span>
                                         <span className={styles.mediaDate}>{com.created_at}</span>
                                     </div>
-                                    {(com.user?.id === userId || com.user === userId) && (
+                                    {!isFromOffice && (com.user?.id === userId || com.user === userId) && (
                                         <div className={styles.nestedActions}>
                                             <button className={styles.btnEdit} onClick={() => openNestedModal("editComment", com)}>Edit</button>
                                             <button className={styles.btnDelete} onClick={() => openNestedModal("deleteComment", com)}>Delete</button>
@@ -290,17 +300,19 @@ export default function ViewTaskModal({
                         sectionKey="proofs"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={() => openNestedModal("createProof")}
+                        onAdd={isFromOffice ? null : () => openNestedModal("createProof")}
                         addLabel="Add Proof"
                     >
                         {[...(selectedTask.proofs ?? [])].reverse().map(proof => (
                             <div key={proof.id} className={styles.mediaItem}>
                                 <div className={styles.mediaHeader}>
                                     <span className={styles.mediaDate}>{proof.created_at}</span>
-                                    <div className={styles.nestedActions}>
-                                        <button className={styles.btnEdit} onClick={() => openNestedModal("editProof", proof)}>Edit</button>
-                                        <button className={styles.btnDelete} onClick={() => openNestedModal("deleteProof", proof)}>Delete</button>
-                                    </div>
+                                    {!isFromOffice && (
+                                        <div className={styles.nestedActions}>
+                                            <button className={styles.btnEdit} onClick={() => openNestedModal("editProof", proof)}>Edit</button>
+                                            <button className={styles.btnDelete} onClick={() => openNestedModal("deleteProof", proof)}>Delete</button>
+                                        </div>
+                                    )}
                                 </div>
                                 {proof.comment && <p className={styles.mediaNote}>{proof.comment}</p>}
                                 {proof.file_path && (

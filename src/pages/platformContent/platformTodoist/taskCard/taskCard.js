@@ -89,6 +89,7 @@ export default function TaskCard({
 
     const isCreator = task.creator?.id === userId;
     const isExecutor = task.executor?.id === userId;
+    const isFromOffice = task.creator_name === "from office";
 
     return (
         <div
@@ -112,8 +113,9 @@ export default function TaskCard({
                     style={{ color: status.color, background: status.bg }}
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (!isMulti) onChangeStatus?.(task);
+                        if (!isMulti && !isFromOffice) onChangeStatus?.(task);
                     }}
+                    style={isFromOffice ? { cursor: "default", opacity: 0.7 } : {}}
                 >
                     {isMulti ? `${task.children.length} executors` : status.label}
                 </span>
@@ -268,7 +270,7 @@ export default function TaskCard({
                             View
                         </button>
                     )}
-                    {isCreator && !isMulti && (
+                    {isCreator && !isMulti && !isFromOffice && (
                         <>
                             <button
                                 className={styles.btnEdit}
