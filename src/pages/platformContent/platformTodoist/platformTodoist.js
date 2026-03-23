@@ -90,7 +90,8 @@ const PlatformTodoist = () => {
     const { register, handleSubmit, setValue } = useForm()
 
 
-    const { id: userId, level } = useSelector(state => state.me)
+    const { id: userId, level, name: myName, surname: myUsername } = useSelector(state => state.me)
+    const userName = `${myName ?? ""} ${myUsername ?? ""}`.trim()
     const { teachers } = useSelector(state => state.teachers)
     const { employees } = useSelector(state => state.employees)
     const {
@@ -685,7 +686,8 @@ const PlatformTodoist = () => {
         const post = {
             title: nestedFormData.title,
             order: nestedFormData.order,
-            mission_id: selectedTask.id
+            mission_id: selectedTask.id,
+            creator_id: userId
         }
 
         request(`${BackUrl}subtasks/`, "POST", JSON.stringify(post), headers())
@@ -814,6 +816,7 @@ const PlatformTodoist = () => {
             formDataImg.append("file", nestedFormData.file)
         }
         formDataImg.append("mission_id", selectedTask.id)
+        formDataImg.append("creator_id", userId)
 
         request(`${BackUrl}attachments/`, "POST", formDataImg, headersImg())
             .then(res => {
@@ -916,6 +919,7 @@ const PlatformTodoist = () => {
         const formDataImg = new FormData()
         formDataImg.append("text", nestedFormData.text)
         formDataImg.append("user_id", userId)
+        formDataImg.append("creator_id", userId)
         if (nestedFormData.comFile && typeof nestedFormData.comFile === "object") {
             formDataImg.append("attachment", nestedFormData.comFile)
         }
@@ -1026,6 +1030,7 @@ const PlatformTodoist = () => {
             formDataImg.append("file", nestedFormData.proofFile)
         }
         formDataImg.append("mission_id", selectedTask.id)
+        formDataImg.append("creator_id", userId)
 
         request(`${BackUrl}proofs/`, "POST", formDataImg, headersImg())
             .then(res => {
@@ -1652,6 +1657,7 @@ const PlatformTodoist = () => {
                         categoryList={categoryList}
                         statusList={statusList}
                         userId={userId}
+                        userName={userName}
                         BackUrlForDoc={BackUrlForDoc}
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}

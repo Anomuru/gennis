@@ -73,6 +73,7 @@ export default function ViewTaskModal({
     categoryList,
     statusList,
     userId,
+    userName,
     BackUrlForDoc,
     activeCollapsibles,
     toggleCollapsible,
@@ -86,6 +87,11 @@ export default function ViewTaskModal({
     if (!selectedTask) return null;
 
     const isFromOffice = selectedTask.creator_name === "from office";
+    const canInteract = (
+        userId === selectedTask.creator_id ||
+        userId === selectedTask.executor_id ||
+        userId === selectedTask.reviewer_id
+    );
     const status = STATUS_CONFIG[selectedTask.status] ?? { label: selectedTask.status, color: "#6b7280", bg: "#f3f4f6" };
     const daysLeft = selectedTask.days_left ?? 0;
     const isOverdue = daysLeft < 0 && selectedTask.status !== "completed";
@@ -110,8 +116,8 @@ export default function ViewTaskModal({
                     <div className={styles.topBarRight}>
                         <button
                             className={styles.statusBtn}
-                            style={{ color: status.color, background: status.bg, ...(isFromOffice ? { cursor: "default", opacity: 0.7 } : {}) }}
-                            onClick={() => !isFromOffice && onChangeStatus?.(selectedTask)}
+                            style={{ color: status.color, background: status.bg, ...(!canInteract ? { cursor: "default", opacity: 0.7 } : {}) }}
+                            onClick={() => canInteract && onChangeStatus?.(selectedTask)}
                         >
                             {status.label}
                         </button>
@@ -131,7 +137,11 @@ export default function ViewTaskModal({
 
                     {/* ── People row ── */}
                     <div className={styles.peopleRow}>
-                        <PersonChip label="Creator" name={selectedTask.creator?.name} surname={selectedTask.creator?.surname} />
+                        <PersonChip
+                            label="Creator"
+                            name={isFromOffice ? "Boshqarma" : selectedTask.creator?.name}
+                            surname={isFromOffice ? "" : selectedTask.creator?.surname}
+                        />
                         <PersonChip
                             label={selectedTask.is_redirected && selectedTask.executor?.id !== selectedTask.redirected_by?.id ? "Executor (Redirected)" : "Executor"}
                             name={selectedTask.executor?.name}
@@ -201,31 +211,34 @@ export default function ViewTaskModal({
                         sectionKey="subtasks"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={isFromOffice ? null : () => openNestedModal("createSubtask")}
+                        onAdd={canInteract ? () => openNestedModal("createSubtask") : null}
                         addLabel="Add Subtask"
                     >
                         {tasksProfileLoading === "subtasks"
                             ? <div className={styles.loader}>Loading...</div>
-                            : [...(selectedTask.subtasks ?? [])].sort(compareByOrder).map(st => (
-                                <div key={st.id} className={classNames(styles.nestedItem, { [styles.done]: st.is_done })}>
-                                    <div className={styles.nestedLeft}>
-                                        <button
-                                            className={classNames(styles.checkBtn, { [styles.checked]: st.is_done })}
-                                            onClick={() => !isFromOffice && handleCompleteSubtask(st.is_done, st.id)}
-                                            style={isFromOffice ? { cursor: "default", opacity: 0.7 } : {}}
-                                        >
-                                            {st.is_done ? "✓" : ""}
-                                        </button>
-                                        <span>{st.order}. {st.title}</span>
-                                    </div>
-                                    {!isFromOffice && (
-                                        <div className={styles.nestedActions}>
-                                            <button className={styles.btnEdit} onClick={() => openNestedModal("editSubtask", st)}>Edit</button>
-                                            <button className={styles.btnDelete} onClick={() => openNestedModal("deleteSubtask", st)}>Delete</button>
+                            : [...(selectedTask.subtasks ?? [])].sort(compareByOrder).map(st => {
+                                const isMySubtask = st.creator_name === null || st.creator_name === userName;
+                                return (
+                                    <div key={st.id} className={classNames(styles.nestedItem, { [styles.done]: st.is_done })}>
+                                        <div className={styles.nestedLeft}>
+                                            <button
+                                                className={classNames(styles.checkBtn, { [styles.checked]: st.is_done })}
+                                                onClick={() => canInteract && handleCompleteSubtask(st.is_done, st.id)}
+                                                style={!canInteract ? { cursor: "default", opacity: 0.7 } : {}}
+                                            >
+                                                {st.is_done ? "✓" : ""}
+                                            </button>
+                                            <span>{st.order}. {st.title}</span>
                                         </div>
-                                    )}
-                                </div>
-                            ))
+                                        {canInteract && isMySubtask && (
+                                            <div className={styles.nestedActions}>
+                                                <button className={styles.btnEdit} onClick={() => openNestedModal("editSubtask", st)}>Edit</button>
+                                                <button className={styles.btnDelete} onClick={() => openNestedModal("deleteSubtask", st)}>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })
                         }
                     </CollapsibleSection>
 
@@ -236,26 +249,29 @@ export default function ViewTaskModal({
                         sectionKey="attachments"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={isFromOffice ? null : () => openNestedModal("createAttachment")}
+                        onAdd={canInteract ? () => openNestedModal("createAttachment") : null}
                         addLabel="Add Attachment"
                     >
-                        {[...(selectedTask.attachments ?? [])].reverse().map(att => (
-                            <div key={att.id} className={styles.mediaItem}>
-                                <div className={styles.mediaHeader}>
-                                    <span className={styles.mediaDate}>{att.uploaded_at}</span>
-                                    {!isFromOffice && (
-                                        <div className={styles.nestedActions}>
-                                            <button className={styles.btnEdit} onClick={() => openNestedModal("editAttachment", att)}>Edit</button>
-                                            <button className={styles.btnDelete} onClick={() => openNestedModal("deleteAttachment", att)}>Delete</button>
-                                        </div>
+                        {[...(selectedTask.attachments ?? [])].reverse().map(att => {
+                            const isMyAttachment = att.creator_name === null || att.creator_name === userName;
+                            return (
+                                <div key={att.id} className={styles.mediaItem}>
+                                    <div className={styles.mediaHeader}>
+                                        <span className={styles.mediaDate}>{att.uploaded_at}</span>
+                                        {canInteract && isMyAttachment && (
+                                            <div className={styles.nestedActions}>
+                                                <button className={styles.btnEdit} onClick={() => openNestedModal("editAttachment", att)}>Edit</button>
+                                                <button className={styles.btnDelete} onClick={() => openNestedModal("deleteAttachment", att)}>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {att.note && <p className={styles.mediaNote}>{att.note}</p>}
+                                    {att.file_path && (
+                                        <img crossOrigin="anonymous" src={BackUrlForDoc + att.file_path} className={styles.mediaImg} alt="" />
                                     )}
                                 </div>
-                                {att.note && <p className={styles.mediaNote}>{att.note}</p>}
-                                {att.file_path && (
-                                    <img crossOrigin="anonymous" src={BackUrlForDoc + att.file_path} className={styles.mediaImg} alt="" />
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
                     </CollapsibleSection>
 
                     {/* ── Comments ── */}
@@ -265,32 +281,39 @@ export default function ViewTaskModal({
                         sectionKey="comments"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={isFromOffice ? null : () => openNestedModal("createComment")}
+                        onAdd={canInteract ? () => openNestedModal("createComment") : null}
                         addLabel="Add Comment"
                     >
-                        {[...(selectedTask.comments ?? [])].reverse().map(com => (
-                            <div key={com.id} className={styles.commentItem}>
-                                <div className={styles.commentHeader}>
-                                    <div className={styles.commentMeta}>
-                                        <Avatar name={com.user?.name ?? com.user?.full_name?.split(" ")[0]} surname={com.user?.surname ?? ""} size={24} />
-                                        <span className={styles.commentAuthor}>
-                                            {com.user?.full_name ?? `${com.user?.name} ${com.user?.surname}`}
-                                        </span>
-                                        <span className={styles.mediaDate}>{com.created_at}</span>
-                                    </div>
-                                    {!isFromOffice && (com.user?.id === userId || com.user === userId) && (
-                                        <div className={styles.nestedActions}>
-                                            <button className={styles.btnEdit} onClick={() => openNestedModal("editComment", com)}>Edit</button>
-                                            <button className={styles.btnDelete} onClick={() => openNestedModal("deleteComment", com)}>Delete</button>
+                        {[...(selectedTask.comments ?? [])].reverse().map(com => {
+                            const displayName = com.user
+                                ? (com.user.full_name ?? `${com.user.name} ${com.user.surname}`)
+                                : (com.creator_name ?? "—");
+                            const displayAvatarName = com.user?.name ?? com.creator_name?.split(" ")[0] ?? "—";
+                            const displayAvatarSurname = com.user?.surname ?? com.creator_name?.split(" ").slice(1).join(" ") ?? "";
+                            const isMyComment = com.user_id !== null ? com.user_id === userId : com.creator_name === null || com.creator_name === userName;
+                            return (
+                                <div key={com.id} className={styles.commentItem}>
+                                    <div className={styles.commentHeader}>
+                                        <div className={styles.commentMeta}>
+                                            <Avatar name={displayAvatarName} surname={displayAvatarSurname} size={24} />
+                                            <span className={styles.commentAuthor}>{displayName}</span>
+                                            <span className={styles.mediaDate}>{com.created_at}</span>
                                         </div>
+                                        {canInteract && isMyComment && (
+                                            <div className={styles.nestedActions}>
+                                                <button className={styles.btnEdit} onClick={() => openNestedModal("editComment", com)}>Edit</button>
+                                                <button className={styles.btnDelete} onClick={() => openNestedModal("deleteComment", com)}>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className={styles.commentText}>{com.text}</p>
+                                    {com.attachment_path && (
+                                        <img crossOrigin="anonymous" src={BackUrlForDoc + com.attachment_path} className={styles.mediaImg} alt="" />
                                     )}
                                 </div>
-                                <p className={styles.commentText}>{com.text}</p>
-                                {com.attachment_path && (
-                                    <img crossOrigin="anonymous" src={BackUrlForDoc + com.attachment_path} className={styles.mediaImg} alt="" />
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
+
                     </CollapsibleSection>
 
                     {/* ── Proofs ── */}
@@ -300,26 +323,29 @@ export default function ViewTaskModal({
                         sectionKey="proofs"
                         activeCollapsibles={activeCollapsibles}
                         toggleCollapsible={toggleCollapsible}
-                        onAdd={isFromOffice ? null : () => openNestedModal("createProof")}
+                        onAdd={canInteract ? () => openNestedModal("createProof") : null}
                         addLabel="Add Proof"
                     >
-                        {[...(selectedTask.proofs ?? [])].reverse().map(proof => (
-                            <div key={proof.id} className={styles.mediaItem}>
-                                <div className={styles.mediaHeader}>
-                                    <span className={styles.mediaDate}>{proof.created_at}</span>
-                                    {!isFromOffice && (
-                                        <div className={styles.nestedActions}>
-                                            <button className={styles.btnEdit} onClick={() => openNestedModal("editProof", proof)}>Edit</button>
-                                            <button className={styles.btnDelete} onClick={() => openNestedModal("deleteProof", proof)}>Delete</button>
-                                        </div>
+                        {[...(selectedTask.proofs ?? [])].reverse().map(proof => {
+                            const isMyProof = proof.creator_name === null || proof.creator_name === userName;
+                            return (
+                                <div key={proof.id} className={styles.mediaItem}>
+                                    <div className={styles.mediaHeader}>
+                                        <span className={styles.mediaDate}>{proof.created_at}</span>
+                                        {canInteract && isMyProof && (
+                                            <div className={styles.nestedActions}>
+                                                <button className={styles.btnEdit} onClick={() => openNestedModal("editProof", proof)}>Edit</button>
+                                                <button className={styles.btnDelete} onClick={() => openNestedModal("deleteProof", proof)}>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {proof.comment && <p className={styles.mediaNote}>{proof.comment}</p>}
+                                    {proof.file_path && (
+                                        <img crossOrigin="anonymous" src={BackUrlForDoc + proof.file_path} className={styles.mediaImg} alt="" />
                                     )}
                                 </div>
-                                {proof.comment && <p className={styles.mediaNote}>{proof.comment}</p>}
-                                {proof.file_path && (
-                                    <img crossOrigin="anonymous" src={BackUrlForDoc + proof.file_path} className={styles.mediaImg} alt="" />
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
                     </CollapsibleSection>
 
                 </div>
