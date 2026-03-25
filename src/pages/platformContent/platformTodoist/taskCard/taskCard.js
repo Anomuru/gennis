@@ -113,9 +113,9 @@ export default function TaskCard({
                     style={{ color: status.color, background: status.bg }}
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (!isMulti && !isFromOffice) onChangeStatus?.(task);
+                        if (!isMulti) onChangeStatus?.(task);
                     }}
-                    style={isFromOffice ? { cursor: "default", opacity: 0.7 } : {}}
+                // style={isFromOffice ? { cursor: "default", opacity: 0.7 } : {}}
                 >
                     {isMulti ? `${task.children.length} executors` : status.label}
                 </span>

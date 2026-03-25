@@ -210,12 +210,14 @@ const PlatformTodoist = () => {
         const isCreator = task.creator?.id === userId;
         const isReviewer = task.reviewer?.id === userId;
         const isExecutor = task.executor?.id === userId;
+        const isRedirected = task.redirected_by?.id === userId;
+        const isFromOffice = !task.management_id;
 
-        if (isCreator) return statusList; // creator видит всё
+        if (isCreator && isFromOffice) return statusList; // creator видит всё
 
         const allowed = isReviewer
             ? STATUS_PERMISSIONS.reviewer[task.status] ?? []
-            : isExecutor
+            : (isExecutor || isRedirected)
                 ? STATUS_PERMISSIONS.executor[task.status] ?? []
                 : [];
 

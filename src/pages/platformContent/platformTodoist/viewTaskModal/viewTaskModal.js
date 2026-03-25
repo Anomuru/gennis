@@ -147,7 +147,7 @@ export default function ViewTaskModal({
                             name={selectedTask.executor?.name}
                             surname={selectedTask.executor?.surname}
                             extra={selectedTask.is_redirected && selectedTask.executor?.id !== selectedTask.redirected_by?.id
-                                ? `← ${selectedTask.redirected_by?.full_name}` : null}
+                                ? `← ${selectedTask.redirected_by?.name} ${selectedTask.redirected_by?.name}` : null}
                         />
                         <PersonChip
                             label="Reviewer"
