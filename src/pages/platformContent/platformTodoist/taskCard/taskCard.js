@@ -89,7 +89,7 @@ export default function TaskCard({
 
     const isCreator = task.creator?.id === userId;
     const isExecutor = task.executor?.id === userId;
-    const isFromOffice = task.creator_name === "from office";
+    const isFromOffice = !!task.management_id;
 
     return (
         <div
@@ -129,13 +129,23 @@ export default function TaskCard({
                         icon="👤"
                         label="Creator:"
                         value={
-                            <span className={styles.personRow}>
-                                <Avatar
-                                    name={task.creator.name}
-                                    surname={task.creator.surname}
-                                />
-                                {task.creator.name} {task.creator.surname}
-                            </span>
+                            isFromOffice ? (
+                                <span className={styles.personRow}>
+                                    <Avatar
+                                        name={task.creator.name}
+                                        surname={task.creator.surname}
+                                    />
+                                    {task.creator.name} {task.creator.surname}
+                                </span>
+                            ) : (
+                                <span className={styles.personRow}>
+                                    <Avatar
+                                        name={task.creator.name}
+                                        surname={task.creator.surname}
+                                    />
+                                    {task.creator.name} {task.creator.surname}
+                                </span>
+                            )
                         }
                     />
                 )}

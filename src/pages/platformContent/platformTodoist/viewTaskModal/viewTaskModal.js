@@ -86,7 +86,7 @@ export default function ViewTaskModal({
 }) {
     if (!selectedTask) return null;
 
-    const isFromOffice = selectedTask.creator_name === "from office";
+    const isFromOffice = !!selectedTask.management_id;
     const canInteract = (
         userId === selectedTask.creator_id ||
         userId === selectedTask.executor_id ||

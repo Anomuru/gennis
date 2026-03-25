@@ -169,7 +169,7 @@ const PlatformTodoist = () => {
                 if (activeTaskType === "myTasks") {
                     dispatch(fetchTasks({ executor: userId, ...props }))
                 } else if (activeTaskType === "givenTask") {
-                    dispatch(fetchTasks({ creator_id: userId, ...props }))
+                    dispatch(fetchTasks({ creator: userId, ...props }))
                 } else {
                     dispatch(fetchTasks({ reviewer: userId, ...props }))
                 }
