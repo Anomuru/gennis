@@ -267,7 +267,7 @@ export default function ViewTaskModal({
                                     </div>
                                     {att.note && <p className={styles.mediaNote}>{att.note}</p>}
                                     {att.file_path && (
-                                        <img crossOrigin="anonymous" src={BackUrlForDoc + att.file_path} className={styles.mediaImg} alt="" />
+                                        <img crossOrigin="anonymous" src={att.file_path} className={styles.mediaImg} alt="" />
                                     )}
                                 </div>
                             );
