@@ -1,33 +1,362 @@
+// @import "styles/abstracts/variables"
+
+// .teachersRating
+//   padding: 5rem
+//   position: relative
+//   .header
+//     display: flex
+//     align-items: center
+//     justify-content: space-between
+//     margin-bottom: 2rem
+//     position: sticky
+//     top: 0
+//     z-index: 1000
+//     background-color: white
+//     padding: 2rem
+//     &>div
+//       display: flex
+//     h1
+//       font-size: 3rem
+//   .rating
+//     border: 2px solid $color-grey-light
+//     padding: 4rem
+//     border-radius: 15px
+//     overflow: auto
+//     margin: 1rem 0
+//     h1
+//       margin-bottom: 2rem
+//       font-size: 2.5rem
+//     .subHeader
+//       display: flex
+//       align-items: center
+//       justify-content: space-between
+
 @import "styles/abstracts/variables"
 
+// ─── page ─────────────────────────────────────────────────────────────────────
 
 .teachersRating
-  padding: 5rem
+  padding: 4rem 5rem
   position: relative
-  .header
-    display: flex
-    align-items: center
-    justify-content: space-between
-    margin-bottom: 2rem
-    position: sticky
-    top: 0
-    z-index: 1000
-    background-color: white
-    padding: 2rem
-    &>div
-      display: flex
-    h1
-      font-size: 3rem
-  .rating
-    border: 2px solid $color-grey-light
-    padding: 4rem
-    border-radius: 15px
-    overflow: auto
-    margin: 1rem 0
-    h1
-      margin-bottom: 2rem
-      font-size: 2.5rem
-    .subHeader
-      display: flex
-      align-items: center
-      justify-content: space-between
+
+.header
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 2rem
+  position: sticky
+  top: 0
+  z-index: 1000
+  background-color: #fff
+  padding: 1.5rem 2rem
+  border-bottom: 1px solid #ebebeb
+  h1
+    font-size: 2.6rem
+    font-weight: 600
+
+.filters
+  display: flex
+  gap: 1rem
+  align-items: center
+
+// ─── section card ─────────────────────────────────────────────────────────────
+
+.rating
+  border: 1px solid #e8e8e8
+  padding: 2.8rem 3.2rem
+  border-radius: 14px
+  margin: 1.2rem 0
+  background: #fff
+
+.sectionTitle
+  font-size: 1.8rem
+  font-weight: 600
+  color: #222
+  margin-bottom: 2rem
+
+.sectionHeader
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 2rem
+
+// ─── horizontal bar chart ─────────────────────────────────────────────────────
+
+.barChartScroll
+  max-height: 42rem
+  overflow-y: auto
+  padding-right: 1.4rem
+  &::-webkit-scrollbar
+    width: 4px
+  &::-webkit-scrollbar-track
+    background: #f5f5f5
+    border-radius: 4px
+  &::-webkit-scrollbar-thumb
+    background: #ddd
+    border-radius: 4px
+
+.barChart
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.barRow
+  display: grid
+  grid-template-columns: 22rem 1fr
+  align-items: center
+  gap: 1.6rem
+
+.barLabel
+  display: flex
+  align-items: center
+  gap: 1rem
+  font-size: 1.4rem
+  color: #333
+  overflow: hidden
+  span
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+.barTrack
+  display: flex
+  align-items: center
+  gap: 1rem
+
+.barBg
+  flex: 1
+  height: 8px
+  background: #f0f0f0
+  border-radius: 4px
+  overflow: hidden
+
+.barFill
+  height: 100%
+  border-radius: 4px
+  transition: width 0.5s ease
+
+.barNum
+  font-size: 1.3rem
+  font-weight: 500
+  color: #555
+  min-width: 2.4rem
+  text-align: right
+
+.barNumZero
+  font-size: 1.3rem
+  font-weight: 400
+  color: #ccc
+  min-width: 2.4rem
+  text-align: right
+
+.loaderWrap
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 3rem 0
+
+.emptyState
+  text-align: center
+  color: #bbb
+  font-size: 1.5rem
+  padding: 3rem 0
+
+// ─── avatar ───────────────────────────────────────────────────────────────────
+
+.avatar
+  width: 3rem
+  height: 3rem
+  border-radius: 50%
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 1.1rem
+  font-weight: 600
+  flex-shrink: 0
+
+// ─── mini bar (in table) ──────────────────────────────────────────────────────
+
+.hBarWrap
+  display: flex
+  align-items: center
+  gap: 8px
+
+.hBarBg
+  flex: 1
+  height: 6px
+  background: #f0f0f0
+  border-radius: 3px
+  overflow: hidden
+  min-width: 5rem
+
+.hBarFill
+  height: 100%
+  border-radius: 3px
+  transition: width 0.4s ease
+
+.hBarVal
+  font-size: 1.2rem
+  color: #666
+  min-width: 2rem
+  text-align: right
+
+.dash
+  color: #ccc
+  font-size: 1.4rem
+
+// ─── summary table ────────────────────────────────────────────────────────────
+
+.tableScroll
+  overflow-x: auto
+
+.table
+  width: 100%
+  border-collapse: collapse
+  font-size: 1.35rem
+  min-width: 60rem
+
+  th
+    text-align: left
+    padding: 8px 12px
+    font-size: 1.15rem
+    font-weight: 500
+    color: #999
+    border-bottom: 1px solid #f0f0f0
+    white-space: nowrap
+
+  td
+    padding: 10px 12px
+    border-bottom: 1px solid #f5f5f5
+    vertical-align: middle
+
+  tr:last-child td
+    border-bottom: none
+
+  tr:hover td
+    background: #fafafa
+
+  tr.dimRow
+    opacity: 0.45
+
+.thSmall
+  width: 4rem
+
+.nameCell
+  display: flex
+  align-items: center
+  gap: 1rem
+
+.rankNum
+  font-size: 1.3rem
+  color: #bbb
+
+.gold
+  font-size: 1.4rem
+  font-weight: 700
+  color: #BA7517
+
+.silver
+  font-size: 1.4rem
+  font-weight: 700
+  color: #888780
+
+.bronze
+  font-size: 1.4rem
+  font-weight: 700
+  color: #534AB7
+
+.badgeGreen
+  display: inline-block
+  background: #EAF3DE
+  color: #3B6D11
+  font-size: 1.15rem
+  font-weight: 500
+  padding: 3px 10px
+  border-radius: 20px
+  white-space: nowrap
+
+.badgeGray
+  display: inline-block
+  background: #f5f5f5
+  color: #aaa
+  font-size: 1.15rem
+  font-weight: 500
+  padding: 3px 10px
+  border-radius: 20px
+  white-space: nowrap
+
+// ─── donut chart ──────────────────────────────────────────────────────────────
+
+.donutWrap
+  display: flex
+  align-items: center
+  gap: 4rem
+  flex-wrap: wrap
+
+.donutSvg
+  width: 16rem
+  height: 16rem
+  flex-shrink: 0
+
+.donutSlice
+  cursor: pointer
+  transition: opacity 0.2s
+  &:hover
+    opacity: 0.8
+
+.donutLegend
+  display: flex
+  flex-direction: column
+  gap: 0.8rem
+  flex: 1
+
+.legendRow
+  display: flex
+  align-items: center
+  gap: 1rem
+  padding: 7px 12px
+  border-radius: 8px
+  background: none
+  border: none
+  text-align: left
+  cursor: default
+  font-size: 1.4rem
+  color: #333
+  transition: background 0.15s
+
+.legendClickable
+  cursor: pointer
+  &:hover
+    background: #f7f7f7
+
+.legendDot
+  width: 1rem
+  height: 1rem
+  border-radius: 50%
+  flex-shrink: 0
+
+.legendName
+  flex: 1
+  font-size: 1.4rem
+  color: #333
+
+.legendPct
+  font-size: 1.4rem
+  font-weight: 600
+
+.legendArrow
+  font-size: 1.2rem
+  color: #bbb
+  margin-left: 4px
+
+// ─── sub-reason drill-down ────────────────────────────────────────────────────
+
+.subReasonTitle
+  font-size: 1.6rem
+  font-weight: 500
+  color: #555
+  margin-bottom: 2rem
+  padding: 8px 14px
+  background: #fafafa
+  border-radius: 8px
+  display: inline-block
