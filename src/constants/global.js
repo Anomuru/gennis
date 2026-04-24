@@ -4,7 +4,7 @@ export const ClassroomUrl = `https://classroom.gennis.uz/`
 //
 
 // export const BackUrlForDoc = `http://26.196.249.247:5002/`
-// export const BackUrlForDoc = `http://100.94.144.113:5002/`
+// export const BackUrlForDoc = `http://100.76.119.90:5000/`
 // export const BackUrl = `${BackUrlForDoc}api/`
 
 // export const ClassroomUrl = `http://localhost:3000/`

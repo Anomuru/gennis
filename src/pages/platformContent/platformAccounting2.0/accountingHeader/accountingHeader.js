@@ -33,6 +33,7 @@ export const AccountingHeader = ({ search, setSearch }) => {
             {/*<h1>{selectOptionName}</h1>*/}
             <div className={cls.header__btn}>
                 <Button onClickBtn={() => navigate("otchot")}>Buxgalteriya</Button>
+                <Button onClickBtn={() => navigate("harajat-turlari")}>Harajat turlari</Button>
                 <Select defaultValue={selectOptionValue} options={selectOption} onChangeOption={onChangePage} />
             </div>
 

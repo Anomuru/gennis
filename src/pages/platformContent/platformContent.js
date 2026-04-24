@@ -107,6 +107,7 @@ const PlatformNewAccounting = React.lazy(() => import('./platformAccounting2.0/p
 const PlatformAccountingProfile = React.lazy(() => import("./platformAccountingProfile/platformAccountingProfile"))
 const PlatformTodoist = React.lazy(() => import('./platformTodoist/platformTodoist'))
 const PlatformChats = React.lazy(() => import('./platformChats/platformChats'))
+const PlatformHarajatTurlari = React.lazy(() => import('./platformHarajatTurlari/platformHarajatTurlari'))
 
 
 
@@ -186,6 +187,7 @@ const PlatformContent = () => {
 
                     {/*<Route path="overheadBooks.js/:locationId" element={<PlatformAccounting/>}/>*/}
                     {/*<Route path="accounting/:locationId/*" element={<PlatformAccounting/>} />*/}
+                    <Route path="accounting/:locationId/harajat-turlari" element={<PlatformHarajatTurlari />} />
                     <Route path="accounting/:locationId/*" element={<PlatformNewAccounting />} />
                     <Route path="accounting/:locationId/otchot/*" element={<PlatformAccountingProfile />} />
 

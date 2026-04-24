@@ -68,17 +68,18 @@ export const BranchStatistics = () => {
     useEffect(() => {
         if (!!date) {
             const sectionTitles = {
-                joined_students: "Guruhga qo‘shilgan o‘quvchilar",
+                joined_students: "Guruhga qo’shilgan o’quvchilar",
                 new_groups: "Yangi guruhlar",
-                new_students: "Yangi o‘quvchilar",
+                new_students: "Yangi o’quvchilar",
                 new_leads: "Yangi leadlar",
-                teacher_salaries: "O‘qituvchilar maoshi",
+                teacher_salaries: "O’qituvchilar maoshi",
                 assistent_salaries: "Assistent maoshi",
                 staff_salaries: "Xodimlar maoshi",
-                payments: "To‘lovlar",
+                payments: "To’lovlar",
                 overheads: "Xarajatlar",
                 expenses: "Umumiy xarajatlar",
-                overall: "Umumiy balans"
+                overall: "Umumiy balans",
+                branch_transactions: "Filial tranzaksiyalari"
             }
 
             setTitles(
@@ -105,17 +106,18 @@ export const BranchStatistics = () => {
 
     const render = () => {
         const sectionTitles = {
-            joined_students: "Guruhga qo‘shilgan o‘quvchilar",
+            joined_students: "Guruhga qo’shilgan o’quvchilar",
             new_groups: "Yangi guruhlar",
-            new_students: "Yangi o‘quvchilar",
+            new_students: "Yangi o’quvchilar",
             new_leads: "Yangi leadlar",
-            teacher_salaries: "O‘qituvchilar maoshi",
+            teacher_salaries: "O’qituvchilar maoshi",
             assistent_salaries: "Assistent maoshi",
             staff_salaries: "Xodimlar maoshi",
-            payments: "To‘lovlar",
+            payments: "To’lovlar",
             overheads: "Xarajatlar",
             expenses: "Umumiy xarajatlar",
-            overall: "Umumiy balans"
+            overall: "Umumiy balans",
+            branch_transactions: "Filial tranzaksiyalari"
         };
 
         return Object.entries(date).map(([key, value]) => {
@@ -193,6 +195,46 @@ export const BranchStatistics = () => {
                         teacher_name: "O'qituvchi Ismi",
                         teacher_surname: "O'qituvchi Familiyasi",
                     };
+                } else if (key.includes("branch_transaction")) {
+                    return (
+                        <div key={key} className={cls.item}>
+                            <h2>
+                                {sectionTitles[key]}{" "}
+                                <span>
+                                    (count: {value.count || value.items.length}
+                                    {value.sum ? `, sum: ${Number(value.sum).toLocaleString()}` : ""})
+                                </span>
+                            </h2>
+                            <Table className={cls.item__table}>
+                                <thead>
+                                    <tr>
+                                        <th>№</th>
+                                        <th>Ism Familiya</th>
+                                        <th>Telefon</th>
+                                        <th>Miqdori</th>
+                                        <th>Yo'nalish</th>
+                                        <th>To'lov turi</th>
+                                        <th>Sabab</th>
+                                        <th>Sana</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {value.items.map((item, idx) => (
+                                        <tr key={idx}>
+                                            <td>{idx + 1}</td>
+                                            <td>{item.person ? `${item.person.name} ${item.person.surname}` : "—"}</td>
+                                            <td>{item.person?.phone ?? "—"}</td>
+                                            <td>{item.amount?.toLocaleString()}</td>
+                                            <td>{item.is_give ? "Berildi" : "Qabul qilindi"}</td>
+                                            <td>{item.payment_type ?? "—"}</td>
+                                            <td>{item.reason ?? "—"}</td>
+                                            <td>{item.date ?? "—"}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </div>
+                    );
                 } else {
                     columns = Object.keys(value.items[0] || {}).filter(
                         (f) => f !== "id" && f !== "type_name" && !f.includes("id")
