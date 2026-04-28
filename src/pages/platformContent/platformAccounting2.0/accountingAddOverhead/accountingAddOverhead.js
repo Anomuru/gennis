@@ -6,7 +6,6 @@ import Select from "components/platform/platformUI/select";
 import {useHttp} from "hooks/http.hook";
 import {BackUrl, headers} from "constants/global";
 import {setMessage} from "slices/messageSlice";
-import {fetchAccData} from "slices/accountingSlice";
 import {newAccountingOverheadTools} from "pages/platformContent/platformAccounting2.0/model/accountingSelector";
 import {useParams} from "react-router-dom";
 import {onAddItem} from "pages/platformContent/platformAccounting2.0/model/accountingSlice";
@@ -16,111 +15,77 @@ export const AccountingAddOverhead = ({setActive}) => {
         register,
         formState: {errors},
         handleSubmit,
-        reset
-    } = useForm({
-        mode: "onBlur"
-    })
-
+        reset,
+        setValue
+    } = useForm({mode: "onBlur"})
 
     const {dataToChange} = useSelector(state => state.dataToChange)
     const overheadTools = useSelector(newAccountingOverheadTools)
     const [day, setDay] = useState(null)
     const [month, setMonth] = useState(null)
     const [selectedCommunal, setSelectedComunal] = useState(null)
+    const [overheadTypes, setOverheadTypes] = useState([])
+    const [selectedType, setSelectedType] = useState(null)
     const dispatch = useDispatch()
     const {locationId} = useParams()
-
+    const {request} = useHttp()
 
     useEffect(() => {
         dispatch(fetchDataToChange(locationId))
     }, [locationId])
 
+    useEffect(() => {
+        request(`${BackUrl}account/overhead_type?location_id=${locationId}`, "GET", null, headers())
+            .then(res => { if (res.success) setOverheadTypes(res.data) })
+            .catch(() => {})
+    }, [locationId])
+
+    useEffect(() => {
+        if (selectedCommunal) {
+            const type = overheadTypes.find(t => String(t.id) === String(selectedCommunal))
+            setSelectedType(type || null)
+            if (type && type.cost != null) {
+                setValue("price", type.cost)
+            } else {
+                setValue("price", "")
+            }
+        } else {
+            setSelectedType(null)
+        }
+    }, [selectedCommunal, overheadTypes, setValue])
+
     const renderPaymentType = useCallback(() => {
-        return dataToChange?.payment_types?.map((item, index) => {
-            return (
-                <label key={index} className="radioLabel" htmlFor="">
-                    <input className="radio" {...register("typePayment", {required: true})} type="radio"
-                           value={item.id}/>
-                    <span>{item.name}</span>
-                </label>
-            )
-        })
+        return dataToChange?.payment_types?.map((item, index) => (
+            <label key={index} className="radioLabel" htmlFor="">
+                <input className="radio" {...register("typePayment", {required: true})} type="radio" value={item.id}/>
+                <span>{item.name}</span>
+            </label>
+        ))
     }, [dataToChange?.payment_types])
 
-
-    const renderDate = useCallback(() => {
-        return overheadTools?.map((item, index) => {
-            if (item.value === month) {
-                return (
-                    <div className="date__item" key={index}>
-                        <Select
-                            number={true}
-                            name={"day"}
-                            title={"Kun"}
-                            defaultValue={day}
-                            onChangeOption={setDay}
-                            options={item?.days}
-                        />
-                    </div>
-                )
-            }
-        })
-    }, [overheadTools, month, day])
-
-
-    const renderedDays = renderDate()
     const renderedPaymentType = renderPaymentType()
-
-    const {request} = useHttp()
 
     const onSubmit = (data, e) => {
         e.preventDefault()
-        let newData
-        if (selectedCommunal === "boshqa") {
-            newData = {
-                ...data,
-                month,
-                day
-            }
-        } else {
-            newData = {
-                ...data,
-                typeItem: selectedCommunal,
-                month,
-                day
-            }
+        const newData = {
+            ...data,
+            typeItem: Number(selectedCommunal),
+            month,
+            day
         }
 
         request(`${BackUrl}account/add_overhead/${locationId}`, "POST", JSON.stringify(newData), headers())
             .then(res => {
                 if (res.success) {
                     reset()
-                    dispatch(setMessage({
-                        msg: res.msg,
-                        type: "success",
-                        active: true
-
-                    }))
+                    dispatch(setMessage({msg: res.msg, type: "success", active: true}))
                     dispatch(onAddItem(res?.data))
-
                     setActive(false)
-
-                    const data = {
-                        locationId,
-                        type: "overhead"
-                    }
-
                 } else {
-                    dispatch(setMessage({
-                        msg: res.msg,
-                        type: "success",
-                        active: true
-                    }))
-
+                    dispatch(setMessage({msg: res.msg, type: "success", active: true}))
                 }
             })
     }
-
 
     useEffect(() => {
         if (overheadTools?.length < 2) {
@@ -128,7 +93,7 @@ export const AccountingAddOverhead = ({setActive}) => {
         }
     }, [overheadTools])
 
-    const communal = ["gaz", "svet", "suv", "arenda", "boshqa"]
+    const isPriceLocked = selectedType && selectedType.cost != null
 
     return (
         <div className="overhead">
@@ -138,32 +103,8 @@ export const AccountingAddOverhead = ({setActive}) => {
                     title={"Komunal"}
                     defaultValue={selectedCommunal}
                     onChangeOption={setSelectedComunal}
-                    options={communal}
+                    options={overheadTypes}
                 />
-                {
-                    selectedCommunal === "boshqa" ?
-                        <label htmlFor="typeItem">
-                            <div>
-                                <span className="name-field">Narsa turi</span>
-                                <input
-                                    defaultValue={""}
-                                    id="typeItem"
-                                    className="input-fields"
-                                    {...register("typeItem", {
-                                        required: "Iltimos to'ldiring",
-                                    })}
-                                />
-                            </div>
-                            {
-                                errors?.typeItem &&
-                                <span className="error-field">
-                            {errors?.typeItem?.message}
-                        </span>
-                            }
-                        </label>
-                        : null
-
-                }
 
                 <label htmlFor="date">
                     <div>
@@ -173,59 +114,32 @@ export const AccountingAddOverhead = ({setActive}) => {
                             id="date"
                             className="input-fields"
                             type={"date"}
-                            {...register("date", {
-                                required: "Iltimos to'ldiring",
-                            })}
+                            {...register("date", {required: "Iltimos to'ldiring"})}
                         />
                     </div>
-                    {
-                        errors?.date &&
-                        <span className="error-field">
-                            {errors?.date?.message}
-                        </span>
-                    }
+                    {errors?.date && <span className="error-field">{errors?.date?.message}</span>}
                 </label>
 
                 <label htmlFor="price">
                     <div>
                         <span className="name-field">Narxi</span>
                         <input
-                            defaultValue={""}
                             id="price"
                             className="input-fields"
                             type={"number"}
-                            {...register("price", {
-                                required: "Iltimos to'ldiring",
-                            })}
+                            readOnly={isPriceLocked}
+                            style={isPriceLocked ? {backgroundColor: "#f0f0f0", cursor: "not-allowed"} : {}}
+                            {...register("price", {required: "Iltimos to'ldiring"})}
                         />
                     </div>
-                    {
-                        errors?.price &&
-                        <span className="error-field">
-                            {errors?.price?.message}
-                        </span>
-                    }
+                    {errors?.price && <span className="error-field">{errors?.price?.message}</span>}
                 </label>
+
                 <div>
                     {renderedPaymentType}
                 </div>
-                {/*{*/}
-                {/*    overheadTools?.length >= 2 ?*/}
-                {/*        <Select*/}
-                {/*            name={"month"}*/}
-                {/*            title={"Oy"}*/}
-                {/*            defaultValue={month}*/}
-                {/*            onChangeOption={setMonth}*/}
-                {/*            options={overheadTools}*/}
-                {/*        /> :*/}
-                {/*        null*/}
-                {/*}*/}
-
-                {/*{renderedDays}*/}
 
                 <input className="input-submit" type="submit" value="Tasdiqlash"/>
-
-
             </form>
         </div>
     )

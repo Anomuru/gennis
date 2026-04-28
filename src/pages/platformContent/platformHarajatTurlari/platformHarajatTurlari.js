@@ -349,14 +349,6 @@ const PlatformHarajatTurlari = () => {
                     ))}
                 </div>
                 <div className={cls.headerBtns}>
-                    {activeTab === "types" && (
-                        <>
-                            <Button onClickBtn={() => { addForm.reset({ name: "", cost: "", changeable: false }); setAddModal(true); }}>Qo'shish</Button>
-                            <Button onClickBtn={() => setShowDeleted(prev => !prev)}>
-                                {showDeleted ? "Faollar" : "O'chirilgan"}
-                            </Button>
-                        </>
-                    )}
                     {activeTab === "tx" && (
                         <>
                             <Button onClickBtn={openAddTx}>Qo'shish</Button>
@@ -371,16 +363,15 @@ const PlatformHarajatTurlari = () => {
 
             {/* ── Tab: Types ── */}
             {activeTab === "types" && (
-                deletedLoading ? <DefaultLoaderSmall /> : (
                 <Table>
                     <thead>
-                        <tr><th>#</th><th>Nomi</th><th>Narxi</th><th>Turi</th>{!showDeleted && <th></th>}</tr>
+                        <tr><th>#</th><th>Nomi</th><th>Narxi</th><th>Turi</th></tr>
                     </thead>
                     <tbody>
-                        {(showDeleted ? deletedTypes : types).length === 0 ? (
-                            <tr><td colSpan={showDeleted ? 4 : 5} className={cls.empty}>Ma'lumot yo'q</td></tr>
-                        ) : (showDeleted ? deletedTypes : types).map((item, i) => (
-                            <tr key={item.id} className={showDeleted ? cls.rowDeleted : ""}>
+                        {types.length === 0 ? (
+                            <tr><td colSpan={4} className={cls.empty}>Ma'lumot yo'q</td></tr>
+                        ) : types.map((item, i) => (
+                            <tr key={item.id}>
                                 <td>{i + 1}</td>
                                 <td>{item.name}</td>
                                 <td>{item.cost != null ? item.cost.toLocaleString() : "—"}</td>
@@ -389,17 +380,10 @@ const PlatformHarajatTurlari = () => {
                                         {item.changeable ? "O'zgaruvchan" : "Doimiy"}
                                     </span>
                                 </td>
-                                {!showDeleted && (
-                                    <td className={cls.actions}>
-                                        <i className={`fas fa-pen ${cls.editBtn}`} onClick={() => openEditType(item)} />
-                                        <i className={`fas fa-times ${cls.deleteBtn}`} onClick={() => openDeleteType(item.id)} />
-                                    </td>
-                                )}
                             </tr>
                         ))}
                     </tbody>
                 </Table>
-                )
             )}
 
             {/* ── Tab: Logs ── */}
@@ -489,38 +473,6 @@ const PlatformHarajatTurlari = () => {
                     )}
                 </div>
             )}
-
-            {/* ── Modals: Types ── */}
-            <Modal activeModal={addModal} setActiveModal={setAddModal}>
-                <form className={cls.form} onSubmit={addForm.handleSubmit(onAddType)}>
-                    <h2>Yangi tur qo'shish</h2>
-                    <InputForm title="Nomi" register={addForm.register} name="name" type="text" required />
-                    <label className={cls.checkLabel}>
-                        <input type="checkbox" {...addForm.register("changeable")} />
-                        <span>O'zgaruvchan narx</span>
-                    </label>
-                    {!addChangeable && <InputForm title="Narxi" register={addForm.register} name="cost" type="number" required />}
-                    {submitting ? <DefaultLoaderSmall /> : <button className="input-submit" type="submit">Tasdiqlash</button>}
-                </form>
-            </Modal>
-
-            <Modal activeModal={editModal} setActiveModal={setEditModal}>
-                <form className={cls.form} onSubmit={editForm.handleSubmit(onEditType)}>
-                    <h2>Tahrirlash</h2>
-                    <InputForm title="Nomi" register={editForm.register} name="name" type="text" required />
-                    <label className={cls.checkLabel}>
-                        <input type="checkbox" {...editForm.register("changeable")} />
-                        <span>O'zgaruvchan narx</span>
-                    </label>
-                    {!editChangeable && <InputForm title="Narxi" register={editForm.register} name="cost" type="number" required />}
-                    {submitting ? <DefaultLoaderSmall /> : <button className="input-submit" type="submit">Saqlash</button>}
-                </form>
-            </Modal>
-
-            <Modal activeModal={deleteModal} setActiveModal={setDeleteModal}>
-                <Confirm text="O'chirishni tasdiqlaysizmi?" setActive={setDeleteModal}
-                    getConfirm={r => { if (r === "yes") confirmDeleteType(); }} />
-            </Modal>
 
             {/* ── Modal: Pay log ── */}
             <Modal activeModal={payModal} setActiveModal={setPayModal}>
