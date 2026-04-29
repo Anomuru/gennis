@@ -54,6 +54,8 @@ export const AccountingAddOverhead = ({setActive}) => {
         }
     }, [selectedCommunal, overheadTypes, setValue])
 
+    const isBoshqa = selectedType?.name === "Boshqa"
+
     const renderPaymentType = useCallback(() => {
         return dataToChange?.payment_types?.map((item, index) => (
             <label key={index} className="radioLabel" htmlFor="">
@@ -67,12 +69,9 @@ export const AccountingAddOverhead = ({setActive}) => {
 
     const onSubmit = (data, e) => {
         e.preventDefault()
-        const newData = {
-            ...data,
-            typeItem: Number(selectedCommunal),
-            month,
-            day
-        }
+        const newData = isBoshqa
+            ? { ...data, overhead_type_id: Number(selectedCommunal), month, day }
+            : { ...data, overhead_type_id: Number(selectedCommunal), typeItem: Number(selectedCommunal), month, day }
 
         request(`${BackUrl}account/add_overhead/${locationId}`, "POST", JSON.stringify(newData), headers())
             .then(res => {
@@ -105,6 +104,21 @@ export const AccountingAddOverhead = ({setActive}) => {
                     onChangeOption={setSelectedComunal}
                     options={overheadTypes}
                 />
+
+                {isBoshqa && (
+                    <label htmlFor="typeItem">
+                        <div>
+                            <span className="name-field">Xarajat nomi</span>
+                            <input
+                                defaultValue={""}
+                                id="typeItem"
+                                className="input-fields"
+                                {...register("typeItem", {required: "Iltimos to'ldiring"})}
+                            />
+                        </div>
+                        {errors?.typeItem && <span className="error-field">{errors?.typeItem?.message}</span>}
+                    </label>
+                )}
 
                 <label htmlFor="date">
                     <div>
