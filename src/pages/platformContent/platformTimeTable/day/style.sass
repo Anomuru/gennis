@@ -37,7 +37,7 @@
     .rooms
       min-width: 100%
       max-width: fit-content
-      margin-left: 50px
+      margin-left: 120px
       display: flex
       position: sticky
       top: 0
@@ -47,11 +47,12 @@
         display: flex
         align-items: center
         justify-content: center
-        font-size: 1.6rem
+        font-size: 1.3rem
         height: 50px
         min-width: 170px
         border: 1px solid black
         background-color: white
+        white-space: nowrap
     .wrapper
       min-width: 100%
       max-width: fit-content
@@ -65,29 +66,75 @@
           display: flex
           align-items: center
           justify-content: center
-          writing-mode: vertical-lr
-          width: 50px
+          width: 120px
           height: 120px
           border: 1px solid black
-          font-size: 1.5rem
+          font-size: 1.4rem
           background-color: white
+          text-align: center
+          padding: 4px
       &__classes
         width: 100%
         position: relative
         .lesson
-          width: 170px
           display: flex
-          flex-direction: column
-          align-items: center
-          justify-content: center
+          flex-direction: row
           font-size: 1.6rem
           border: 1px solid $color-grey-dark
           position: absolute
           z-index: 10
           background-color: white
           cursor: pointer
-          h1
-            font-size: 1.5rem
+          overflow: hidden
+          &--multi
+            flex-direction: column
+          &__multi-bar
+            flex-shrink: 0
+            height: 22px
+            background-color: rgba(0, 0, 0, 0.28)
+            color: white
+            display: flex
+            align-items: center
+            justify-content: center
+            font-size: 1.1rem
+            font-weight: 600
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
+            padding: 0 6px
+            letter-spacing: 0.02em
+          &__subs
+            flex: 1
+            display: flex
+            flex-direction: row
+            overflow: hidden
+            min-height: 0
+          &__sub
+            flex: 1
+            display: flex
+            flex-direction: column
+            align-items: center
+            justify-content: center
+            text-decoration: none
+            color: inherit
+            height: 100%
+            padding: 4px 2px
+            overflow: hidden
+            h1
+              font-size: 1.3rem
+              text-align: center
+              word-break: break-word
+              margin: 0
+              line-height: 1.3
+            &--empty
+              background-color: white
+              color: #999
+            &:hover
+              filter: brightness(0.9)
+            small
+              font-size: 1rem
+              opacity: 0.75
+              margin-top: 2px
         .default
           position: static
           width: 100%
@@ -96,7 +143,7 @@
           display: flex
           flex-direction: row
           &>div
-            width: 170px
+            min-width: 170px
             height: 120px
             border-right: 1px solid $color-grey-dark
           &:hover
