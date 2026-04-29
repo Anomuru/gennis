@@ -99,9 +99,12 @@ const initialState = {
 export const fetchUserData = createAsyncThunk(
     'userProfileSlice/fetchUserData',
     async (data) => {
-        const { id } = data
+        const { id, locationId } = data
         const { request } = useHttp();
-        return await request(`${BackUrl}base/profile/${id}`, "GET", null, headers())
+        const url = locationId
+            ? `${BackUrl}base/profile/${id}?location_id=${locationId}`
+            : `${BackUrl}base/profile/${id}`
+        return await request(url, "GET", null, headers())
     }
 )
 

@@ -34,12 +34,12 @@ const StudentTimeTable = React.lazy(() => import('pages/platformContent/platform
 
 
 const PlatformUserProfile = () => {
-    const { userId } = useParams()
+    const { userId, locationId } = useParams()
 
     return (
         <>
             <Routes>
-                <Route path="info" element={<UserContent userId={userId} />} />
+                <Route path="info" element={<UserContent userId={userId} locationId={locationId} />} />
                 <Route path="changeInfo/:userId/:userRole" element={<PlatformUserProfileChange />} />
                 <Route path="changePhoto/:userId/:userRole" element={<PlatformUserProfileChangePhoto />} />
                 <Route path="studentPayment/:userId/:role/*" element={<PlatformUserPayment />} />
@@ -64,7 +64,7 @@ const PlatformUserProfile = () => {
 };
 
 
-const UserContent = ({ userId }) => {
+const UserContent = ({ userId, locationId }) => {
 
 
     const [activeOptions, setActiveOptions] = useState(false)
@@ -82,11 +82,12 @@ const UserContent = ({ userId }) => {
 
     useEffect(() => {
         const data = {
-            id: userId
+            id: userId,
+            locationId
         }
         dispatch(fetchUserData(data))
 
-    }, [dispatch, userId])
+    }, [dispatch, userId, locationId])
 
 
 
