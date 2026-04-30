@@ -459,6 +459,15 @@ export const requireMenuItems = (id) => {
             roles: [ROLES.Director, ROLES.Programmer, ROLES.Accountant]
         },
         {
+            to: "applicationSystem",
+            name: "Application System",
+            classIcon: "fa-list",
+            location: true,
+            children: true,
+
+            roles: [ROLES.Director, ROLES.Programmer, ROLES.Accountant]
+        },
+        {
             to: "accountantBill",
             name: "Bill",
             classIcon: "fa-dollar-sign",
