@@ -131,8 +131,21 @@ export const RenderTh = () => {
                 <th>Nomi</th>
                 <th>Narxi</th>
                 <th>Sana</th>
-                <th>To‘lov turi</th>
-                <th>O‘chirish</th>
+                <th>To’lov turi</th>
+                <th>O’chirish</th>
+            </>
+        }
+
+        case "transactions": {
+            return <>
+                <th>#</th>
+                <th>Sana</th>
+                <th>Ism Familiya</th>
+                <th>Tel</th>
+                <th>Sabab</th>
+                <th>Summa</th>
+                <th>Yo'nalish</th>
+                <th>To'lov turi</th>
             </>
         }
 

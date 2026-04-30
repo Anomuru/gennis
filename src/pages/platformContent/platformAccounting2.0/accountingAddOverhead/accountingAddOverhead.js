@@ -70,8 +70,8 @@ export const AccountingAddOverhead = ({setActive}) => {
     const onSubmit = (data, e) => {
         e.preventDefault()
         const newData = isBoshqa
-            ? { ...data, overhead_type_id: Number(selectedCommunal), month, day }
-            : { ...data, overhead_type_id: Number(selectedCommunal), typeItem: Number(selectedCommunal), month, day }
+            ? { ...data, month, day }
+            : { ...data, overhead_type_id: Number(selectedCommunal), month, day }
 
         request(`${BackUrl}account/add_overhead/${locationId}`, "POST", JSON.stringify(newData), headers())
             .then(res => {

@@ -51,13 +51,15 @@ const initialState = {
         { value: "capital", name: "Kapital xarajatlari", disabled: false },
         { value: "investments", name: "Invistitsiya", disabled: false },
         { value: "dividends", name: "Dividends", disabled: false },
-        { value: "prepayment", name: "Prepayments", disabled: false }
+        { value: "prepayment", name: "Prepayments", disabled: false },
+        { value: "transactions", name: "Tranzaksiyalar", disabled: false }
     ],
     selectedValue: savedValue || "studentsPayments",
     selectedName: savedName || "O'quvchilar tolovlari",
     totalCount: null,
     overhead_tools: [],
-    capital_tools: []
+    capital_tools: [],
+    summary: null
 };
 
 
@@ -126,6 +128,7 @@ const newAccountingSlice = createSlice({
                 state.totalCount = action?.payload?.data?.pagination;
                 state.capital_tools = action?.payload?.data?.capital_tools
                 state.overhead_tools = action?.payload?.data?.overhead_tools
+                state.summary = action?.payload?.data?.summary
 
             })
             .addCase(fetchAccounting.rejected, state => {

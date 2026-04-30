@@ -10,7 +10,7 @@ import FilterFromTo from "components/platform/platformUI/filters/filterFromTo";
 import { motion, AnimatePresence } from "framer-motion";
 import useMeasure from "react-use-measure";
 import { fetchLocationMoney } from "slices/dataToChangeSlice";
-import { newAccountingData, newAccountingDataLoading, newAccountingSelectOptionValue } from "../model/accountingSelector";
+import { newAccountingData, newAccountingDataLoading, newAccountingSelectOptionValue, newAccountingSummary } from "../model/accountingSelector";
 import { fetchAccounting } from "pages/platformContent/platformAccounting2.0/model/accountingThunk";
 import DefaultLoaderSmall from "components/loader/defaultLoader/defaultLoaderSmall";
 import Modal from "components/platform/platformUI/modal";
@@ -34,6 +34,7 @@ export const AccountingFilter = ({ currentPage, pageSize, setCurrentPage, search
     const selectOptionValue = useSelector(newAccountingSelectOptionValue);
     const data = useSelector(newAccountingData);
     const loading = useSelector(newAccountingDataLoading);
+    const summary = useSelector(newAccountingSummary);
     const [activeAdd, setActiveAdd] = useState(false);
 
     useEffect(() => {
@@ -106,6 +107,9 @@ export const AccountingFilter = ({ currentPage, pageSize, setCurrentPage, search
                 break;
             case "prepayment":
                 route = "prepayments/"
+                break;
+            case "transactions":
+                route = "branch_transaction/";
                 break;
         }
 
@@ -227,6 +231,12 @@ export const AccountingFilter = ({ currentPage, pageSize, setCurrentPage, search
                 <div className={cls.filter__footer_payment}>
                     {loading ? (
                         <DefaultLoaderSmall />
+                    ) : selectOptionValue === "transactions" && summary ? (
+                        <>
+                            <h1>Net: {summary.net?.toLocaleString()}</h1>
+                            <h1>Berildi: {summary.total_given?.toLocaleString()}</h1>
+                            <h1>Qabul qilindi: {summary.total_received?.toLocaleString()}</h1>
+                        </>
                     ) : shouldCalculateTotal && (
                         <h1>Total: {totalPayment?.toLocaleString()}</h1>
                     )}

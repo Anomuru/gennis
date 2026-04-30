@@ -309,5 +309,26 @@ export const RenderTd = ({ item, index, setConfirmModal, setItem, setChangeActiv
                 </td>
             </>
         }
+
+        case "transactions": {
+            const personName = item?.person ? `${item.person.name || ""} ${item.person.surname || ""}`.trim() : "-";
+            const personPhone = item?.person?.phone || "-";
+            const directionText = item?.direction === "receive" ? "Qabul qilindi" : "Berildi";
+
+            return <>
+                <td>{index + 1}</td>
+                <td className={cls.muted}>{item?.date}</td>
+                <td>{personName}</td>
+                <td>{personPhone}</td>
+                <td>{item?.reason || "-"}</td>
+                <td className={cls.mono}>{formatNumber(item?.amount)}</td>
+                <td>{directionText}</td>
+                <td>
+                    <button className={cls.paymentType}>
+                        {item?.payment_type}
+                    </button>
+                </td>
+            </>
+        }
     }
 }

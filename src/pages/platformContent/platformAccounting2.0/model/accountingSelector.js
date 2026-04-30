@@ -6,3 +6,4 @@ export const newAccountingData = (state) => state.newAccountingSlice.data
 export const newAccountingDataLoading = (state) => state.newAccountingSlice.loading
 export const newAccountingCapitalTools = (state) => state.newAccountingSlice.capital_tools
 export const newAccountingOverheadTools = (state) => state.newAccountingSlice.overhead_tools
+export const newAccountingSummary = (state) => state.newAccountingSlice.summary
