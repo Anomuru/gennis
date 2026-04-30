@@ -80,6 +80,16 @@ const PlatformOtchot = () => {
                             <p>Qo'shimcha xarajatlarni boshqarish</p>
                         </div>
                     </div>
+
+                    <div className={styles.categoryCard} onClick={() => navigate("transactions")}>
+                        <div className={styles.categoryCardHeader}>
+                            <h3 className={styles.categoryCardTitle}>Tranzaksiyalar</h3>
+                            {/* <p className={styles.categoryCardSubtitle}>Branch Transactions</p> */}
+                        </div>
+                        <div className={styles.categoryCardContent}>
+                            <p>Filial tranzaksiyalarini ko'rish</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main >

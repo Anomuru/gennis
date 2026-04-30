@@ -23,6 +23,12 @@ export const fetchAccountingProfileData = createAsyncThunk(
     "accountingProfileSlice/fetchAccountingProfileData",
     ({ URL_TYPE, locationId, year, month, type_salary }) => {
         const { request } = useHttp()
+
+        // Для branch_transaction используем другой endpoint
+        if (URL_TYPE === "branch_transaction") {
+            return request(`${BackUrl}account/account_info/branch_transaction/?locationId=${locationId}&offset=0&limit=50`, "GET", null, headers())
+        }
+
         return request(`${BackUrl}account/home/${URL_TYPE}/?location_id=${locationId}&month=${month}&year=${year}${type_salary ? `&type_salary=${type_salary}` : ""}`, "GET", null, headers())
     }
 )
