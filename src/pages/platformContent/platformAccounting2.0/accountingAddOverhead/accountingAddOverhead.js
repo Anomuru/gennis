@@ -44,7 +44,7 @@ export const AccountingAddOverhead = ({setActive}) => {
         if (selectedCommunal) {
             const type = overheadTypes.find(t => String(t.id) === String(selectedCommunal))
             setSelectedType(type || null)
-            if (type && type.cost != null) {
+            if (type && type.cost != null && type.changeable === false) {
                 setValue("price", type.cost)
             } else {
                 setValue("price", "")
@@ -92,7 +92,7 @@ export const AccountingAddOverhead = ({setActive}) => {
         }
     }, [overheadTools])
 
-    const isPriceLocked = selectedType && selectedType.cost != null
+    const isPriceLocked = selectedType && selectedType.changeable === false
 
     return (
         <div className="overhead">
