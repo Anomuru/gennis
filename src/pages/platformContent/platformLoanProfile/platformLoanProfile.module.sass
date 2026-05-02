@@ -1,0 +1,404 @@
+.page
+  min-height: 100vh
+  background: #f2f2f0
+  padding: 2rem
+  display: flex
+  justify-content: center
+
+.container
+  width: 800px
+  display: flex
+  flex-direction: column
+  gap: 16px
+
+.skeleton
+  width: 100%
+  height: 400px
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%)
+  background-size: 200% 100%
+  border-radius: 20px
+  animation: shimmer 1.4s infinite
+
+@keyframes shimmer
+  0%
+    background-position: 200% 0
+  100%
+    background-position: -200% 0
+
+// ── Main Card ──
+.mainCard
+  background: #ffffff
+  border-radius: 20px
+  box-shadow: 0 1px 8px rgba(0,0,0,0.08)
+  padding: 28px 32px
+  position: relative
+  overflow: hidden
+  &::before
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 4px
+
+.accentActive::before
+  background: linear-gradient(90deg, #3b6ef0, #3b6ef088)
+
+.accentCancelled::before
+  background: linear-gradient(90deg, #e74c3c, #e74c3c88)
+
+.accentSettled::before
+  background: linear-gradient(90deg, oklch(0.52 0.14 145), oklch(0.52 0.14 145 / 0.5))
+
+// ── Header ──
+.header
+  display: flex
+  justify-content: space-between
+  align-items: flex-start
+  margin-bottom: 16px
+
+.avatarRow
+  display: flex
+  gap: 12px
+  align-items: center
+
+.avatar
+  width: 56px
+  height: 56px
+  border-radius: 16px
+  background: oklch(0.95 0.05 240)
+  color: #3b6ef0
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 22px
+  font-weight: 700
+
+.nameBlock
+  display: flex
+  flex-direction: column
+
+.name
+  font-size: 18px
+  font-weight: 700
+  color: #111
+  letter-spacing: -0.2px
+
+.phone
+  font-size: 14px
+  color: #aaa
+  margin-top: 3px
+
+.badges
+  display: flex
+  gap: 6px
+  flex-wrap: wrap
+
+.badgeActive,
+.badgeSettled,
+.badgeCancelled,
+.badgeDirOut,
+.badgeDirIn
+  padding: 5px 14px
+  border-radius: 99px
+  font-size: 13px
+  font-weight: 600
+  letter-spacing: 0.3px
+  white-space: nowrap
+
+.badgeActive
+  background: oklch(0.93 0.06 240)
+  color: oklch(0.35 0.13 240)
+
+.badgeSettled
+  background: oklch(0.93 0.06 145)
+  color: oklch(0.35 0.13 145)
+
+.badgeCancelled
+  background: oklch(0.93 0.05 25)
+  color: oklch(0.40 0.10 25)
+
+.badgeDirOut
+  background: oklch(0.93 0.05 25)
+  color: oklch(0.40 0.14 25)
+
+.badgeDirIn
+  background: oklch(0.93 0.06 145)
+  color: oklch(0.35 0.13 145)
+
+// ── Amount Block ──
+.amountBlock
+  background: #f8f8f8
+  border-radius: 14px
+  padding: 20px 24px
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 16px
+
+.amountLeft
+  display: flex
+  flex-direction: column
+
+.amountLabel
+  font-size: 13px
+  color: #bbb
+  text-transform: uppercase
+  letter-spacing: 0.6px
+  margin-bottom: 6px
+
+.amountValue
+  font-size: 36px
+  font-weight: 700
+  letter-spacing: -1px
+  color: #111
+
+.unit
+  font-size: 18px
+  font-weight: 400
+  color: #aaa
+  margin-left: 6px
+
+.amountSubtext
+  font-size: 14px
+  color: #bbb
+  margin-top: 8px
+
+.donutWrap
+  position: relative
+  width: 100px
+  height: 100px
+
+.donut
+  transform: rotate(0deg)
+
+.donutProgress
+  transition: stroke-dasharray 0.7s cubic-bezier(0.4, 0, 0.2, 1)
+
+.donutLabel
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  font-size: 18px
+  font-weight: 700
+  color: #111
+
+// ── Stat Chips ──
+.statChips
+  display: grid
+  grid-template-columns: 1fr 1fr 1fr
+  gap: 12px
+  margin-bottom: 20px
+
+.chip
+  background: #f5f5f5
+  border-radius: 12px
+  padding: 14px 10px
+  display: flex
+  flex-direction: column
+  align-items: center
+  text-align: center
+
+.chipLabel
+  font-size: 12px
+  color: #bbb
+  letter-spacing: 0.3px
+  margin-bottom: 6px
+
+.chipValue
+  font-size: 14px
+  font-weight: 700
+
+.chipPaid
+  color: oklch(0.38 0.13 145)
+
+.chipRemaining
+  color: oklch(0.45 0.15 25)
+
+.chipIssued
+  color: #666
+
+// ── Notes Block ──
+.notesBlock
+  border-left: 4px solid #3b6ef0
+  padding-left: 16px
+  margin-bottom: 20px
+
+.borderCancelled
+  border-left-color: #e74c3c
+
+.notesReason
+  font-size: 14px
+  color: #bbb
+  margin-bottom: 6px
+
+.cancelledReason
+  color: #e74c3c
+  margin-left: 6px
+
+.notesText
+  font-size: 15px
+  color: #444
+  line-height: 1.5
+  margin-bottom: 6px
+
+.notesMuddat
+  font-size: 13px
+  color: #ccc
+  margin-top: 6px
+
+// ── Settled Banner ──
+.settledBanner
+  background: oklch(0.93 0.06 145)
+  color: oklch(0.35 0.13 145)
+  padding: 14px 18px
+  border-radius: 12px
+  font-size: 15px
+  font-weight: 600
+  text-align: center
+  margin-bottom: 20px
+
+// ── Action Buttons ──
+.actions
+  display: flex
+  gap: 10px
+
+.btnPrimary
+  flex: 2
+  padding: 14px 0
+  border-radius: 12px
+  font-size: 15px
+  font-weight: 600
+  background: #3b6ef0
+  color: #fff
+  border: none
+  cursor: pointer
+  transition: all 0.2s
+  &:hover
+    background: #2a5dd0
+
+.btnSecondary
+  flex: 1
+  padding: 14px 0
+  border-radius: 12px
+  font-size: 14px
+  font-weight: 500
+  border: 1.5px solid #e8e8e8
+  background: #fff
+  color: #555
+  cursor: pointer
+  transition: all 0.2s
+  &:hover
+    background: #f5f5f5
+
+.btnDanger
+  flex: 1
+  padding: 14px 0
+  border-radius: 12px
+  font-size: 14px
+  font-weight: 500
+  border: 1.5px solid #ffe0e0
+  background: #fff7f7
+  color: #e74c3c
+  cursor: pointer
+  transition: all 0.2s
+  &:hover
+    background: #ffeded
+
+// ── Payment History Card ──
+.historyCard
+  background: #ffffff
+  border-radius: 20px
+  padding: 24px 28px
+  box-shadow: 0 1px 8px rgba(0,0,0,0.07)
+
+.historyHeader
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 20px
+
+.historyTitle
+  font-size: 16px
+  font-weight: 600
+  color: #111
+
+.historyCount
+  background: oklch(0.95 0.05 240)
+  color: #3b6ef0
+  padding: 4px 12px
+  border-radius: 99px
+  font-size: 13px
+  font-weight: 600
+
+.historyEmpty
+  text-align: center
+  padding: 2rem
+  color: #aaa
+  font-size: 15px
+
+.historyList
+  display: flex
+  flex-direction: column
+
+.historyRow
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 14px 0
+
+.historyLeft
+  display: flex
+  gap: 14px
+  align-items: center
+
+.historyDot
+  width: 8px
+  height: 8px
+  border-radius: 50%
+  background: #3b6ef0
+  flex-shrink: 0
+
+.historyName
+  font-size: 15px
+  font-weight: 500
+  color: #222
+
+.historyMeta
+  font-size: 13px
+  color: #ccc
+  margin-top: 3px
+
+.historyAmount
+  font-size: 15px
+  font-weight: 700
+  color: #3b6ef0
+
+.historyAmountNegative
+  font-size: 15px
+  font-weight: 700
+  color: #e74c3c
+
+.historyDivider
+  height: 1px
+  background: #f5f5f5
+
+// ── Modal ──
+.modalForm
+  display: flex
+  flex-direction: column
+  gap: 1.2rem
+  min-width: 30rem
+  padding: 2rem
+  background: #fff
+  border-radius: 1rem
+
+.modalTitle
+  font-size: 1.6rem
+  margin-bottom: 0.5rem
+
+.modalActions
+  display: flex
+  gap: 1rem
+  margin-top: 1rem
