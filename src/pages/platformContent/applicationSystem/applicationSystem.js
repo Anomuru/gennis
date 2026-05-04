@@ -11,6 +11,7 @@ import {useParams} from "react-router-dom";
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [filterBranch, setFilterBranch] = useState('');
     const [filterUser, setFilterUser] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
     const [newComment, setNewComment] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -33,12 +34,23 @@ import {useParams} from "react-router-dom";
      let API_URL = BackUrl
 
     useEffect(() => {
-        request(`${API_URL}admin-requests/?branch=${locationId}` , "GET" , null , headers())
+        fetchRequests();
+    }, [filterStatus]);
+
+    const fetchRequests = () => {
+        let url = `${API_URL}admin-requests/?branch=${locationId}`;
+        if (filterStatus !== '') {
+            url += `&status=${filterStatus}`;
+        }
+        request(url, "GET", null, headers())
             .then(res => {
                 console.log(res)
                 setRequests(res)
             })
-    }, []);
+            .catch(err => {
+                console.error('Error fetching requests:', err);
+            });
+    };
 
 
     //
@@ -169,30 +181,19 @@ import {useParams} from "react-router-dom";
             </div>
 
             <div className={styles.controls}>
-                {/*<div className={styles.filters}>*/}
-                {/*    <div className={styles.filterGroup}>*/}
-                {/*        <label>Filial</label>*/}
-                {/*        <select*/}
-                {/*            value={filterBranch}*/}
-                {/*            onChange={(e) => setFilterBranch(e.target.value)}*/}
-                {/*        >*/}
-                {/*            <option value="">Barcha filiallar</option>*/}
-                {/*            <option value="1">Toshkent Filiali</option>*/}
-                {/*            <option value="2">Samarqand Filiali</option>*/}
-                {/*        </select>*/}
-                {/*    </div>*/}
-                {/*    <div className={styles.filterGroup}>*/}
-                {/*        <label>Foydalanuvchi</label>*/}
-                {/*        <select*/}
-                {/*            value={filterUser}*/}
-                {/*            onChange={(e) => setFilterUser(e.target.value)}*/}
-                {/*        >*/}
-                {/*            <option value="">Barcha foydalanuvchilar</option>*/}
-                {/*            <option value="5">Ali Valiyev</option>*/}
-                {/*            <option value="3">Bobur Karimov</option>*/}
-                {/*        </select>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+                <div className={styles.filters}>
+                    <div className={styles.filterGroup}>
+                        <label>Status</label>
+                        <select
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value)}
+                        >
+                            <option value="">Barchasi</option>
+                            <option value="true">Qabul qilindi</option>
+                            <option value="false">Qabul qilinmadi</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div className={styles.stats}>
                     <div className={styles.statCard}>
@@ -229,9 +230,14 @@ import {useParams} from "react-router-dom";
                             >
                                 <div className={styles.requestHeader}>
                                     <h3>{request.name}</h3>
-                                    <span className={`${styles.deadline} ${getStatusColor(request.deadline)}`}>
-                                        {formatDate(request.deadline)}
-                                    </span>
+                                    <div className={styles.headerRight}>
+                                        <span className={`${styles.statusBadge} ${request.status ? styles.statusAccepted : styles.statusPending}`}>
+                                            {request.status ? 'Qabul qilindi' : 'Qabul qilinmadi'}
+                                        </span>
+                                        <span className={`${styles.deadline} ${getStatusColor(request.deadline)}`}>
+                                            {formatDate(request.deadline)}
+                                        </span>
+                                    </div>
                                 </div>
                                 <p className={styles.requestDesc}>{request.description}</p>
                                 <div className={styles.requestMeta}>
@@ -253,7 +259,12 @@ import {useParams} from "react-router-dom";
                 {selectedRequest && (
                     <div className={styles.requestDetails}>
                         <div className={styles.detailsHeader}>
-                            <h2>{selectedRequest.name}</h2>
+                            <div className={styles.detailsHeaderLeft}>
+                                <h2>{selectedRequest.name}</h2>
+                                <span className={`${styles.statusBadge} ${selectedRequest.status ? styles.statusAccepted : styles.statusPending}`}>
+                                    {selectedRequest.status ? 'Qabul qilindi' : 'Qabul qilinmadi'}
+                                </span>
+                            </div>
                             <button
                                 className={styles.deleteBtn}
                                 onClick={() => deleteRequest(selectedRequest.id)}

@@ -355,6 +355,31 @@ $text-muted: #64748b;
   }
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.statusBadge {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.statusAccepted {
+  background: rgba(16, 185, 129, 0.1);
+  color: $success;
+}
+
+.statusPending {
+  background: rgba(245, 158, 11, 0.1);
+  color: $warning;
+}
+
 .deadline {
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -436,6 +461,13 @@ $text-muted: #64748b;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 2px solid $border;
+}
+
+.detailsHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
 
   h2 {
     margin: 0;
