@@ -406,7 +406,7 @@ const PlatformHarajatTurlari = () => {
         request(`${BackUrl}account/branch_loans/`, "POST", JSON.stringify(body), headers())
             .then(res => {
                 if (res.success) {
-                    dispatch(setMessage({ msg: res.message || "Qarz yaratildi", type: "success", active: true }));
+                    dispatch(setMessage({ msg: res.message || "Tranzaksiya yaratildi", type: "success", active: true }));
                     setLoanCreateModal(false);
                     fetchLoans();
                 }
@@ -458,7 +458,7 @@ const PlatformHarajatTurlari = () => {
         request(`${BackUrl}account/branch_loans/${selectedLoan.id}/cancel/`, "POST", JSON.stringify(body), headers())
             .then(res => {
                 if (res.success) {
-                    dispatch(setMessage({ msg: res.message || "Qarz bekor qilindi", type: "success", active: true }));
+                    dispatch(setMessage({ msg: res.message || "Tranzaksiya bekor qilindi", type: "success", active: true }));
                     setLoanCancelModal(false);
                     fetchLoans();
                 }
@@ -541,8 +541,7 @@ const PlatformHarajatTurlari = () => {
                     {[
                         { key: "types", label: "Harajat turlari" },
                         { key: "logs", label: "Oylik xarajatlar" },
-                        { key: "tx", label: "Filial tranzaksiyalari" },
-                        { key: "loans", label: "Tranzaksiyalar (Qarzlar)" },
+                        { key: "loans", label: "Tranzaksiyalar" },
                     ].map(t => (
                         <button key={t.key}
                             className={`${cls.tabSwitch} ${activeTab === t.key ? cls.tabSwitchActive : ""}`}
@@ -551,16 +550,8 @@ const PlatformHarajatTurlari = () => {
                     ))}
                 </div>
                 <div className={cls.headerBtns}>
-                    {activeTab === "tx" && (
-                        <>
-                            <Button onClickBtn={openAddTx}>Qo'shish</Button>
-                            <Button onClickBtn={() => setShowDeletedTx(prev => !prev)}>
-                                {showDeletedTx ? "Faollar" : "O'chirilgan"}
-                            </Button>
-                        </>
-                    )}
                     {activeTab === "loans" && (
-                        <Button onClickBtn={openCreateLoan}>+ Qarz Qo'shish</Button>
+                        <Button onClickBtn={openCreateLoan}>+ Tranzaksiya Qo'shish</Button>
                     )}
                     <Button onClickBtn={() => navigate(-1)}>Orqaga</Button>
                 </div>
@@ -570,11 +561,11 @@ const PlatformHarajatTurlari = () => {
             {activeTab === "types" && (
                 <Table>
                     <thead>
-                        <tr><th>#</th><th>Nomi</th><th>Narxi</th><th>Turi</th></tr>
+                        <tr><th>#</th><th>Nomi</th><th>Narxi</th><th>Turi</th><th></th></tr>
                     </thead>
                     <tbody>
                         {types.length === 0 ? (
-                            <tr><td colSpan={4} className={cls.empty}>Ma'lumot yo'q</td></tr>
+                            <tr><td colSpan={5} className={cls.empty}>Ma'lumot yo'q</td></tr>
                         ) : types.map((item, i) => (
                             <tr key={item.id}>
                                 <td>{i + 1}</td>
@@ -584,6 +575,9 @@ const PlatformHarajatTurlari = () => {
                                     <span className={item.changeable ? cls.tagVariable : cls.tagFixed}>
                                         {item.changeable ? "O'zgaruvchan" : "Doimiy"}
                                     </span>
+                                </td>
+                                <td className={cls.actions}>
+                                    <i className={`fas fa-pen ${cls.editBtn}`} onClick={() => openEditType(item)} />
                                 </td>
                             </tr>
                         ))}
@@ -623,54 +617,6 @@ const PlatformHarajatTurlari = () => {
                                         <td><span className={log.is_paid ? cls.tagFixed : cls.tagVariable}>{log.is_paid ? "To'langan" : "To'lanmagan"}</span></td>
                                         <td>{log.paid_date ?? "—"}</td>
                                         <td>{!log.is_paid && <button className={cls.payBtn} onClick={() => openPay(log)}>To'lash</button>}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    )}
-                </div>
-            )}
-
-            {/* ── Tab: Transactions ── */}
-            {activeTab === "tx" && (
-                <div className={cls.logsSection}>
-                    <div className={cls.logsHeader}>
-                        <MonthYearFilter month={txMonth} year={txYear} onMonth={setTxMonth} onYear={setTxYear} />
-                    </div>
-                    {txSummary && (
-                        <div className={cls.summary}>
-                            <div className={`${cls.summaryCard} ${cls.summaryUnpaid}`}><span>Berildi</span><strong>{txSummary.total_given?.toLocaleString() ?? 0}</strong></div>
-                            <div className={`${cls.summaryCard} ${cls.summaryPaid}`}><span>Qabul qilindi</span><strong>{txSummary.total_received?.toLocaleString() ?? 0}</strong></div>
-                            <div className={`${cls.summaryCard} ${txSummary.net < 0 ? cls.summaryUnpaid : cls.summaryPaid}`}><span>Saldo</span><strong>{txSummary.net?.toLocaleString() ?? 0}</strong></div>
-                        </div>
-                    )}
-                    <div className={cls.statusTabs}>
-                        {[["all", "Barchasi"], ["give", "Berildi"], ["receive", "Qabul qilindi"]].map(([val, label]) => (
-                            <button key={val} className={`${cls.tab} ${dirFilter === val ? cls.tabActive : ""}`} onClick={() => setDirFilter(val)}>{label}</button>
-                        ))}
-                    </div>
-                    {(txLoading || deletedTxLoading) ? <DefaultLoaderSmall /> : (
-                        <Table>
-                            <thead><tr><th>#</th><th>Shaxs</th><th>Telefon</th><th>Miqdor</th><th>Yo'nalish</th><th>Sabab</th><th>To'lov turi</th><th>Sana</th>{!showDeletedTx && <th></th>}</tr></thead>
-                            <tbody>
-                                {(showDeletedTx ? deletedTxs : txs).length === 0 ? (
-                                    <tr><td colSpan={showDeletedTx ? 8 : 9} className={cls.empty}>Ma'lumot yo'q</td></tr>
-                                ) : (showDeletedTx ? deletedTxs : txs).map((tx, i) => (
-                                    <tr key={tx.id} className={showDeletedTx ? cls.rowDeleted : ""}>
-                                        <td>{i + 1}</td>
-                                        <td>{tx.person ? `${tx.person.name} ${tx.person.surname}` : "—"}</td>
-                                        <td>{tx.person?.phone ?? "—"}</td>
-                                        <td>{tx.amount?.toLocaleString()}</td>
-                                        <td><span className={tx.is_give ? cls.tagVariable : cls.tagFixed}>{tx.is_give ? "Berildi" : "Qabul qilindi"}</span></td>
-                                        <td>{tx.reason}</td>
-                                        <td>{tx.payment_type}</td>
-                                        <td>{tx.date}</td>
-                                        {!showDeletedTx && (
-                                            <td className={cls.actions}>
-                                                <i className={`fas fa-pen ${cls.editBtn}`} onClick={() => openEditTx(tx)} />
-                                                <i className={`fas fa-times ${cls.deleteBtn}`} onClick={() => openDeleteTx(tx.id)} />
-                                            </td>
-                                        )}
                                     </tr>
                                 ))}
                             </tbody>
@@ -800,6 +746,22 @@ const PlatformHarajatTurlari = () => {
                 </div>
             )}
 
+            {/* ── Modal: Edit type ── */}
+            <Modal activeModal={editModal} setActiveModal={setEditModal}>
+                <form className={cls.form} onSubmit={editForm.handleSubmit(onEditType)}>
+                    <h2>Harajat turini tahrirlash</h2>
+                    <InputForm title="Nomi" register={editForm.register} name="name" type="text" required clazzLabel={cls.inputNoMargin} />
+                    {!editChangeable && (
+                        <InputForm title="Narxi" register={editForm.register} name="cost" type="number" required clazzLabel={cls.inputNoMargin} />
+                    )}
+                    <label className={cls.checkboxLabel}>
+                        <input type="checkbox" className={cls.checkboxInput} {...editForm.register("changeable")} />
+                        <span className={cls.checkboxText}>O'zgaruvchan</span>
+                    </label>
+                    {submitting ? <DefaultLoaderSmall /> : <button className="input-submit" type="submit">Saqlash</button>}
+                </form>
+            </Modal>
+
             {/* ── Modal: Pay log ── */}
             <Modal activeModal={payModal} setActiveModal={setPayModal}>
                 <form className={cls.form} onSubmit={payForm.handleSubmit(onPay)}>
@@ -851,7 +813,7 @@ const PlatformHarajatTurlari = () => {
             {/* ── Modals: Loans ── */}
             <Modal activeModal={loanCreateModal} setActiveModal={setLoanCreateModal}>
                 <form className={cls.form} onSubmit={loanCreateForm.handleSubmit(onCreateLoan)}>
-                    <h2>Qarz yaratish</h2>
+                    <h2>Tranzaksiya yaratish</h2>
 
                     <div className={cls.formRow}>
                         <InputForm title="Ism" register={loanCreateForm.register} name="counterparty_name" type="text" required />
@@ -884,7 +846,7 @@ const PlatformHarajatTurlari = () => {
                     {loanSubmitting ? <DefaultLoaderSmall /> : (
                         <div className={cls.modalActions}>
                             <button type="button" className={cls.btnSecondary} onClick={() => setLoanCreateModal(false)}>Bekor</button>
-                            <button type="submit" className="input-submit">Qarz yaratish</button>
+                            <button type="submit" className="input-submit">Tranzaksiya yaratish</button>
                         </div>
                     )}
                 </form>
@@ -910,7 +872,7 @@ const PlatformHarajatTurlari = () => {
 
             <Modal activeModal={loanEditModal} setActiveModal={setLoanEditModal}>
                 <form className={cls.form} onSubmit={loanEditForm.handleSubmit(onEditLoan)}>
-                    <h2>Qarzni tahrirlash</h2>
+                    <h2>Tranzaksiyani tahrirlash</h2>
                     <InputForm title="Yangi muddat" register={loanEditForm.register} name="due_date" type="date" required />
                     <InputForm title="Sabab" register={loanEditForm.register} name="reason" type="text" />
                     <label className="input-label">
@@ -928,7 +890,7 @@ const PlatformHarajatTurlari = () => {
 
             <Modal activeModal={loanCancelModal} setActiveModal={setLoanCancelModal}>
                 <form className={cls.form} onSubmit={loanCancelForm.handleSubmit(onCancelLoan)}>
-                    <h2>Qarzni bekor qilish</h2>
+                    <h2>Tranzaksiyani bekor qilish</h2>
                     <label className="input-label">
                         <span className="name-field">Bekor qilish sababi (majburiy)</span>
                         <textarea className="input-fields" {...loanCancelForm.register("cancelled_reason", { required: true })} rows={3} />

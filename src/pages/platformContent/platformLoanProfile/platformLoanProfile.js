@@ -8,6 +8,7 @@ import { setMessage } from "slices/messageSlice";
 import { useHttp } from "hooks/http.hook";
 import Modal from "components/platform/platformUI/modal";
 import InputForm from "components/platform/platformUI/inputForm";
+import Confirm from "components/platform/platformModals/confirm/confirm";
 import DefaultLoaderSmall from "components/loader/defaultLoader/defaultLoaderSmall";
 
 const PaymentTypeSelect = ({ register, name }) => {
@@ -30,6 +31,7 @@ const PlatformLoanProfile = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { request } = useHttp();
+    const { dataToChange } = useSelector(state => state.dataToChange);
 
     const [loan, setLoan] = useState(null);
     const [payments, setPayments] = useState([]);
@@ -43,6 +45,13 @@ const PlatformLoanProfile = () => {
     const repayForm = useForm();
     const editForm = useForm();
     const cancelForm = useForm();
+    const payEditForm = useForm();
+
+    const [payEditModal, setPayEditModal] = useState(false);
+    const [payEditItem, setPayEditItem] = useState(null);
+    const [payDeleteModal, setPayDeleteModal] = useState(false);
+    const [payDeleteId, setPayDeleteId] = useState(null);
+    const [payEditSubmitting, setPayEditSubmitting] = useState(false);
 
     useEffect(() => {
         fetchLoan();
@@ -119,6 +128,43 @@ const PlatformLoanProfile = () => {
             })
             .catch(() => {})
             .finally(() => setSubmitting(false));
+    };
+
+    const openEditPayment = (p) => {
+        setPayEditItem(p);
+        const matchedType = dataToChange?.payment_types?.find(
+            pt => pt.name?.toLowerCase() === p.payment_type?.toLowerCase()
+        );
+        payEditForm.reset({ amount: p.amount, reason: p.reason || "", payment_type_id: matchedType?.id ?? "" });
+        setPayEditModal(true);
+    };
+
+    const onEditPayment = (data) => {
+        const body = { amount: Number(data.amount), reason: data.reason, payment_type_id: Number(data.payment_type_id) };
+        setPayEditSubmitting(true);
+        request(`${BackUrl}account/branch_transaction/${payEditItem.id}`, "PUT", JSON.stringify(body), headers())
+            .then(res => {
+                if (res.success) {
+                    dispatch(setMessage({ msg: res.message || "Yangilandi", type: "success", active: true }));
+                    setPayEditModal(false);
+                    fetchLoan();
+                }
+            })
+            .catch(() => {})
+            .finally(() => setPayEditSubmitting(false));
+    };
+
+    const openDeletePayment = (id) => { setPayDeleteId(id); setPayDeleteModal(true); };
+    const confirmDeletePayment = () => {
+        request(`${BackUrl}account/branch_transaction/${payDeleteId}`, "DELETE", null, headers())
+            .then(res => {
+                if (res.success) {
+                    setPayments(prev => prev.filter(p => p.id !== payDeleteId));
+                    dispatch(setMessage({ msg: res.message || "O'chirildi", type: "success", active: true }));
+                }
+            })
+            .catch(() => {})
+            .finally(() => { setPayDeleteModal(false); setPayDeleteId(null); });
     };
 
     const fmtAmount = (num) => {
@@ -332,8 +378,14 @@ const PlatformLoanProfile = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={p.direction === "give" ? cls.historyAmountNegative : cls.historyAmount}>
-                                            {p.direction === "give" ? `-${fmtAmount(p.amount)}` : `+${fmtAmount(p.amount)}`}
+                                        <div className={cls.historyRight}>
+                                            <div className={p.direction === "give" ? cls.historyAmountNegative : cls.historyAmount}>
+                                                {p.direction === "give" ? `-${fmtAmount(p.amount)}` : `+${fmtAmount(p.amount)}`}
+                                            </div>
+                                            <div className={cls.historyActions}>
+                                                <i className={`fas fa-pen ${cls.editBtn}`} onClick={() => openEditPayment(p)} />
+                                                <i className={`fas fa-times ${cls.deleteBtn}`} onClick={() => openDeletePayment(p.id)} />
+                                            </div>
                                         </div>
                                     </div>
                                 </React.Fragment>
@@ -385,6 +437,26 @@ const PlatformLoanProfile = () => {
                         </div>
                     )}
                 </form>
+            </Modal>
+
+            <Modal activeModal={payEditModal} setActiveModal={setPayEditModal}>
+                <form className={cls.modalForm} onSubmit={payEditForm.handleSubmit(onEditPayment)}>
+                    <h2 className={cls.modalTitle}>To'lovni tahrirlash</h2>
+                    <InputForm title="Summa" register={payEditForm.register} name="amount" type="number" required />
+                    <InputForm title="Sabab" register={payEditForm.register} name="reason" type="text" />
+                    <PaymentTypeSelect register={payEditForm.register} name="payment_type_id" />
+                    {payEditSubmitting ? <DefaultLoaderSmall /> : (
+                        <div className={cls.modalActions}>
+                            <button type="button" className={cls.btnSecondary} onClick={() => setPayEditModal(false)}>Bekor</button>
+                            <button type="submit" className="input-submit">Saqlash</button>
+                        </div>
+                    )}
+                </form>
+            </Modal>
+
+            <Modal activeModal={payDeleteModal} setActiveModal={setPayDeleteModal}>
+                <Confirm text="To'lovni o'chirishni tasdiqlaysizmi?" setActive={setPayDeleteModal}
+                    getConfirm={r => { if (r === "yes") confirmDeletePayment(); }} />
             </Modal>
         </div>
     );

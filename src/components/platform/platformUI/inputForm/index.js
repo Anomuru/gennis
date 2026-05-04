@@ -4,11 +4,11 @@ import React from 'react';
 import "./input.sass"
 
 
-const InputForm = ({title, name, type, required, register, defaultValue, placeholder, value, error, onChange, onBlur}) => {
+const InputForm = ({title, name, type, required, register, defaultValue, placeholder, value, error, onChange, onBlur, clazzLabel}) => {
 
 
     return (
-        <label className="input-label" htmlFor={name}>
+        <label className={`input-label${clazzLabel ? ` ${clazzLabel}` : ""}`} htmlFor={name}>
             <span className="name-field">{title}</span>
             <input
                 {...register(`${name}`, {
