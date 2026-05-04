@@ -577,7 +577,9 @@ const PlatformHarajatTurlari = () => {
                                     </span>
                                 </td>
                                 <td className={cls.actions}>
-                                    <i className={`fas fa-pen ${cls.editBtn}`} onClick={() => openEditType(item)} />
+                                    {!item.changeable && (
+                                        <i className={`fas fa-pen ${cls.editBtn}`} onClick={() => openEditType(item)} />
+                                    )}
                                 </td>
                             </tr>
                         ))}
