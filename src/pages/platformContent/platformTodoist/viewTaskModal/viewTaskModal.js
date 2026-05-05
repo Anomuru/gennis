@@ -308,7 +308,7 @@ export default function ViewTaskModal({
                                     </div>
                                     <p className={styles.commentText}>{com.text}</p>
                                     {com.attachment_path && (
-                                        <img crossOrigin="anonymous" src={BackUrlForDoc + com.attachment_path} className={styles.mediaImg} alt="" />
+                                        <img crossOrigin="anonymous" src={com.attachment_path} className={styles.mediaImg} alt="" />
                                     )}
                                 </div>
                             );
@@ -341,7 +341,7 @@ export default function ViewTaskModal({
                                     </div>
                                     {proof.comment && <p className={styles.mediaNote}>{proof.comment}</p>}
                                     {proof.file_path && (
-                                        <img crossOrigin="anonymous" src={BackUrlForDoc + proof.file_path} className={styles.mediaImg} alt="" />
+                                        <img crossOrigin="anonymous" src={proof.file_path} className={styles.mediaImg} alt="" />
                                     )}
                                 </div>
                             );
