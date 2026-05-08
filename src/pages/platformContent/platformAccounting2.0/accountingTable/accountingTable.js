@@ -59,6 +59,7 @@ export const AccountingTable = ({
     const [renderRoute, setRenderRoute] = useState({})
 
     const selectedValue = useSelector(newAccountingSelectOptionValue)
+    const selectOption = useSelector(newAccountingSelectOptionValue);
     const totalPage = useSelector(newAccountingTotalCount)
 
     console.log(data, "data")
@@ -81,7 +82,7 @@ export const AccountingTable = ({
                     }))
                 })
         } else {
-            request(`${BackUrl}account/${renderRoute.delete}/${item.id}`, "POST", JSON.stringify({}), headers())
+            request(`${BackUrl}account/${renderRoute.delete}/${item.id}${selectOption === "assistentSalary" ? `/${item.user_id}` : ""}`, "POST", JSON.stringify({}), headers())
                 .then(res => {
                     setConfirm("")
 

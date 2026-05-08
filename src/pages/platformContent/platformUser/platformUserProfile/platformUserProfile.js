@@ -34,12 +34,12 @@ const StudentTimeTable = React.lazy(() => import('pages/platformContent/platform
 
 
 const PlatformUserProfile = () => {
-    const { userId } = useParams()
+    const { userId, locationId } = useParams()
 
     return (
         <>
             <Routes>
-                <Route path="info" element={<UserContent userId={userId} />} />
+                <Route path="info" element={<UserContent userId={userId} locationId={locationId} />} />
                 <Route path="changeInfo/:userId/:userRole" element={<PlatformUserProfileChange />} />
                 <Route path="changePhoto/:userId/:userRole" element={<PlatformUserProfileChangePhoto />} />
                 <Route path="studentPayment/:userId/:role/*" element={<PlatformUserPayment />} />
@@ -64,7 +64,7 @@ const PlatformUserProfile = () => {
 };
 
 
-const UserContent = ({ userId }) => {
+const UserContent = ({ userId, locationId }) => {
 
 
     const [activeOptions, setActiveOptions] = useState(false)
@@ -82,11 +82,12 @@ const UserContent = ({ userId }) => {
 
     useEffect(() => {
         const data = {
-            id: userId
+            id: userId,
+            locationId
         }
         dispatch(fetchUserData(data))
 
-    }, [dispatch, userId])
+    }, [dispatch, userId, locationId])
 
 
 
@@ -138,7 +139,6 @@ const UserContent = ({ userId }) => {
 
         // eslint-disable-next-line array-callback-return
         return keysUser.map(item => {
-            console.log(item, "item")
             if (item === "info" && user[item].length !== 0) {
                 return (
                     <div className="profile__main-item information">
@@ -240,14 +240,13 @@ const UserContent = ({ userId }) => {
     const info = user?.info
 
 
-    console.log(info, user,)
     return (
         <>
             <div className="profile" onClick={handleClick}>
                 <div className="profile__left">
                     <div className="profile__left__info">
                         <div className="profile__left__info__profileImg">
-                            <img src="" alt="" />
+                            <img src={userImg ? userImg : img} alt="user_image" />
                         </div>
                         <h1 title={info.fathersName?.value} className="profile__left__info__name">{info.name?.value} {info.surname?.value}</h1>
                         <span className="profile__left__info__userStatus">
@@ -454,7 +453,7 @@ const UserContent = ({ userId }) => {
                                                     <img
                                                         style={{ width: "5rem" }}
                                                         src={
-                                                            img
+                                                            item.photo_profile ? `${BackUrlForDoc}${item.photo_profile}` : img
                                                         }
                                                         alt="teacherImg"
                                                     />
@@ -643,7 +642,7 @@ const UserGroups = React.memo(({ data }) => {
 
 
     return data.map((item, index) => {
-        const userImg = item.photo_profile ? `${BackUrl}${item.photo_profile}` : null
+        const userImg = item.photo_profile ? `${BackUrlForDoc}${item.photo_profile}` : null
         return (
             <Link to={`../../../insideGroup/${item.id}`}>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem", borderBottom: "2px solid #E3E5E8", padding: "1rem" }} className="groups__item">

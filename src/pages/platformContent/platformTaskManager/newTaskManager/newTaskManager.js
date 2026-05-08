@@ -263,7 +263,6 @@ const NewTaskManager = () => {
                     callState: "processing",
                     type: activeCategory
                 }))
-                socketService.disconnect()
             })
             .catch(err => {
                 if (err) {
@@ -541,19 +540,29 @@ const WrapperSlide = ({
     }
 
     const onCallPhone = (id, phone, student) => {
+        dispatch(onCallLoading(true))
         request(`${BackUrl}task_leads/call-to-lead`, "POST", JSON.stringify({ lead_id: id }), headers())
             .then(res => {
+                const person = {
+                    fullName: student.name,
+                    id,
+                    phone
+                }
+                localStorage.setItem("callId", res.task_id)
+                localStorage.setItem("categoryType", activeCategory)
+                localStorage.setItem("selectedPerson", JSON.stringify(person))
+                localStorage.setItem("callStatus", "loading")
+                localStorage.setItem("callState", "processing")
                 dispatch(onCallStart({
-                    person: {
-                        fullName: student.name,
-                        id,
-                        phone
-                    },
+                    person,
                     callId: res.task_id,
                     callStatus: "loading",
                     callState: "processing",
                     type: activeCategory
                 }))
+            })
+            .finally(() => {
+                dispatch(onCallLoading(false))
             })
     }
 

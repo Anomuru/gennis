@@ -18,6 +18,11 @@ class SocketService {
             return;
         }
 
+        if (this.isConnecting) {
+            console.log('⏳ Socket already connecting, skipping');
+            return;
+        }
+
         // ✅ Отключаем старый сокет перед новым подключением
         if (this.socket) {
             console.log('🔄 Cleaning up old socket');
@@ -94,20 +99,28 @@ class SocketService {
             return;
         }
 
-        // ✅ Выходим из старой комнаты перед входом в новую
-        if (this.room && this.room !== userId) {
-            console.log(`🚪 Leaving previous room: ${this.room}`);
-            this.socket.emit('leave', { user_id: this.room });
-        }
+        const doJoin = () => {
+            // ✅ Выходим из старой комнаты перед входом в новую
+            if (this.room && this.room !== userId) {
+                console.log(`🚪 Leaving previous room: ${this.room}`);
+                this.socket.emit('leave', { user_id: this.room });
+            }
 
-        if (this.room === userId) {
-            console.log(`✅ Already in room: ${userId}`);
-            return;
-        }
+            if (this.room === userId) {
+                console.log(`✅ Already in room: ${userId}`);
+                return;
+            }
 
-        console.log(`🚪 Joining room: ${userId}`);
-        this.room = userId;
-        this.socket.emit('join', { user_id: userId });
+            console.log(`🚪 Joining room: ${userId}`);
+            this.room = userId;
+            this.socket.emit('join', { user_id: userId });
+        };
+
+        if (this.socket.connected) {
+            doJoin();
+        } else {
+            this.socket.once('connect', doJoin);
+        }
     }
 
     leaveUserRoom(userId) {

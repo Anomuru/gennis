@@ -43,6 +43,7 @@ const initialState = {
         { value: "studentsPayments", name: "O'quvchilar tolovlari", disabled: false },
         { value: "bookPayment", name: "Kitob tolovlari", disabled: false },
         { value: "teachersSalary", name: "O'qituvchilar oyligi", disabled: false },
+        { value: "assistentSalary", name: "Asistentlar oyligi", disabled: false },
         { value: "employeesSalary", name: "Ishchilar oyligi", disabled: false },
         { value: "studentsDiscounts", name: "O'quvchilar chegirmalari", disabled: false },
         { value: "debtStudents", name: "Qarzdor o'quvchilar", disabled: false },
@@ -112,7 +113,7 @@ const newAccountingSlice = createSlice({
             state.data = [action.payload, ...state.data]
         }
     },
-    extraReducers: builder  =>
+    extraReducers: builder =>
         builder
             .addCase(fetchAccounting.pending, state => {
                 state.loading = true;

@@ -85,6 +85,7 @@ const meSlice = createSlice({
             sessionStorage.setItem('refresh_token', action.payload.refresh_token);
             localStorage.setItem('user', action.payload.username);
             localStorage.setItem('role', action.payload.role);
+            localStorage.setItem('user_id', action.payload.id);
             localStorage.setItem('location_id', action.payload.location_id);
             state.id = action.payload.id;
             state.username = action.payload.username;

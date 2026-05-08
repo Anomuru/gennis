@@ -11,6 +11,7 @@ import {useParams} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setMessage} from "slices/messageSlice";
 import Select from "components/platform/platformUI/select";
+import Form from "../../../components/platform/platformUI/form/Form";
 
 
 const PlatformCentreInfo = () => {
@@ -101,7 +102,7 @@ const PlatformCentreInfo = () => {
 
 
             <Modal activeModal={active} setActiveModal={setActive}>
-                <form onSubmit={handleSubmit(onSubmit)} className={cls.changeInfo}>
+                <Form onSubmit={handleSubmit(onSubmit)} extraClassname={cls.changeInfo}>
 
                     <InputForm type={"text"} register={register} required title={"Campus name"} name={"campus_name"} />
                     <InputForm placeholder={"Toshkent viloyati Boʻstonliq tumani Xoʻjakent qishlogʻi Nurchilar MFY"} type={"text"} register={register} required title={"Address"} name={"address"} />
@@ -121,8 +122,8 @@ const PlatformCentreInfo = () => {
                     <InputForm register={register} required title={"bank"} name={"bank"} />
                     <InputForm register={register} required title={"mfo"} name={"mfo"} />
                     <InputForm register={register} required title={"tel"} name={"tel"} />
-                    <Button type={"submit"}>Tasdiqlash</Button>
-                </form>
+                    {/*<Button formId={"info"} type={"submit"}>Tasdiqlash</Button>*/}
+                </Form>
             </Modal>
         </div>
     );

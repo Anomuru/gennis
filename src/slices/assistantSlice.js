@@ -52,7 +52,7 @@ const assistantSlice = createSlice({
             state.loading = true
         })
         .addCase(fetchAssistantByTeacher.fulfilled, (state, action) => {
-            state.data = action.payload.error ? action.payload.error : action.payload.assistent_errors
+            state.data = action.payload.error ? [] : action.payload.assistent_errors
             state.loading = true
         })
         .addCase(fetchAssistantByTeacher.rejected, state => {

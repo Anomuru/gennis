@@ -4,7 +4,7 @@ export const ClassroomUrl = `https://classroom.gennis.uz/`
 //
 
 // export const BackUrlForDoc = `http://26.196.249.247:5002/`
-// export const BackUrlForDoc = `http://100.94.144.113:5002/`
+// export const BackUrlForDoc = `http://100.76.119.90:5000/`
 // export const BackUrl = `${BackUrlForDoc}api/`
 
 // export const ClassroomUrl = `http://localhost:3000/`
@@ -80,7 +80,15 @@ export const requireMenuItems = (id) => {
             classIcon: "fa-circle-check",
             location: true,
             children: true,
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant]
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
+        },
+        {
+            to: "chats",
+            name: "Chats",
+            classIcon: "fa-comments",
+            location: true,
+            children: true,
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
         },
         // {
         //     to: "adminRating",
@@ -448,6 +456,15 @@ export const requireMenuItems = (id) => {
             to: "bookKeeping",
             name: "Dividend",
             classIcon: "fa-search-dollar",
+            roles: [ROLES.Director, ROLES.Programmer, ROLES.Accountant]
+        },
+        {
+            to: "applicationSystem",
+            name: "Application System",
+            classIcon: "fa-list",
+            location: true,
+            children: true,
+
             roles: [ROLES.Director, ROLES.Programmer, ROLES.Accountant]
         },
         {

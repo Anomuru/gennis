@@ -92,6 +92,9 @@ export const AccountingFilter = ({ currentPage, pageSize, setCurrentPage, search
             case "teachersSalary":
                 route = "teacher_salary/";
                 break;
+            case "assistentSalary":
+                route = "assistent_salary/";
+                break;
             case "studentsDiscounts":
                 route = "discounts/";
                 break;

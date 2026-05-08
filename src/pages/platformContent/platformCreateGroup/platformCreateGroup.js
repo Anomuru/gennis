@@ -479,11 +479,23 @@ const Users = ({ locationId, setGroupData, groupData, setGetErrors }) => {
                 if (res.success) {
                     setGroupError(res.data.gr_errors)
                     setGetErrors(res.data.gr_errors)
-                    activeType === "students" ? setUsers(res.data.students) : setUsers(res.data.teachers)
-                    setStudents(res.data.students)
+                    activeType === "students" ? setUsers(
+                        res.data.students
+                            .filter(item => item.subjects.length > 0)
+                    ) : setUsers(res.data.teachers)
+                    setStudents(
+                        res.data.students
+                            .filter(item => item.subjects.length > 0)
+                    )
+                    console.log(res.data.students);
+
                     setTeachers(res.data.teachers)
-                    setGroupData(item => {
-                        return { ...item, time: lessons }
+                    setGroupData({
+                        teacher: {},
+                        students: [],
+                        asistant: {},
+                        groupInfo: {},
+                        time: lessons
                     })
 
 
@@ -694,6 +706,7 @@ const GroupInfo = React.memo(({ groupData, setGroupData, error, setError, setAct
     const [nameGroup, setNameGroup] = useState(null)
     const [priceCourse, setPriceCourse] = useState(null)
     const [teacherDolya, setTeacherDolya] = useState(null)
+    const [assistantSalary, setAssistantSalary] = useState(null)
     // const [attendanceDays,setAttendanceDays] = useState(null)
 
     const [errorMsg, setErrorMsg] = useState("")
@@ -740,13 +753,12 @@ const GroupInfo = React.memo(({ groupData, setGroupData, error, setError, setAct
                 ...data,
                 groupInfo: {
                     ...data.groupInfo,
-                    assistent_id: groupData.asistant.id
+                    assistent_id: groupData.asistant.id,
+                    assistentSalary: assistantSalary
                 }
             }
         }
 
-
-        console.log(data, "data");
 
 
         // dispatch(deleteCheckedStudents({ checkedStudents }))
@@ -893,6 +905,14 @@ const GroupInfo = React.memo(({ groupData, setGroupData, error, setError, setAct
                     name={`dolya-of-teacher`}
                     title={`O'qituvchi ulushi`}
                     onChange={setTeacherDolya}
+                />
+                <Input
+                    defaultValue={assistantSalary}
+                    required={true}
+                    type={`number`}
+                    name={`assistentSalary`}
+                    title={`Asistent ulushi`}
+                    onChange={setAssistantSalary}
                 />
 
                 <input

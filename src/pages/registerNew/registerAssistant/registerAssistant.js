@@ -187,13 +187,13 @@ export const RegisterAssistant = ({
                 type={"number"}
                 required
             />
-            <InputForm
+            {/* <InputForm
                 register={register}
                 name={"percentage"}
                 title={"Ulush"}
                 type={"number"}
                 required
-            />
+            /> */}
             <Input
                 register={register}
                 name={"password"}

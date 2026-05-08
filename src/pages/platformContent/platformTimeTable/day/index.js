@@ -287,97 +287,194 @@ const Index = () => {
 
 
 
-    const renderItems = () => {
-        return lessons.map(item => {
+    function hexToRgb(hex) {
+        if (!hex) return { r: 255, g: 255, b: 255 }
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : { r: 255, g: 255, b: 255 };
+    }
 
-            let indexHour
-            let indexRoom = 0
+    const timeToMinutes = (time) => {
+        const [h, m] = time.split(':').map(Number)
+        return h * 60 + m
+    }
 
-            // eslint-disable-next-line array-callback-return
-            rooms.map((room,index) => {
-                if (room.id === item.room) {
-                    indexRoom = index
+    const getMergedConflicts = (lessonList) => {
+        const parent = {}
+        lessonList.forEach(l => { parent[l.id] = l.id })
+
+        const find = (id) => {
+            if (parent[id] !== id) parent[id] = find(parent[id])
+            return parent[id]
+        }
+        const union = (a, b) => { parent[find(a)] = find(b) }
+
+        const conflictedIds = new Set()
+
+        for (let i = 0; i < lessonList.length; i++) {
+            for (let j = i + 1; j < lessonList.length; j++) {
+                const a = lessonList[i]
+                const b = lessonList[j]
+                if (a.room !== b.room) continue
+                const startA = timeToMinutes(a.from)
+                const endA = timeToMinutes(a.to)
+                const startB = timeToMinutes(b.from)
+                const endB = timeToMinutes(b.to)
+                if (startA < endB && startB < endA) {
+                    union(a.id, b.id)
+                    conflictedIds.add(a.id)
+                    conflictedIds.add(b.id)
                 }
+            }
+        }
+
+        const groupMap = {}
+        conflictedIds.forEach(id => {
+            const root = find(id)
+            if (!groupMap[root]) groupMap[root] = []
+            groupMap[root].push(lessonList.find(l => l.id === id))
+        })
+
+        return { conflictedIds, groups: Object.values(groupMap) }
+    }
+
+    const renderLessonCard = (item, key) => {
+        let indexRoom = 0
+        // eslint-disable-next-line array-callback-return
+        rooms.map((room, index) => {
+            if (room.id === item.room) indexRoom = index
+        })
+        const indexHour = +item.from.replace(":", ".") - 7
+        const durationHours = +item.to.replace(":", ".") - +item.from.replace(":", ".")
+        const containerStyle = {
+            top: indexRoom * 120 + "px",
+            left: indexHour * 170 + "px",
+            width: durationHours * 170 + "px",
+            height: "120px",
+        }
+        const teachers = item.teacher.length > 0 ? item.teacher : []
+        const isMulti = teachers.length > 1
+        const isSameTeacher = isMulti && teachers.every(t => t.name === teachers[0].name && t.surname === teachers[0].surname)
+        const displayTeachers = isSameTeacher ? [teachers[0]] : teachers
+
+        return (
+            <div key={key} className={`lesson${isMulti ? ' lesson--multi' : ''}`} style={containerStyle}>
+                {isMulti && (
+                    <div className="lesson__multi-bar">
+                        {teachers.map(t => t.group_name).join(' / ')}
+                    </div>
+                )}
+                <div className="lesson__subs">
+                    {displayTeachers.length === 0 ? (
+                        <div className="lesson__sub lesson__sub--empty"><h1>—</h1></div>
+                    ) : (
+                        displayTeachers.map((t, idx) => {
+                            const rgb = hexToRgb(t.color)
+                            const brightness = Math.round(((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000)
+                            return (
+                                <Link
+                                    key={t.group_id}
+                                    to={`../../insideGroup/${t.group_id}`}
+                                    className="lesson__sub"
+                                    style={{
+                                        backgroundColor: t.color || "white",
+                                        color: brightness > 125 ? "black" : "white",
+                                        borderLeft: idx > 0 ? "2px solid rgba(255,255,255,0.4)" : "none",
+                                    }}
+                                >
+                                    <h1>{t.name}</h1>
+                                    <h1>{t.surname}</h1>
+                                    {!isMulti && <h1>{t.group_name}</h1>}
+                                </Link>
+                            )
+                        })
+                    )}
+                </div>
+            </div>
+        )
+    }
+
+    const renderItems = () => {
+        const { conflictedIds, groups } = getMergedConflicts(lessons)
+
+        const normalCards = lessons
+            .filter(item => !conflictedIds.has(item.id))
+            .map(item => renderLessonCard(item, item.id))
+
+        const conflictCards = groups.map((group, idx) => {
+            let indexRoom = 0
+            // eslint-disable-next-line array-callback-return
+            rooms.map((room, index) => {
+                if (room.id === group[0].room) indexRoom = index
             })
 
-            indexHour = +item.from.replace(":",".") - 7
+            const fromDecimal = Math.min(...group.map(l => +l.from.replace(":", ".")))
+            const toDecimal = Math.max(...group.map(l => +l.to.replace(":", ".")))
 
-
-            function hexToRgb(hex) {
-                var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-                hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-                    return r + r + g + g + b + b;
-                });
-
-                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-                return result ? {
-                    r: parseInt(result[1], 16),
-                    g: parseInt(result[2], 16),
-                    b: parseInt(result[3], 16)
-                } : null;
+            const containerStyle = {
+                top: indexRoom * 120 + "px",
+                left: (fromDecimal - 7) * 170 + "px",
+                width: (toDecimal - fromDecimal) * 170 + "px",
+                height: "120px",
             }
 
-            const color1rgb = hexToRgb(item?.teacher[0]?.color ? item?.teacher[0]?.color : "#ffffff");
+            const firstTeacher = group[0].teacher[0]
+            const rgb = hexToRgb(firstTeacher?.color)
+            const brightness = Math.round(((rgb.r * 299) + (rgb.g * 587) + (rgb.b * 114)) / 1000)
 
+            const groupNames = group.flatMap(l => l.teacher.map(t => t.group_name)).join("/")
+            const times = group.map(l => `${l.from}–${l.to}`).join("/")
 
-
-            const brightness = Math.round(((parseInt(color1rgb.r) * 299) +
-                (parseInt(color1rgb.g) * 587) +
-                (parseInt(color1rgb.b) * 114)) / 1000);
-
-            const heightItem = +item.to.replace(":",".")- +item.from.replace(":",".")
-
-            const style = {
-                top: indexHour * 120 + "px",
-                left: indexRoom * 170  + "px",
-                height: heightItem * 120 + "px",
-                backgroundColor: item?.teacher[0]?.color ? item?.teacher[0]?.color : "white",
-                color: brightness > 125 ? "black" : "white"
-            }
-
-
-
-            return <Link to={`../../insideGroup/${item?.teacher[0]?.group_id}`} className="lesson" style={style}>
-                <h1>{item?.teacher[0]?.name}</h1>
-                <h1>{item?.teacher[0]?.surname}</h1>
-                <h1>{item?.teacher[0]?.group_name}</h1>
-
-            </Link>
+            return (
+                <div
+                    key={`conflict-${idx}`}
+                    className="lesson lesson__sub"
+                    style={{
+                        ...containerStyle,
+                        backgroundColor: firstTeacher?.color || "white",
+                        color: brightness > 125 ? "black" : "white",
+                    }}
+                >
+                    <h1>{firstTeacher?.name}</h1>
+                    <h1>{firstTeacher?.surname}</h1>
+                    <h1>{groupNames}</h1>
+                    <small>{times}</small>
+                </div>
+            )
         })
+
+        return [...normalCards, ...conflictCards]
     }
 
     const renderDefaults = () => {
-
-
-        return hours.map(() => {
+        return rooms.map(() => {
             return <div
                 className="default"
                 style={{
-                    width: rooms.length * 170 + "px"
+                    width: hours.length * 170 + "px"
                 }}
             >
-                {
-                    rooms.map(() => {
-                        return (
-                            <div/>
-                        )
-                    })
-                }
+                {hours.map((_, i) => <div key={i}/>)}
             </div>
         })
-
-
     }
 
     const renderHours = () => {
         return hours.map(item => {
-            return <div>{item.name}</div>
+            return <div key={item.id}>{item.name}</div>
         })
     }
 
-    const renderRooms= () => {
+    const renderRooms = () => {
         return rooms.map(item => {
-            return <div>{item.name}</div>
+            return <div key={item.id}>{item.name}</div>
         })
     }
 
@@ -457,11 +554,11 @@ const Index = () => {
                     <div className="table__wrapper" style={styleTable}>
                         <div className="container">
                             <div className="rooms">
-                                {renderRooms()}
+                                {renderHours()}
                             </div>
                             <div className="wrapper">
                                 <div className="wrapper__hours">
-                                    {renderHours()}
+                                    {renderRooms()}
                                 </div>
                                 <div className="wrapper__classes">
                                     {renderDefaults()}

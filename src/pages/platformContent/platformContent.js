@@ -106,6 +106,9 @@ const PlatformAdminItem = React.lazy(() => import('./platformAdminItem/platformA
 const PlatformNewAccounting = React.lazy(() => import('./platformAccounting2.0/platformNewAccounting'));
 const PlatformAccountingProfile = React.lazy(() => import("./platformAccountingProfile/platformAccountingProfile"))
 const PlatformTodoist = React.lazy(() => import('./platformTodoist/platformTodoist'))
+const PlatformChats = React.lazy(() => import('./platformChats/platformChats'))
+const PlatformHarajatTurlari = React.lazy(() => import('./platformHarajatTurlari/platformHarajatTurlari'))
+const PlatformApplicationSystem = React.lazy(() => import('./applicationSystem/applicationSystem'))
 
 
 
@@ -147,6 +150,7 @@ const PlatformContent = () => {
                     {/* <Route path="oneDay/:locationId" element={<PlatformOneDay/>}/> */}
                     <Route path="adminItem/:locationId/*" element={<PlatformAdminItem />} />
                     <Route path="todoist/:locationId/*" element={<PlatformTodoist />} />
+                    <Route path="chats/:locationId/*" element={<PlatformChats />} />
                     {/* <Route path="storyProfile/:storyId" element={<PlatformTaskManagerProfile />} /> */}
                     {/* </Route> */}
 
@@ -157,6 +161,7 @@ const PlatformContent = () => {
                     {/*<Route path="teachers/:locationId" element={<PlatformTeachers/>}/>*/}
 
                     <Route path="newStudents/:locationId/*" element={<PlatformNewStudents />} />
+                    <Route path="applicationSystem/:locationId/*" element={<PlatformApplicationSystem />} />
 
                     {/*<Route path="newStudents/:locationId" element={<PlatformNewStudents/>}>*/}
                     {/*    <Route path="profileBooks/:userId" element={<PlatformUserProfile/>}  />*/}
@@ -184,6 +189,7 @@ const PlatformContent = () => {
 
                     {/*<Route path="overheadBooks.js/:locationId" element={<PlatformAccounting/>}/>*/}
                     {/*<Route path="accounting/:locationId/*" element={<PlatformAccounting/>} />*/}
+                    <Route path="accounting/:locationId/harajat-turlari" element={<PlatformHarajatTurlari />} />
                     <Route path="accounting/:locationId/*" element={<PlatformNewAccounting />} />
                     <Route path="accounting/:locationId/otchot/*" element={<PlatformAccountingProfile />} />
 

@@ -50,70 +50,129 @@
     text-align: center
   &__btns
     width: 100%
-    padding: 2rem
     display: flex
     align-items: center
-    justify-content: center
+    flex-wrap: wrap
+    gap: 0.4rem
+    background: #f0f0f0
+    border-radius: 1rem
+    padding: 0.4rem
+    margin-bottom: 2rem
     &>div
       cursor: pointer
-      padding: 1rem 1.5rem
-      border-radius: 15px
-      border: 2px solid $color-grey-dark
-      margin: 0 1rem
-      font-size: 1.5rem
+      padding: 0.7rem 1.6rem
+      border-radius: 0.6rem
+      border: none
+      font-size: 1.4rem
       transition: all .2s
-      font-weight: bold
-      &:hover,&.active
-        border: 2px solid $color-main-light
-        color: $color-main-light
-        box-shadow: 0 0 13px $color-main-light
+      color: #666
+      white-space: nowrap
+      &:hover
+        color: #2c3e50
+      &.active
+        background: #fff
+        color: #2c3e50
+        font-weight: 600
+        box-shadow: 0 1px 4px rgba(0,0,0,0.12)
       &:active
-        transform: scale(0.9)
+        transform: scale(0.97)
 
-  &__container
+.branch-tx
+  width: 100%
+  &__filters
+    display: flex
+    gap: 1rem
+    margin-bottom: 2rem
+  &__select
+    padding: 0.6rem 1.2rem
+    width: auto
+  &__summary
+    display: flex
+    gap: 1.5rem
+    margin-bottom: 2rem
+  &__card
+    flex: 1
+    background: #f8f9fa
+    border-radius: 1rem
+    padding: 1.5rem 2rem
+    display: flex
+    flex-direction: column
+    gap: 0.4rem
+    span
+      font-size: 1.2rem
+      color: #888
+    strong
+      font-size: 1.8rem
+      font-weight: 600
+    &--give
+      background: #fef9e7
+      strong
+        color: #e67e22
+    &--receive
+      background: #eafaf1
+      strong
+        color: #27ae60
+
+.tag-fixed
+  background: #eaf4fb
+  color: #2980b9
+  padding: 0.3rem 0.8rem
+  border-radius: 1rem
+  font-size: 1.2rem
+  white-space: nowrap
+
+.tag-variable
+  background: #fef9e7
+  color: #d4ac0d
+  padding: 0.3rem 0.8rem
+  border-radius: 1rem
+  font-size: 1.2rem
+  white-space: nowrap
+
+.collection__container
+  width: 100%
+  .tableBox
+    table
+      td
+        padding: 0 1rem
+      td:nth-child(1)
+        width: auto
+  .birth
+    width: 80%
+  .subjects
     width: 100%
-    .tableBox
-      table
-        td
-          padding: 0 1rem
-        td:nth-child(1)
-          width: auto
-    .birth
-      width: 80%
-    .subjects
-      width: 100%
-      height: fit-content
-      padding: 1rem
+    height: fit-content
+    padding: 1rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    margin: 1.5rem 0
+    h3
+      font-size: 1.8rem
+      font-weight: bold
+      color: $color-grey-dark
+    &__wrapper
+      width: 75%
       display: flex
       flex-direction: column
       align-items: center
       justify-content: center
-      margin: 1.5rem 0
-      h3
-        font-size: 1.8rem
-        font-weight: bold
-        color: $color-grey-dark
-      &__wrapper
-        width: 75%
-        display: flex
-        flex-direction: column
-        align-items: center
-        justify-content: center
-        margin: 1rem 0
-      &__item
-        border-radius: 10px
-        border: 1px solid $color-grey-dark
-        padding: 1.5rem
-        font-size: 1.7rem
-        margin: 1rem 0
-        width: 100%
+      margin: 1rem 0
+    &__item
+      border-radius: 10px
+      border: 1px solid $color-grey-dark
+      padding: 1.5rem
+      font-size: 1.7rem
+      margin: 1rem 0
+      width: 100%
+      position: relative
+      &-info
         position: relative
-        &-info
-          position: relative
-        i
-          position: absolute
-          font-size: 2.5rem
-          top: 50%
-          right: 0
-          transform: translateY(-50%)
-          color: $color-grey-dark
+      i
+        position: absolute
+        font-size: 2.5rem
+        top: 50%
+        right: 0
+        transform: translateY(-50%)
+        color: $color-grey-dark

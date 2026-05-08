@@ -61,8 +61,13 @@ const AccountingProfileSalary = () => {
         }
 
         return [...data].sort((a, b) => {
-            const aVal = a?.teacher_salary ?? 0;
-            const bVal = b?.teacher_salary ?? 0;
+            const getValue = (item) => {
+                if (activeCategory === "teacher") return item?.teacher_salary ?? 0;
+                if (activeCategory === "assistent") return item?.salary ?? item?.amount ?? 0;
+                return item?.staff_salary ?? 0;
+            }
+            const aVal = getValue(a);
+            const bVal = getValue(b);
 
             return bVal - aVal; // сортировка по убыванию
         });
@@ -75,16 +80,22 @@ const AccountingProfileSalary = () => {
                 <tr key={index} className={styles.tableRow}>
                     <td className={styles.tableCell}>{index + 1}</td>
                     <td className={styles.tableCell}>
-                        {activeCategory === "teacher" ? staff.teacher_name : staff.staff_name}
+                        {activeCategory === "teacher" ? staff.teacher_name : staff.staff_name || staff.assistent_name}
                         {staff.is_deleted ? " 🚫" : null}
                     </td>
-                    <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(activeCategory === "teacher" ? staff.teacher_salary : staff.staff_salary)}</td>
+                    <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(
+                        activeCategory === "teacher"
+                            ? staff.teacher_salary
+                            : activeCategory === "assistent"
+                                ? (staff.assistent_salary || staff.amount)
+                                : staff.staff_salary
+                    )}</td>
                     <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(staff.taken_money)}</td>
                     <td className={`${styles.tableCell} ${styles.tableCellRight} ${styles.tableCellBold}`}>
                         {formatCurrency(staff.remaining_salary)}
                     </td>
                     {
-                        activeCategory === "teacher"
+                        activeCategory === "teacher" || activeCategory === "assistent"
                             ? <>
                                 <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(staff.debt)}</td>
                                 <td className={`${styles.tableCell} ${styles.tableCellRight}`}>{formatCurrency(staff.black_salary)}</td>
@@ -122,7 +133,7 @@ const AccountingProfileSalary = () => {
 
                 <div
                     className={classNames(styles.cardsGrid, {
-                        [styles.teacher]: activeCategory === "teacher"
+                        [styles.teacher]: activeCategory === "teacher" || activeCategory === "assistent"
                     })}
                 >
                     <div className={`${styles.card} ${styles.cardPrimary}`}>
@@ -174,7 +185,7 @@ const AccountingProfileSalary = () => {
                     </div>
 
                     {
-                        activeCategory === "teacher"
+                        activeCategory === "teacher" || activeCategory === "assistent"
                             ? <>
                                 <div className={`${styles.card} ${styles.cardDestructive}`}>
                                     <div className={styles.cardHeader}>
@@ -240,6 +251,15 @@ const AccountingProfileSalary = () => {
                             </span>
                             <span className={styles.category}>/</span>
                             <span
+                                onClick={() => setActiveCategory("assistent")}
+                                className={classNames(styles.category, {
+                                    [styles.active]: activeCategory === "assistent"
+                                })}
+                            >
+                                Asistentlar
+                            </span>
+                            <span className={styles.category}>/</span>
+                            <span
                                 onClick={() => setActiveCategory("staff")}
                                 className={classNames(styles.category, {
                                     [styles.active]: activeCategory === "staff"
@@ -278,7 +298,7 @@ const AccountingProfileSalary = () => {
 
                 <div className={styles.tableCard}>
                     <div className={styles.tableHeader}>
-                        <h3 className={styles.tableTitle}>{activeCategory === "teacher" ? "O'qituvchilar" : "Xodimlar"}</h3>
+                        <h3 className={styles.tableTitle}>{activeCategory === "teacher" ? "O'qituvchilar" : activeCategory === "assistent" ? "Asistentlar" : "Xodimlar"}</h3>
                     </div>
                     <div
                         className={classNames(styles.tableContent, {
@@ -298,7 +318,7 @@ const AccountingProfileSalary = () => {
                                                 <th className={`${styles.tableHeaderCell} ${styles.tableHeaderCellRight}`}>Berilgan</th>
                                                 <th className={`${styles.tableHeaderCell} ${styles.tableHeaderCellRight}`}>Qolgan</th>
                                                 {
-                                                    activeCategory === "teacher"
+                                                    activeCategory === "teacher" || activeCategory === "assistent"
                                                         ? <>
                                                             <th className={`${styles.tableHeaderCell} ${styles.tableHeaderCellRight}`}>Qarzdorlik</th>
                                                             <th className={`${styles.tableHeaderCell} ${styles.tableHeaderCellRight}`}>Black</th>

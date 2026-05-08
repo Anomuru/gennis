@@ -1,37 +1,37 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 
 import "./changeGroupTime.sass"
 import "styles/components/_form.sass"
 import img from "assets/user-interface/user_image.png"
 import Select from "components/platform/platformUI/select";
-import {useDispatch, useSelector} from "react-redux";
-import {fetchDataToChange} from "slices/dataToChangeSlice";
-import group, {fetchGroup} from "slices/groupSlice";
-import {useParams} from "react-router-dom";
-import {useAuth} from "hooks/useAuth";
-import {useHttp} from "hooks/http.hook";
-import {BackUrl, headers} from "constants/global";
-import {logout} from "slices/meSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDataToChange } from "slices/dataToChangeSlice";
+import group, { fetchGroup } from "slices/groupSlice";
+import { useParams } from "react-router-dom";
+import { useAuth } from "hooks/useAuth";
+import { useHttp } from "hooks/http.hook";
+import { BackUrl, headers } from "constants/global";
+import { logout } from "slices/meSlice";
 import Input from "components/platform/platformUI/input";
-import {setMessage} from "slices/messageSlice";
+import { setMessage } from "slices/messageSlice";
 
 const ChangeGroupTime = () => {
 
-    const {groupId} = useParams()
-    const {dataToChange} = useSelector(state => state.dataToChange)
-    const {data,time_table} = useSelector(state => state.group)
+    const { groupId } = useParams()
+    const { dataToChange } = useSelector(state => state.dataToChange)
+    const { data, time_table } = useSelector(state => state.group)
     const dispatch = useDispatch()
 
-    const {selectedLocation} = useAuth()
+    const { selectedLocation } = useAuth()
 
-    const [students,setStudents] = useState([])
-    const [days,setDays] = useState([])
-    const [groupError,setGroupError] = useState("")
-    const [teacherError,setTeacherError] = useState("")
-    const [lessons,setLessons] = useState([
+    const [students, setStudents] = useState([])
+    const [days, setDays] = useState([])
+    const [groupError, setGroupError] = useState("")
+    const [teacherError, setTeacherError] = useState("")
+    const [lessons, setLessons] = useState([
         {
-            id : 1,
+            id: 1,
             selectedDay: null,
             selectedRoom: null,
             startTime: null,
@@ -47,77 +47,60 @@ const ChangeGroupTime = () => {
     useEffect(() => {
         dispatch(fetchDataToChange(selectedLocation))
         dispatch(fetchGroup(groupId))
-    },[dispatch, groupId,selectedLocation])
+    }, [dispatch, groupId, selectedLocation])
 
 
 
 
-
-    useEffect(() => {
-        if (time_table?.length > 0 && dataToChange) {
-            if (time_table.length > 1) {
-                setLessons( () => {
-                    return time_table.map((day,index) => {
-                        const filteredRoom = dataToChange?.rooms.filter(item => item.name === day.room)
-                        const filteredDay= dataToChange?.days.filter(item => item.name ===day.day)
-
-                        onSetDay(filteredDay[0]?.name,index+1)
-                        return {
-                            id: index+1,
-                            selectedDay: filteredDay[0],
-                            selectedRoom: filteredRoom[0],
-                            startTime: day.start_time,
-                            endTime: day.end_time,
-                            timeId: day.time_id
-                        }
-                    })
-                })
-            } else {
-                const filteredRoom = dataToChange.rooms.filter(item => item.name === time_table[0].room)
-                const filteredDay = dataToChange.days.filter(item => item.name === time_table[0].day)
-
-
-                onSetDay(filteredDay[0].name,1)
-                setLessons(lessons => {
-                    return lessons.map((item,index) => {
-                        if (index === 0) {
-                            return {
-                                ...item,
-                                selectedDay: filteredDay[0],
-                                selectedRoom:filteredRoom[0],
-                                startTime: time_table[0].start_time,
-                                endTime: time_table[0].end_time,
-                                timeId: time_table[0].time_id
-                            }
-                        }
-                        return item
-                    })
-                })
-            }
-        }
-    },[time_table])
-
-
-    // const [selectedRoom,setSelectedRoom] = useState(null)
-    const [startTime,setStartTime] = useState(null)
-    const [endTime,setEndTime] = useState(null)
-    const [isDisabled,setIsDisabled] = useState(false)
 
     useEffect(() => {
         if (dataToChange) {
-            setDays(dataToChange.days)
+            if (time_table?.length > 0) {
+                const mappedLessons = time_table.map((day, index) => {
+                    const filteredRoom = dataToChange?.rooms?.find(item => item.name === day.room || item.id === day.room || item.id === +day.room);
+                    const filteredDay = dataToChange?.days?.find(item => item.name === day.day || item.id === day.day || item.id === +day.day);
+
+                    return {
+                        id: index + 1,
+                        selectedDay: filteredDay,
+                        selectedRoom: filteredRoom,
+                        startTime: day.start_time,
+                        endTime: day.end_time,
+                        timeId: day.time_id
+                    }
+                });
+
+                setLessons(mappedLessons);
+
+                const activeDays = mappedLessons.map(lesson => ({ name: lesson.selectedDay?.name, id: lesson.id }));
+                setDays(dataToChange?.days?.map(item => {
+                    const activeMatch = activeDays.find(d => d.name === item.name);
+                    if (activeMatch) {
+                        return { ...item, disabled: true, isActive: activeMatch.id };
+                    }
+                    return { ...item, disabled: false, isActive: null };
+                }));
+
+            } else {
+                setDays(dataToChange?.days);
+            }
         }
-    },[dataToChange])
+    }, [time_table, dataToChange])
+
+    const [startTime, setStartTime] = useState(null)
+    const [endTime, setEndTime] = useState(null)
+    const [isDisabled, setIsDisabled] = useState(false)
 
 
-    const {request} = useHttp()
+
+    const { request } = useHttp()
     const onSubmit = (e) => {
         e.preventDefault()
         const data = {
             lessons
         }
 
-        request(`${BackUrl}group_change/check_time_group/${groupId}`, "POST",JSON.stringify(data),headers())
+        request(`${BackUrl}group_change/check_time_group/${groupId}`, "POST", JSON.stringify(data), headers())
             .then(res => {
                 console.log(res)
                 if (res.success) {
@@ -141,7 +124,7 @@ const ChangeGroupTime = () => {
         }
 
 
-        request(`${BackUrl}group_change/change_time_group/${groupId}`, "POST",JSON.stringify(data),headers())
+        request(`${BackUrl}group_change/change_time_group/${groupId}`, "POST", JSON.stringify(data), headers())
             .then(res => {
                 if (res.success) {
                     dispatch(setMessage({
@@ -196,14 +179,14 @@ const ChangeGroupTime = () => {
 
 
 
-    const renderStudents = useCallback( () => {
+    const renderStudents = useCallback(() => {
         // eslint-disable-next-line array-callback-return
         if (students.length !== 0) {
-            return students.map(st => {
+            return students.map((st, i) => {
                 return (
-                    <div className={`students__item ${st.color}`}>
+                    <div key={st.id || i} className={`students__item ${st.color}`}>
                         <div className="students__item-info">
-                            <img src={img} alt=""/>
+                            <img src={img} alt="" />
                             <div>
                                 {st.name}
                             </div>
@@ -239,27 +222,27 @@ const ChangeGroupTime = () => {
             })
         }
 
-    },[students])
+    }, [students])
 
-    const onSetDay = (subjectName,id) => {
+    const onSetDay = (subjectName, id) => {
 
         if (subjectName !== "Fan tanla") {
             const filteredDays = days.filter(item => item.name === subjectName)
             setDays(subjects => {
                 return subjects.map(item => {
                     if (item.name === subjectName && !item.isActive) {
-                        return {...item,disabled: true, isActive: id}
+                        return { ...item, disabled: true, isActive: id }
                     }
                     if (item?.isActive !== id) {
                         return item
                     }
-                    return  {...item,disabled: false,isActive: null}
+                    return { ...item, disabled: false, isActive: null }
                 })
             })
             setLessons(lessons => {
                 return lessons.map(item => {
                     if (item.id === id) {
-                        return {...item, selectedDay: filteredDays[0]}
+                        return { ...item, selectedDay: filteredDays[0] }
                     }
                     return item
                 })
@@ -267,34 +250,34 @@ const ChangeGroupTime = () => {
         }
     }
 
-    const onSetRoom = (roomId,id) => {
+    const onSetRoom = (roomId, id) => {
         const filteredRoom = dataToChange.rooms.filter(item => item.id === +roomId)
         setLessons(lessons => {
             return lessons.map(item => {
                 if (item.id === id) {
-                    return {...item, selectedRoom: filteredRoom[0]}
+                    return { ...item, selectedRoom: filteredRoom[0] }
                 }
                 return item
             })
         })
     }
 
-    const onSetStartTime = (value,id) => {
+    const onSetStartTime = (value, id) => {
         setLessons(lessons => {
             return lessons.map(item => {
                 if (item.id === id) {
-                    return {...item, startTime: value}
+                    return { ...item, startTime: value }
                 }
                 return item
             })
         })
     }
 
-    const onSetEndTime = (value,id) => {
+    const onSetEndTime = (value, id) => {
         setLessons(lessons => {
             return lessons.map(item => {
                 if (item.id === id) {
-                    return {...item, endTime: value}
+                    return { ...item, endTime: value }
                 }
                 return item
             })
@@ -343,9 +326,9 @@ const ChangeGroupTime = () => {
     // }
 
     const onAddBtn = () => {
-        const lastElem = lessons.filter((item,index) => index === lessons.length-1)
+        const lastElem = lessons.filter((item, index) => index === lessons.length - 1)
 
-        setLessons([...lessons,{id:lastElem[0].id + 1,selectedDay: null,selectedRoom: null}])
+        setLessons([...lessons, { id: lastElem[0].id + 1, selectedDay: null, selectedRoom: null }])
 
     }
 
@@ -357,7 +340,7 @@ const ChangeGroupTime = () => {
             setDays(subjects => {
                 return subjects.map(item => {
                     if (item.name === lesson[0].selectedDay.name) {
-                        return {...item,disabled: false, isActive: null}
+                        return { ...item, disabled: false, isActive: null }
                     }
                     return item
                 })
@@ -368,12 +351,12 @@ const ChangeGroupTime = () => {
         setLessons(lessons => lessons.filter(item => item.id !== id))
     }
 
-    const onDelLesson = (id,timeId) => {
+    const onDelLesson = (id, timeId) => {
 
         const lesson = lessons.filter(item => item.id === id)
 
 
-        request(`${BackUrl}group_change/delete_time_table/${timeId}`, "GET",null,headers())
+        request(`${BackUrl}group_change/delete_time_table/${timeId}`, "GET", null, headers())
             .then(res => {
                 if (res.success) {
                     dispatch(setMessage({
@@ -389,7 +372,7 @@ const ChangeGroupTime = () => {
             setDays(subjects => {
                 return subjects.map(item => {
                     if (item.name === lesson[0].selectedDay.name) {
-                        return {...item,disabled: false, isActive: null}
+                        return { ...item, disabled: false, isActive: null }
                     }
                     return item
                 })
@@ -402,14 +385,16 @@ const ChangeGroupTime = () => {
     }
 
     const renderDays = useCallback(() => {
+        console.log(days, "days")
+        console.log(dataToChange?.rooms, "dataToChange?.rooms")
         // console.log(lessons)
-        return lessons.map((item,index) => {
+        return lessons.map((item, index) => {
             return (
-                <div className="days__item">
+                <div className="days__item" key={item.id || item.timeId || index}>
                     <Select
                         keyValue={"name"}
                         options={days}
-                        onChangeOption={(e) => onSetDay(e,item.id)}
+                        onChangeOption={(e) => onSetDay(e, item.id)}
                         name={`days-${index}`}
                         title="Kunlar"
                         defaultValue={item.selectedDay?.name}
@@ -420,13 +405,13 @@ const ChangeGroupTime = () => {
                         name={`rooms-${index}`}
                         title={`Honalar`}
                         options={dataToChange?.rooms}
-                        onChangeOption={(e) => onSetRoom(e,item.id)}
+                        onChangeOption={(e) => onSetRoom(e, item.id)}
                         defaultValue={item.selectedRoom?.id}
                     />
 
 
-                    <Input onChange={(e) => onSetStartTime(e,item.id)} defaultValue={item.startTime} name={`start-${index}`} title={"Boshlanish vaqti"} type={"time"} />
-                    <Input onChange={(e) => onSetEndTime(e,item.id)} defaultValue={item.endTime} name={`end-${index}`} title={"Tugash vaqti"} type={"time"} />
+                    <Input onChange={(e) => onSetStartTime(e, item.id)} defaultValue={item.startTime} name={`start-${index}`} title={"Boshlanish vaqti"} type={"time"} />
+                    <Input onChange={(e) => onSetEndTime(e, item.id)} defaultValue={item.endTime} name={`end-${index}`} title={"Tugash vaqti"} type={"time"} />
 
                     {/*<label className="time-label" htmlFor="time-label">*/}
                     {/*    <span className="name-field">Boshlanish vaqti</span>*/}
@@ -440,12 +425,12 @@ const ChangeGroupTime = () => {
                     {
                         index !== 0 ?
                             <div className="days__item-del" onClick={() => delFromLesson(item.id)}>
-                                <i className="fas fa-minus"/>
+                                <i className="fas fa-minus" />
                             </div> : null
                     }
                     {
                         item.timeId ?
-                            <div className="days__item-del" onClick={() => onDelLesson(item.id,item.timeId)}>
+                            <div className="days__item-del" onClick={() => onDelLesson(item.id, item.timeId)}>
                                 <i className="fas fa-times" />
                             </div> : null
                     }
@@ -453,7 +438,7 @@ const ChangeGroupTime = () => {
                 </div>
             )
         })
-    },[lessons,days])
+    }, [lessons, days, dataToChange, delFromLesson])
 
 
     useEffect(() => {
@@ -463,12 +448,12 @@ const ChangeGroupTime = () => {
             setIsDisabled(true)
         } else if (teacherError !== "") {
             setIsDisabled(true)
-        }  else if (students.length === 0) {
+        } else if (students.length === 0) {
             setIsDisabled(true)
         } else {
             setIsDisabled(false)
         }
-    },[groupError, students])
+    }, [groupError, students])
 
 
     const renderedStudents = renderStudents()
@@ -477,7 +462,7 @@ const ChangeGroupTime = () => {
     return (
         <div className="changeGroupTime">
             <form className="changeGroupTime__buttons" onSubmit={onChangeSubmit}>
-                <input disabled={isDisabled} type="submit" value="O'zgartirish" className="input-submit"/>
+                <input disabled={isDisabled} type="submit" value="O'zgartirish" className="input-submit" />
             </form>
             <div className="changeGroupTime__header">
 
@@ -558,7 +543,7 @@ const ChangeGroupTime = () => {
 
 
 
-                    <input  type="submit" value="Tekshirmoq" className="input-submit"/>
+                    <input type="submit" value="Tekshirmoq" className="input-submit" />
 
 
 
