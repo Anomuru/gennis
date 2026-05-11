@@ -52,6 +52,7 @@ const PlatformAddGroup = React.lazy(() => import('./platformAddGroup/platformAdd
 const PlatformTimeTable = React.lazy(() => import('pages/platformContent/platformTimeTable/day'));
 const PlatformRoomTimeTable = React.lazy(() => import('pages/platformContent/platformTimeTable/room'));
 const PlatformGroupTime = React.lazy(() => import('pages/platformContent/platformTimeTable/group'));
+const TeacherTimeTable = React.lazy(() => import('pages/platformContent/platformTimeTable/teacher/index.js'));
 
 const PlatformRooms = React.lazy(() => import('./platformRooms/platformRooms'));
 const PlatformInsideRoom = React.lazy(() => import('./platformRooms/roomInside/roomInside'));
@@ -178,6 +179,7 @@ const PlatformContent = () => {
                     <Route path="parentsList/:locationId/*" element={<PlaftformParentsList />} />
                     <Route path="timeTable/:locationId" element={<PlatformTimeTable />} />
                     <Route path="roomTimeTable/:roomId" element={<PlatformRoomTimeTable />} />
+                    <Route path="teacherTimeTable/:locationId" element={<TeacherTimeTable />} />
 
 
                     <Route path="allTeachers/*" element={<PlatformAllTeachers />} />

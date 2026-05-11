@@ -1,9 +1,15 @@
 .main
-  display: grid
-  grid-template-columns: repeat(3,2fr)
-  grid-auto-rows: auto
-  gap: 3rem
-  justify-items: center
+  display: flex
+  //align-items: center
+  justify-content: space-between
+  //justify-items: center
+  &__box
+    width: 60%
+    //align-items: center
+    display: flex
+    padding-left: 3rem
+    flex-direction: column
+    gap: 2rem
 
   &Flex
     width: 100%

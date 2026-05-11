@@ -3,34 +3,106 @@
 
 
 .insideGroup
-  padding: 4rem
+  padding: 2rem
+  background: #F3F7FB
+  position: relative
+  display: flex
+  flex-direction: column
+  gap: 2rem
+
   .header
     width: 100%
+    position: sticky
+    top: 2rem
+    right: 0
+    z-index: 199
     padding: 3rem
+    border-radius: 2rem
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px
+    background: #FDFEFF
     display: flex
-    &>div
-      width: 33.3333%
+    gap: 5rem
+
+    & > div
+      width: fit-content
       display: flex
+      align-items: end
+      padding-top: 1.5rem
       flex-direction: column
+
       &:nth-child(2)
-        align-items: center
-      &:last-child
+        width: 90%
+        padding-top: 0
         flex-direction: row
+        align-items: center
+        gap: 1.5rem
+
+        span
+          background: linear-gradient(34deg, #3284EA, #118FBF)
+          padding: 1.3rem
+          border-radius: 1rem
+          display: flex
+          corner-top-right-shape: scoop
+          position: relative
+          align-items: center
+          text-align: center
+
+          &::after
+            content: ""
+            position: absolute
+            inset: 0
+            border-radius: 10px
+            background: linear-gradient(34deg, #3284EA, #118FBF)
+            filter: blur(20px)
+            opacity: 0.6
+            z-index: -1
+
+
+        h1
+          text-transform: uppercase
+
+        .error_status
+
+          width: 3rem
+          font-size: 1.2rem
+          height: 3rem
+          display: flex
+          justify-content: center
+          position: absolute
+          align-items: center
+          font-weight: bold
+          color: white
+          cursor: pointer
+          text-align: center
+          vertical-align: super
+          top: -1rem
+          right: -1rem
+          background: #fd4141
+          font-family: "Inter"
+          border-radius: 50%
+
+      &:last-child
+        padding-top: 0
+        padding-bottom: 1.5rem
+        flex-direction: row
+        align-self: end
         justify-content: flex-end
-      h1
-        font-size: 2.3rem
-      h2
-        margin-top: 1rem
-        font-size: 2.5rem
+    //h1
+    //  font-size: 2.3rem
+    //h2
+    //  margin-top: 1rem
+    //  font-size: 2.5rem
     &Btn
       position: relative
       display: flex
       align-items: center
       justify-content: center
       cursor: pointer
+
       i
         font-size: 3rem
         color: $color-grey-dark
+
       .modalOptions
         width: 20rem
         border-radius: 10px
@@ -39,13 +111,15 @@
         top: 150%
         right: 0
         z-index: 101
-        box-shadow: 0 1px 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.12) ,0 4px 8px rgba(0,0,0,0.12) ,0 8px 16px rgba(0,0,0,0.12) ,0 16px 32px rgba(0,0,0,0.12)
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.12), 0 16px 32px rgba(0, 0, 0, 0.12)
         visibility: hidden
         opacity: 0
         overflow: hidden
+
         &.active
           visibility: visible
           opacity: 1
+
         .option
           display: flex
           align-items: center
@@ -53,69 +127,168 @@
           padding: 1rem 2rem
           //margin-bottom: 1rem
           transition: all .5s
+
           &:last-child
             margin-bottom: 0
+
           &:hover
             background-color: #ebebeb
+
           i
             color: $color-grey-dark
             font-size: 1.8rem
+
           span
             font-size: 1.5rem
             color: $color-grey-dark
             margin-left: 1rem
+
   .error
     margin: 1rem 0
-    display: flex
+    background: #FEF3F2
+
+    border-radius: 2rem
+    display: none
     flex-direction: column
-    align-items: center
-    justify-content: center
-    h1
-      color: red
-  .subheader
-    width: 100%
-    padding: 3rem
-    margin-top: 1rem
-    &__links
+    border: 2px solid #FEDEDE
+    z-index: 200
+    //left: 20%
+    //top: 3rem
+
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 50px
+
+    &.active
+      display: flex
+
+    &__header
       width: 100%
-      height: fit-content
       padding: 2rem
       display: flex
+      gap: 2rem
       align-items: center
+
+      h1
+        font-weight: bold
+        font-family: "Arial Black" !important
+        font-size: 2rem
+        margin-top: -2rem
+        color: #7F1D1D
+
+      &__span
+        border-radius: 1.2rem
+        background: linear-gradient(-45deg, #F57B6B, #F88448)
+        padding: 1rem
+        animation: alert .6s ease-in-out infinite alternate
+        @keyframes alert
+          from
+            opacity: 1
+            transform: scale(1)
+          to
+            opacity: 0.6
+            transform: scale(1.05)
+
+    &__list
+      //width: 100%
+      display: flex
+      flex-direction: column
+      gap: 2rem
+      padding: 2rem
+      align-items: center
+
+      li
+        background: #FFFFFF
+        border-radius: 1rem
+        padding: 1rem
+        width: 90%
+        color: #7F1D1D
+        font-size: 1.8rem
+        font-weight: 700
+
+
+
+
+
+  .subheader
+    width: 40%
+    padding: 0
+    margin-top: 2rem
+
+    &__links
+      width: 70%
+      gap: 2rem
+      height: fit-content
+      padding: 1rem
+      box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 50px
+      background: #fff
+      border-radius: 2rem
+
+      display: flex
+      align-items: center
+
       &Item
         width: 50%
         font-size: 1.8rem
         display: flex
         align-items: center
         justify-content: center
-        padding: 2rem 0
-        border-bottom: 2px solid
+        padding: 2rem
+        color: #47556E
+        border-radius: 2rem
         font-weight: bold
         cursor: pointer
+        position: relative
         user-select: none
-        &:hover,&.active
-          border-bottom: 2px solid $color-main-dark
-          color: $color-main-dark
+        transition: all 0.3s ease
+
+        &.active
+          background: linear-gradient(to right, #4691F7, #17C0E1)
+          color: #fff
+
+.status
+  width: 3rem
+  font-size: 1.2rem
+  height: 3rem
+  display: flex
+  justify-content: center
+  position: absolute
+  align-items: center
+  font-weight: bold
+  color: white
+  cursor: pointer
+  text-align: center
+  vertical-align: super
+  top: -1rem
+  right: -1rem
+  font-family: "Inter"
+  border-radius: 50%
+  background: #10B983
 
 @media (max-width: 768px)
   .insideGroup
     .header
-      &>div
+      & > div
         h1
           font-size: 2.7rem
+
         h2
           font-size: 3.2rem
+
       &-btn
         i
           font-size: 3.7rem
+
         .modalOptions
           width: 25rem
+
           .option
             padding: 2rem
+
             i
               font-size: 2.5rem
+
             span
               font-size: 2rem
+
     .subheader
       &__links
         &-item
@@ -125,34 +298,43 @@
       .checkAttendance
         min-width: 15rem
         height: 15rem
+
         i
           font-size: 5rem
-
 
 
 @media (max-width: 475px)
   .insideGroup
     padding: 2rem
+
     .header
-      &>div
+      & > div
         h1
           font-size: 3rem
+
         h2
           font-size: 3.7rem
+
       &-btn
 
         i
           font-size: 5rem
+
         .modalOptions
           width: 30rem
+
           .option
             padding: 2rem 3rem
+
             .icon
               width: 4rem
+
               i
                 font-size: 3rem
+
             span
               font-size: 2.7rem
+
     .subheader
       &__links
         &-item
@@ -164,6 +346,7 @@
       .checkAttendance
         min-width: 15rem
         height: 15rem
+
         i
           font-size: 5rem
 
