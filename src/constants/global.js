@@ -417,6 +417,14 @@ export const requireMenuItems = (id) => {
             roles: [ROLES.Teacher, ROLES.Student],
             // location: true
         },
+        {
+            to: `teacherTimeTable`,
+            name: "Time table",
+            classIcon: "fa-calendar-alt",
+            location: true,
+            roles: [ROLES.Teacher],
+            // children: true
+        },
         // {
         //     to : `qrCode`,
         //     name : "Qr code",

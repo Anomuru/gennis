@@ -28,8 +28,9 @@ const PlatformMeProfile = () => {
 
 
     const {extraInfo,meLoadingStatus,links,role,id,profile_photo} = useSelector(state => state.me)
+    const data = useSelector(state => state.me)
 
-
+    console.log(data, 'dat')
     const handleClick = (e) => {
         if (!e.target.classList.contains("modalOptions") && activeOptions) {
             setActiveOptions(false)

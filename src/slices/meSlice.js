@@ -16,6 +16,7 @@ const initialState = {
     rate: [],
     extraInfo: {},
     links: [],
+    teacher_id: null,
     activeToChange: {},
     meLoadingStatus: "idle",
     meInfoLoadingStatus: "idle",
@@ -95,6 +96,7 @@ const meSlice = createSlice({
             state.location = action.payload.location_id
             state.links = action.payload.links
             state.contract_url = action.payload.contract_url
+            state.teacher_id = action.payload.teacher_id
 
         },
 
@@ -155,6 +157,7 @@ const meSlice = createSlice({
                 state.surname = action.payload.surname;
                 state.role = action.payload.role;
                 state.profile_photo = action.payload.profile_photo
+                state.teacher_id = action.payload.teacher_id
                 sessionStorage.setItem('token', action.payload.access_token);
                 state.location = action.payload.location_id
                 localStorage.setItem('location_id', action.payload.location_id);
@@ -177,6 +180,8 @@ const meSlice = createSlice({
                 state.profile_photo = action.payload.profile_photo
                 state.links = action.payload.links
                 state.rate = action.payload.rate
+                state.teacher_id = action.payload.teacher_id
+                localStorage.setItem("teacher_id", action.payload.teacher_id)
                 state.contract_url = action.payload.contract_url
             })
             .addCase(fetchMyInfo.rejected, state => { state.meInfoLoadingStatus = 'error' })
