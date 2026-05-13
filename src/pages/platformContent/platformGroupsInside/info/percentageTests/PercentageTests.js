@@ -33,16 +33,16 @@ const PercentageTests = ({ data, assisData }) => {
                         <div className={cls.information__container}>
 
                             <div className={cls.information__item}>
-                                <span>{assisData.assistantName.name}: </span>
+                                <span>{assisData.assistantName.name.slice(9,13).toUpperCase()}: </span>
                                 <span>{assisData.assistantName.value} </span>
                             </div>
                             <div className={cls.information__item}>
-                                <span>{assisData.assistantSurname.name}: </span>
+                                <span>{assisData.assistantSurname.name.slice(9,19).toUpperCase()}: </span>
                                 <span>{assisData.assistantSurname.value} </span>
                             </div>
                             <div className={cls.information__item}>
-                                <span>{assisData.assistentSalary.name}: </span>
-                                <span>{assisData.assistentSalary.value} </span>
+                                <span>{assisData.assistentSalary.name.slice(9,14).toUpperCase()}: </span>
+                                <span>{assisData.assistentSalary.value.toLocaleString()} </span>
                             </div>
                         </div>
                     </div>
