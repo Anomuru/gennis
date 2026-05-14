@@ -873,9 +873,10 @@ const PlatformHarajatTurlari = () => {
                 <div className={cls.logsSection}>
                     <div className={cls.logsHeader}>
                         <MonthYearFilter month={logMonth} year={logYear} onMonth={setLogMonth} onYear={setLogYear} />
-                        <button className={cls.generateBtn} disabled={generating} onClick={generateLogs}>
+                        {/* Log creation is intentionally hidden on Oylik xarajatlar. */}
+                        {/* <button className={cls.generateBtn} disabled={generating} onClick={generateLogs}>
                             {generating ? "Yaratilmoqda..." : "Loglarni yaratish"}
-                        </button>
+                        </button> */}
                     </div>
                     {logSummary && (
                         <div className={cls.summary}>
@@ -917,12 +918,14 @@ const PlatformHarajatTurlari = () => {
                                             <td>{log.paid_date ?? "—"}</td>
                                             <td>
                                                 <div className={cls.logActions}>
-                                                    {canEditLogCost(log) && (
+                                                    {/* Log editing is intentionally hidden on Oylik xarajatlar. */}
+                                                    {/* {canEditLogCost(log) && (
                                                         <button className={cls.viewBtn} onClick={() => openLogCost(log)}>Narxni o'zgartirish</button>
-                                                    )}
-                                                    {canDeleteLog(log) && (
+                                                    )} */}
+                                                    {/* Log deletion is intentionally hidden on Oylik xarajatlar. */}
+                                                    {/* {canDeleteLog(log) && (
                                                         <button className={cls.deleteLogBtn} onClick={() => openDeleteLog(log)}>O'chirish</button>
-                                                    )}
+                                                    )} */}
                                                     {status !== "paid" && (
                                                         <button className={cls.payBtn} onClick={() => openPay(log)}>
                                                             {status === "partial" ? "To'lov qo'shish" : "To'lash"}
