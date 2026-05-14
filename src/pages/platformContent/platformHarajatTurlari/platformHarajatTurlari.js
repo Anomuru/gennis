@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,6 +30,14 @@ const MONTHS = [
 ];
 const YEARS = Array.from({ length: 5 }, (_, i) => now.getFullYear() - 2 + i);
 
+const formatMoney = (value) => Number(value || 0).toLocaleString();
+
+const getLogPaidAmount = (log) => Number(log?.paid_amount ?? (log?.is_paid ? log?.cost : 0) ?? 0);
+const getLogRemainingAmount = (log) => Number(log?.remaining_amount ?? Math.max(0, Number(log?.cost || 0) - getLogPaidAmount(log)));
+const getLogPaymentStatus = (log) => log?.payment_status || (log?.is_paid ? "paid" : "unpaid");
+const hasSplitPayments = (log) => (log?.payments || []).length > 0;
+const isLegacyPaidLog = (log) => getLogPaymentStatus(log) === "paid" && !hasSplitPayments(log);
+
 const MonthYearFilter = ({ month, year, onMonth, onYear }) => (
     <div className={cls.logsControls}>
         <select className={cls.select} value={month} onChange={e => onMonth(Number(e.target.value))}>
@@ -58,6 +66,7 @@ const PaymentTypeSelect = ({ register, name }) => {
 
 const PlatformHarajatTurlari = () => {
     const navigate = useNavigate();
+    const { search } = useLocation();
     const dispatch = useDispatch();
     const { locationId } = useParams();
     const { request } = useHttp();
@@ -89,7 +98,28 @@ const PlatformHarajatTurlari = () => {
     const [payModal, setPayModal] = useState(false);
     const [payItem, setPayItem] = useState(null);
     const [paySubmitting, setPaySubmitting] = useState(false);
+    const [payError, setPayError] = useState("");
+    const [paymentsModal, setPaymentsModal] = useState(false);
+    const [paymentsItem, setPaymentsItem] = useState(null);
+    const [paymentsLoading, setPaymentsLoading] = useState(false);
+    const [paymentDeleteModal, setPaymentDeleteModal] = useState(false);
+    const [paymentDeleteId, setPaymentDeleteId] = useState(null);
+    const [paymentDeletingId, setPaymentDeletingId] = useState(null);
+    const [convertSubmitting, setConvertSubmitting] = useState(false);
+    const [logCostModal, setLogCostModal] = useState(false);
+    const [logCostItem, setLogCostItem] = useState(null);
+    const [logCostSubmitting, setLogCostSubmitting] = useState(false);
+    const [logCostError, setLogCostError] = useState("");
+    const [logDeleteModal, setLogDeleteModal] = useState(false);
+    const [logDeleteItem, setLogDeleteItem] = useState(null);
+    const [logDeleteSubmitting, setLogDeleteSubmitting] = useState(false);
+    const [openedDrillLogId, setOpenedDrillLogId] = useState(null);
     const payForm = useForm();
+    const logCostForm = useForm();
+
+    const searchParams = new URLSearchParams(search);
+    const drillLogId = searchParams.get("log_id");
+    const drillLogName = searchParams.get("log_name");
 
     // ── Transactions ──
     const [txMonth, setTxMonth] = useState(now.getMonth() + 1);
@@ -147,6 +177,22 @@ const PlatformHarajatTurlari = () => {
     }, [locationId]);
 
     useEffect(() => { fetchLogs(); }, [locationId, logMonth, logYear, statusFilter]);
+    useEffect(() => {
+        const params = new URLSearchParams(search);
+        if (params.get("tab") === "logs" || params.get("log_id")) {
+            setActiveTab("logs");
+        }
+    }, [search]);
+    useEffect(() => {
+        if (!drillLogId || openedDrillLogId === drillLogId) return;
+
+        const log = logs.find(item => String(item.id) === String(drillLogId));
+        openPayments(log || {
+            id: drillLogId,
+            overhead_type_name: drillLogName || "Bill"
+        });
+        setOpenedDrillLogId(drillLogId);
+    }, [drillLogId, drillLogName, logs, openedDrillLogId]);
     useEffect(() => { fetchTxs(); }, [locationId, txMonth, txYear, dirFilter]);
     useEffect(() => { if (showDeleted) fetchDeletedTypes(); }, [locationId, showDeleted]);
     useEffect(() => { if (showDeletedTx) fetchDeletedTxs(); }, [locationId, txMonth, txYear, showDeletedTx]);
@@ -188,7 +234,7 @@ const PlatformHarajatTurlari = () => {
         const changeable = !!data.changeable;
         const body = { name: data.name, changeable, location_id: Number(locationId), ...(changeable ? {} : { cost: Number(data.cost) }) };
         setSubmitting(true);
-        request(`${BackUrl}account/overhead_type/${editItem.id}`, "PUT", JSON.stringify(body), headers())
+        request(`${BackUrl}account/overhead_type/${editItem.id}`, "PATCH", JSON.stringify(body), headers())
             .then(res => {
                 if (res.success) {
                     setTypes(prev => prev.map(t => t.id === editItem.id ? { ...t, ...body, id: editItem.id } : t));
@@ -223,6 +269,17 @@ const PlatformHarajatTurlari = () => {
     };
 
     // ── Logs API ──
+    const requestJson = async (url, method = "GET", body = null) => {
+        const response = await fetch(url, { method, mode: "cors", body, headers: headers() });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            const error = new Error(data.message || `Request failed: ${response.status}`);
+            error.data = data;
+            throw error;
+        }
+        return data;
+    };
+
     const fetchLogs = () => {
         setLogsLoading(true);
         request(`${BackUrl}account/overhead_type_logs/${logMonth}/${logYear}?location_id=${locationId}&status=${statusFilter}`, "GET", null, headers())
@@ -233,14 +290,45 @@ const PlatformHarajatTurlari = () => {
 
     const openPay = (log) => {
         setPayItem(log);
-        payForm.reset({ date: TODAY, payment_type_id: "" });
+        setPayError("");
+        payForm.reset({
+            amount: getLogRemainingAmount(log),
+            date: TODAY,
+            payment_type_id: "",
+            note: ""
+        });
         setPayModal(true);
     };
 
-    const onPay = (data) => {
-        const body = { log_id: payItem.id, payment_type_id: Number(data.payment_type_id), location_id: Number(locationId), date: data.date };
+    const showRequestError = (error, fallback = "Xatolik yuz berdi") => {
+        dispatch(setMessage({ msg: error?.data?.message || error?.message || fallback, type: "error", active: true }));
+    };
+
+    const onAddPayment = (data) => {
+        const amount = Number(data.amount);
+        const remainingAmount = getLogRemainingAmount(payItem);
+
+        if (!amount || amount <= 0) {
+            setPayError("Summa musbat bo'lishi kerak");
+            return;
+        }
+        if (amount > remainingAmount) {
+            setPayError(`To'lov summasi qoldiqdan oshmasligi kerak. Qoldiq: ${formatMoney(remainingAmount)} so'm`);
+            payForm.setValue("amount", remainingAmount);
+            return;
+        }
+
+        const body = {
+            payment_type_id: Number(data.payment_type_id),
+            amount,
+            date: data.date,
+            location_id: Number(locationId),
+            note: data.note || null
+        };
+
         setPaySubmitting(true);
-        request(`${BackUrl}account/overhead_type_logs/pay`, "POST", JSON.stringify(body), headers())
+        setPayError("");
+        requestJson(`${BackUrl}account/overhead_type_logs/${payItem.id}/payments`, "POST", JSON.stringify(body))
             .then(res => {
                 if (res.success) {
                     dispatch(setMessage({ msg: res.message, type: "success", active: true }));
@@ -248,9 +336,202 @@ const PlatformHarajatTurlari = () => {
                     fetchLogs();
                 }
             })
-            .catch(() => {})
+            .catch(error => {
+                const remainingAmount = error?.data?.remaining_amount;
+                if (remainingAmount != null) {
+                    payForm.setValue("amount", remainingAmount);
+                }
+                setPayError(error?.data?.message || error?.message || "To'lov qo'shilmadi");
+                showRequestError(error, "To'lov qo'shilmadi");
+            })
             .finally(() => setPaySubmitting(false));
     };
+
+    const onPayFullLegacy = async () => {
+        if (!payItem) return;
+        const isValid = await payForm.trigger(["date", "payment_type_id"]);
+        if (!isValid) return;
+
+        const data = payForm.getValues();
+        const body = {
+            log_id: payItem.id,
+            payment_type_id: Number(data.payment_type_id),
+            location_id: Number(locationId),
+            date: data.date
+        };
+        setPaySubmitting(true);
+        setPayError("");
+        requestJson(`${BackUrl}account/overhead_type_logs/pay`, "POST", JSON.stringify(body))
+            .then(res => {
+                if (res.success) {
+                    dispatch(setMessage({ msg: res.message, type: "success", active: true }));
+                    setPayModal(false);
+                    fetchLogs();
+                }
+            })
+            .catch(error => {
+                setPayError(error?.data?.message || error?.message || "To'lov bajarilmadi");
+                showRequestError(error, "To'lov bajarilmadi");
+            })
+            .finally(() => setPaySubmitting(false));
+    };
+
+    const openPayments = (log) => {
+        setPaymentsItem(log);
+        setPaymentsModal(true);
+        setPaymentsLoading(true);
+        requestJson(`${BackUrl}account/overhead_type_logs/${log.id}/payments`)
+            .then(res => {
+                if (res.success) {
+                    setPaymentsItem({
+                        ...log,
+                        cost: res.cost,
+                        paid_amount: res.paid_amount,
+                        remaining_amount: res.remaining_amount,
+                        payment_status: res.payment_status,
+                        payments: res.payments || []
+                    });
+                }
+            })
+            .catch(error => showRequestError(error, "To'lovlar olinmadi"))
+            .finally(() => setPaymentsLoading(false));
+    };
+
+    const openLogCost = (log) => {
+        setLogCostItem(log);
+        setLogCostError("");
+        logCostForm.reset({ cost: log.cost ?? "" });
+        setLogCostModal(true);
+    };
+
+    const onUpdateLogCost = (data) => {
+        const cost = Number(data.cost);
+
+        if (!cost || cost <= 0) {
+            setLogCostError("Narx musbat bo'lishi kerak");
+            return;
+        }
+
+        const paidAmount = getLogPaidAmount(logCostItem);
+        if (paidAmount && cost < paidAmount) {
+            setLogCostError(`Allaqachon ${formatMoney(paidAmount)} so'm to'langan. Avval to'lovlarni o'chiring.`);
+            return;
+        }
+
+        setLogCostSubmitting(true);
+        setLogCostError("");
+        requestJson(`${BackUrl}account/overhead_type_logs/${logCostItem.id}`, "PATCH", JSON.stringify({ cost }))
+            .then(res => {
+                if (res.success) {
+                    dispatch(setMessage({ msg: res.message || "Log yangilandi", type: "success", active: true }));
+                    setLogCostModal(false);
+                    setLogCostItem(null);
+                    fetchLogs();
+                }
+            })
+            .catch(error => {
+                const paid = error?.data?.paid_amount;
+                const message = paid != null
+                    ? `Allaqachon ${formatMoney(paid)} so'm to'langan. Avval to'lovlarni o'chiring.`
+                    : error?.data?.message || error?.message || "Log yangilanmadi";
+                setLogCostError(message);
+                showRequestError(error, "Log yangilanmadi");
+            })
+            .finally(() => setLogCostSubmitting(false));
+    };
+
+    const openDeleteLog = (log) => {
+        setLogDeleteItem(log);
+        setLogDeleteModal(true);
+    };
+
+    const deleteLog = () => {
+        if (!logDeleteItem) return;
+        setLogDeleteSubmitting(true);
+        requestJson(`${BackUrl}account/overhead_type_logs/${logDeleteItem.id}`, "DELETE")
+            .then(res => {
+                if (res.success) {
+                    dispatch(setMessage({ msg: res.message || "Log o'chirildi", type: "success", active: true }));
+                    setLogDeleteModal(false);
+                    setLogDeleteItem(null);
+                    fetchLogs();
+                }
+            })
+            .catch(error => showRequestError(error, "Log o'chirilmadi"))
+            .finally(() => setLogDeleteSubmitting(false));
+    };
+
+    const openDeletePayment = (paymentId) => {
+        setPaymentDeleteId(paymentId);
+        setPaymentDeleteModal(true);
+    };
+
+    const deletePayment = () => {
+        if (!paymentDeleteId) return;
+        const paymentId = paymentDeleteId;
+        setPaymentDeletingId(paymentId);
+        requestJson(`${BackUrl}account/overhead_type_logs/payments/${paymentId}`, "DELETE")
+            .then(res => {
+                if (res.success) {
+                    dispatch(setMessage({ msg: res.message || "To'lov o'chirildi", type: "success", active: true }));
+                    if (paymentsItem) openPayments({ ...paymentsItem, ...res.log });
+                    fetchLogs();
+                }
+            })
+            .catch(error => showRequestError(error, "To'lov o'chirilmadi"))
+            .finally(() => {
+                setPaymentDeletingId(null);
+                setPaymentDeleteId(null);
+                setPaymentDeleteModal(false);
+            });
+    };
+
+    const convertToSplit = (log) => {
+        setConvertSubmitting(true);
+        requestJson(`${BackUrl}account/overhead_type_logs/${log.id}/convert-to-split`, "POST")
+            .then(res => {
+                if (res.success) {
+                    dispatch(setMessage({ msg: res.message || "Log split-payment formatiga o'tkazildi", type: "success", active: true }));
+                    fetchLogs();
+                    openPayments({ ...log, ...res.log });
+                }
+            })
+            .catch(error => showRequestError(error, "Konversiya bajarilmadi"))
+            .finally(() => setConvertSubmitting(false));
+    };
+
+    const renderPaymentStatus = (log) => {
+        const status = getLogPaymentStatus(log);
+        if (status === "paid") return <span className={cls.statusPaid}>To'langan</span>;
+        if (status === "partial") return <span className={cls.statusPartial}>Qisman</span>;
+        return <span className={cls.statusUnpaid}>To'lanmagan</span>;
+    };
+
+    const renderPaymentProgress = (log) => {
+        const cost = Number(log.cost || 0);
+        const paidAmount = getLogPaidAmount(log);
+        const percent = cost ? Math.min(100, Math.round((paidAmount / cost) * 100)) : 0;
+
+        return (
+            <div className={cls.progressWrap}>
+                <div className={cls.progressMeta}>
+                    <span>{formatMoney(paidAmount)}</span>
+                    <span>{formatMoney(getLogRemainingAmount(log))} qoldi</span>
+                </div>
+                <div className={cls.progressBar}>
+                    <span style={{ width: `${percent}%` }} />
+                </div>
+            </div>
+        );
+    };
+
+    const canEditLogCost = (log) => {
+        if (isLegacyPaidLog(log)) return false;
+        if (log?.overhead_id && !hasSplitPayments(log)) return false;
+        return getLogPaymentStatus(log) !== "paid" || hasSplitPayments(log);
+    };
+
+    const canDeleteLog = (log) => getLogPaymentStatus(log) === "unpaid" && !log.overhead_id;
 
     const generateLogs = () => {
         setGenerating(true);
@@ -592,6 +873,9 @@ const PlatformHarajatTurlari = () => {
                 <div className={cls.logsSection}>
                     <div className={cls.logsHeader}>
                         <MonthYearFilter month={logMonth} year={logYear} onMonth={setLogMonth} onYear={setLogYear} />
+                        <button className={cls.generateBtn} disabled={generating} onClick={generateLogs}>
+                            {generating ? "Yaratilmoqda..." : "Loglarni yaratish"}
+                        </button>
                     </div>
                     {logSummary && (
                         <div className={cls.summary}>
@@ -607,20 +891,60 @@ const PlatformHarajatTurlari = () => {
                     </div>
                     {logsLoading ? <DefaultLoaderSmall /> : (
                         <Table>
-                            <thead><tr><th>#</th><th>Nomi</th><th>Narxi</th><th>Holat</th><th>To'langan sana</th><th></th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nomi</th>
+                                    <th>Narxi</th>
+                                    <th>To'lov</th>
+                                    <th>Holat</th>
+                                    <th>To'langan sana</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 {logs.length === 0 ? (
-                                    <tr><td colSpan={6} className={cls.empty}>Ma'lumot yo'q</td></tr>
-                                ) : logs.map((log, i) => (
-                                    <tr key={log.id}>
-                                        <td>{i + 1}</td>
-                                        <td>{log.overhead_type_name}</td>
-                                        <td>{log.cost != null ? log.cost.toLocaleString() : "—"}</td>
-                                        <td><span className={log.is_paid ? cls.tagFixed : cls.tagVariable}>{log.is_paid ? "To'langan" : "To'lanmagan"}</span></td>
-                                        <td>{log.paid_date ?? "—"}</td>
-                                        <td>{!log.is_paid && <button className={cls.payBtn} onClick={() => openPay(log)}>To'lash</button>}</td>
-                                    </tr>
-                                ))}
+                                    <tr><td colSpan={7} className={cls.empty}>Ma'lumot yo'q</td></tr>
+                                ) : logs.map((log, i) => {
+                                    const status = getLogPaymentStatus(log);
+                                    return (
+                                        <tr key={log.id}>
+                                            <td>{i + 1}</td>
+                                            <td>{log.overhead_type_name}</td>
+                                            <td>{log.cost != null ? formatMoney(log.cost) : "—"}</td>
+                                            <td>{renderPaymentProgress(log)}</td>
+                                            <td>{renderPaymentStatus(log)}</td>
+                                            <td>{log.paid_date ?? "—"}</td>
+                                            <td>
+                                                <div className={cls.logActions}>
+                                                    {canEditLogCost(log) && (
+                                                        <button className={cls.viewBtn} onClick={() => openLogCost(log)}>Narxni o'zgartirish</button>
+                                                    )}
+                                                    {canDeleteLog(log) && (
+                                                        <button className={cls.deleteLogBtn} onClick={() => openDeleteLog(log)}>O'chirish</button>
+                                                    )}
+                                                    {status !== "paid" && (
+                                                        <button className={cls.payBtn} onClick={() => openPay(log)}>
+                                                            {status === "partial" ? "To'lov qo'shish" : "To'lash"}
+                                                        </button>
+                                                    )}
+                                                    {(hasSplitPayments(log) || status !== "unpaid") && (
+                                                        <button className={cls.viewBtn} onClick={() => openPayments(log)}>To'lovlar</button>
+                                                    )}
+                                                    {isLegacyPaidLog(log) && (
+                                                        <button
+                                                            className={cls.convertBtn}
+                                                            disabled={convertSubmitting}
+                                                            onClick={() => convertToSplit(log)}
+                                                        >
+                                                            Splitga o'tkazish
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </Table>
                     )}
@@ -764,14 +1088,116 @@ const PlatformHarajatTurlari = () => {
                 </form>
             </Modal>
 
+            {/* ── Modal: Edit log cost ── */}
+            <Modal activeModal={logCostModal} setActiveModal={setLogCostModal}>
+                <form className={cls.form} onSubmit={logCostForm.handleSubmit(onUpdateLogCost)}>
+                    <h2>{logCostItem?.overhead_type_name} — Narxni o'zgartirish</h2>
+                    <div className={cls.payInfo}>
+                        <span>To'langan: <strong>{formatMoney(getLogPaidAmount(logCostItem))} so'm</strong></span>
+                        <span>Qoldiq: <strong>{formatMoney(getLogRemainingAmount(logCostItem))} so'm</strong></span>
+                        <span>Holat: <strong>{getLogPaymentStatus(logCostItem)}</strong></span>
+                    </div>
+                    {getLogPaymentStatus(logCostItem) === "paid" && hasSplitPayments(logCostItem) && (
+                        <p className={cls.formWarning}>
+                            Narx oshirilsa, log qayta qisman to'langan holatiga o'tishi mumkin.
+                        </p>
+                    )}
+                    <InputForm title="Narxi" register={logCostForm.register} name="cost" type="number" required />
+                    {logCostError && <p className={cls.formError}>{logCostError}</p>}
+                    {logCostSubmitting ? <DefaultLoaderSmall /> : (
+                        <div className={cls.modalActions}>
+                            <button type="button" className="input-submit" onClick={() => setLogCostModal(false)}>Bekor</button>
+                            <button className="input-submit" type="submit">Saqlash</button>
+                        </div>
+                    )}
+                </form>
+            </Modal>
+
+            {/* ── Modal: Delete log ── */}
+            <Modal activeModal={logDeleteModal} setActiveModal={setLogDeleteModal}>
+                {logDeleteSubmitting ? <DefaultLoaderSmall /> : (
+                    <Confirm text="Bu logni o'chirmoqchimisiz? Bu amalni bekor qilib bo'lmaydi." setActive={setLogDeleteModal}
+                        getConfirm={r => { if (r === "yes") deleteLog(); }} />
+                )}
+            </Modal>
+
             {/* ── Modal: Pay log ── */}
             <Modal activeModal={payModal} setActiveModal={setPayModal}>
-                <form className={cls.form} onSubmit={payForm.handleSubmit(onPay)}>
-                    <h2>{payItem?.overhead_type_name} — To'lash</h2>
+                <form className={cls.form} onSubmit={payForm.handleSubmit(onAddPayment)}>
+                    <h2>{payItem?.overhead_type_name} — To'lov qo'shish</h2>
+                    <div className={cls.payInfo}>
+                        <span>Narxi: <strong>{formatMoney(payItem?.cost)} so'm</strong></span>
+                        <span>To'langan: <strong>{formatMoney(getLogPaidAmount(payItem))} so'm</strong></span>
+                        <span>Qoldiq: <strong>{formatMoney(getLogRemainingAmount(payItem))} so'm</strong></span>
+                    </div>
+                    <InputForm title="Summa" register={payForm.register} name="amount" type="number" required />
                     <InputForm title="Sana" register={payForm.register} name="date" type="date" required />
                     <PaymentTypeSelect register={payForm.register} name="payment_type_id" />
-                    {paySubmitting ? <DefaultLoaderSmall /> : <button className="input-submit" type="submit">Tasdiqlash</button>}
+                    <InputForm title="Izoh" register={payForm.register} name="note" type="text" />
+                    {payError && <p className={cls.formError}>{payError}</p>}
+                    {paySubmitting ? <DefaultLoaderSmall /> : (
+                        <div className={cls.modalActions}>
+                            {!hasSplitPayments(payItem) && getLogPaymentStatus(payItem) === "unpaid" && (
+                                <button type="button" className="input-submit" onClick={onPayFullLegacy}>Bir martalik to'lash</button>
+                            )}
+                            <button className="input-submit" type="submit">To'lov qo'shish</button>
+                        </div>
+                    )}
                 </form>
+            </Modal>
+
+            {/* ── Modal: Log payments ── */}
+            <Modal activeModal={paymentsModal} setActiveModal={setPaymentsModal}>
+                <div className={`${cls.form} ${cls.paymentsModal}`}>
+                    <h2>{paymentsItem?.overhead_type_name} — To'lovlar</h2>
+                    <div className={cls.payInfo}>
+                        <span>Narxi: <strong>{formatMoney(paymentsItem?.cost)} so'm</strong></span>
+                        <span>To'langan: <strong>{formatMoney(getLogPaidAmount(paymentsItem))} so'm</strong></span>
+                        <span>Qoldiq: <strong>{formatMoney(getLogRemainingAmount(paymentsItem))} so'm</strong></span>
+                    </div>
+                    {paymentsLoading ? <DefaultLoaderSmall /> : (
+                        <div className={cls.paymentsList}>
+                            {(paymentsItem?.payments || []).length === 0 ? (
+                                <p className={cls.empty}>Split to'lovlar yo'q</p>
+                            ) : paymentsItem.payments.map(payment => (
+                                <div className={cls.paymentRow} key={payment.id}>
+                                    <div>
+                                        <strong>{formatMoney(payment.amount)} so'm</strong>
+                                        <span>{payment.payment_type_name || "—"} · {payment.paid_date || "—"}</span>
+                                        {payment.note && <small>{payment.note}</small>}
+                                    </div>
+                                    <button
+                                        className={cls.btnDangerSmall}
+                                        disabled={paymentDeletingId === payment.id}
+                                        onClick={() => openDeletePayment(payment.id)}
+                                    >
+                                        O'chirish
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <div className={cls.modalActions}>
+                        {paymentsItem && getLogPaymentStatus(paymentsItem) !== "paid" && (
+                            <button
+                                type="button"
+                                className={cls.payBtn}
+                                onClick={() => {
+                                    setPaymentsModal(false);
+                                    openPay(paymentsItem);
+                                }}
+                            >
+                                To'lov qo'shish
+                            </button>
+                        )}
+                        <button type="button" className={cls.btnSecondary} onClick={() => setPaymentsModal(false)}>Yopish</button>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal activeModal={paymentDeleteModal} setActiveModal={setPaymentDeleteModal}>
+                <Confirm text="To'lovni o'chirishni tasdiqlaysizmi?" setActive={setPaymentDeleteModal}
+                    getConfirm={r => { if (r === "yes") deletePayment(); }} />
             </Modal>
 
             {/* ── Modals: Transactions ── */}

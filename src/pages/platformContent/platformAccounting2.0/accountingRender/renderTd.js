@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
 import { newAccountingSelectOptionValue } from "../model/accountingSelector";
-import React, { useState } from "react";
+import React from "react";
 import cls from "pages/platformContent/platformAccounting2.0/accountingTable/accountingTable.module.sass";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const RenderTd = ({ item, index, setConfirmModal, setItem, setChangeActive }) => {
     const selectOptionValue = useSelector(newAccountingSelectOptionValue)
@@ -12,6 +12,19 @@ export const RenderTd = ({ item, index, setConfirmModal, setItem, setChangeActiv
 
 
     const navigate = useNavigate()
+    const { locationId } = useParams()
+
+    const openOverheadTypeLog = () => {
+        if (!item?.overhead_type_log_id) return;
+        const params = new URLSearchParams({
+            tab: "logs",
+            log_id: String(item.overhead_type_log_id)
+        });
+        if (item?.name) {
+            params.set("log_name", item.name);
+        }
+        navigate(`/platform/accounting/${locationId}/harajat-turlari?${params.toString()}`);
+    }
 
     switch (selectOptionValue) {
 
@@ -104,6 +117,13 @@ export const RenderTd = ({ item, index, setConfirmModal, setItem, setChangeActiv
                     >
                         {/*<X />*/}x
                     </button>
+                </td>
+                <td>
+                    {item?.overhead_type_log_id ? (
+                        <button onClick={openOverheadTypeLog} className={cls.billBtn}>
+                            Bill
+                        </button>
+                    ) : "—"}
                 </td>
             </>
         }

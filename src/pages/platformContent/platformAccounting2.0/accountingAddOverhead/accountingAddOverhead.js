@@ -92,6 +92,7 @@ export const AccountingAddOverhead = ({setActive}) => {
         }
     }, [overheadTools])
 
+    const changeableOverheadTypes = overheadTypes.filter(type => type.changeable !== false)
     const isPriceLocked = selectedType && selectedType.changeable === false
 
     return (
@@ -102,7 +103,7 @@ export const AccountingAddOverhead = ({setActive}) => {
                     title={"Komunal"}
                     defaultValue={selectedCommunal}
                     onChangeOption={setSelectedComunal}
-                    options={overheadTypes}
+                    options={changeableOverheadTypes}
                 />
 
                 {isBoshqa && (

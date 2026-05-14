@@ -45,6 +45,7 @@ export const RenderTh = () => {
                 <th>Sana</th>
                 <th>To‘lov turi</th>
                 <th>O‘chirish</th>
+                <th>Bill</th>
             </>
         }
 
