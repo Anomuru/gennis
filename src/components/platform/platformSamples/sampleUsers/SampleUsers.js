@@ -310,7 +310,7 @@ const SampleUsers = (props) => {
                             }
                         </div>
                         <main className="section__main">
-                            <div style={{ height: "52vh", overflow: "auto" }} ref={refScroll}>
+                            <div style={{ height: "55vh", overflow: "auto" }} ref={refScroll}>
                                 <UsersTable
                                     fetchUsersStatus={fetchUsersStatus}
                                     funcsSlice={funcsSlice}

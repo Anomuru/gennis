@@ -343,7 +343,8 @@ const SampleGroups = (props) => {
                         </header>
 
 
-                        <main className="section__main">
+                        <main style={{maxHeight: "calc(100vh - 20vh)",
+                            overflow: "auto"}} className="section__main">
                             <GroupsTable
                                 activeRowsInTable={activeRowsInTable}
                                 groups={groups}

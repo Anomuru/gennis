@@ -191,7 +191,11 @@ const LocationMonths = () => {
                         funcSlice={funcSlice}
                         typeOfMoney={"teacherLocSalary"}
                         users={activeFineReport
-                            ? selectedMonth?.fine_report
+                            ?selectedMonth?.fine_report.filter(
+                                item =>
+                                    item.reason !== "dsa" &&
+                                    ![65, 63, 38].includes(item.id)
+                            )
                             : selectedMonth?.data
                         }
                         activeRowsInTable={activeItems}
