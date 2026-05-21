@@ -638,7 +638,7 @@ const PlatformTodoist = () => {
 
     const handleEditTag = () => {
         dispatch(taskTagsLoading())
-        request(`${BackUrl}tags/${selectedTag.id}/`, "PATCH", JSON.stringify({ name: tagFormData }), headers())
+        request(`${BackUrl}tags/${selectedTag.id}`, "PUT", JSON.stringify({ name: tagFormData }), headers())
             .then(res => {
                 dispatch(editTag(res))
                 dispatch(setMessage({
@@ -660,7 +660,7 @@ const PlatformTodoist = () => {
 
     const handleDeleteTag = () => {
         dispatch(taskTagsLoading())
-        request(`${BackUrl}tags/${selectedTag.id}/`, "DELETE", null, headers())
+        request(`${BackUrl}tags/${selectedTag.id}`, "DELETE", null, headers())
             .then(res => {
                 dispatch(deleteTag(selectedTag.id))
                 dispatch(setMessage({
