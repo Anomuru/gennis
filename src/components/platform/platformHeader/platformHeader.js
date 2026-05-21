@@ -6,11 +6,12 @@ import {useAuth} from "hooks/useAuth";
 import {BackUrlForDoc} from "constants/global";
 import img from "assets/user-interface/user_image.png";
 import {useSelector} from "react-redux";
+import Button from "../platformUI/button";
 
 
 const PlatformHeader = ({setMenuActive,menuActive}) => {
 
-    const {name,surname,id} = useAuth()
+    const {name,surname,id , location} = useAuth()
     const {profile_photo} = useSelector(state => state.me)
 
     const activedMenu = menuActive ?  "menu-logo menu-logo_active": "menu-logo"
@@ -27,13 +28,17 @@ const PlatformHeader = ({setMenuActive,menuActive}) => {
                         <span className="menu-logo__item" />
                     </div>
                 </div>
+
                 <div className="logo">
                     <img  src={logo} alt="Logo"/>
                     <span>Gennis</span>
+
                 </div>
             </div>
             <div>
+
                 <div className="user">
+
                     <div className="user__info programmer">
                         <span>{surname}</span>
                         <span>{name}</span>

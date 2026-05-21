@@ -75,21 +75,20 @@ export const requireMenuItems = (id) => {
             roles: [ROLES.Admin, ROLES.Director]
         },
         {
-            to: "todoist",
-            name: "To do",
-            classIcon: "fa-circle-check",
-            location: true,
-            children: true,
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
+            to: "newRegister",
+            name: "Registratsiya",
+            classIcon: "fa-edit",
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer]
         },
-        {
-            to: "chats",
-            name: "Chats",
-            classIcon: "fa-comments",
-            location: true,
-            children: true,
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
-        },
+
+        // {
+        //     to: "chats",
+        //     name: "Chats",
+        //     classIcon: "fa-comments",
+        //     location: true,
+        //     children: true,
+        //     roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
+        // },
         // {
         //     to: "adminRating",
         //     name: "Admin rating",
@@ -110,12 +109,7 @@ export const requireMenuItems = (id) => {
         //     classIcon: "fa-edit",
         //     roles: [ROLES.Admin,ROLES.Director,ROLES.Programmer]
         // },
-        {
-            to: "newRegister",
-            name: "Registratsiya",
-            classIcon: "fa-edit",
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer]
-        },
+
 
         // {
         //     to : "schools",
@@ -143,21 +137,63 @@ export const requireMenuItems = (id) => {
         },
         {
             to: "students",
-            name: "Studenlar",
+            name: "Guruhlar va foydalanuvchilar",
             classIcon: "fa fa-users",
             location: true,
             children: true,
             roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer]
+        },
+        {
+            to: "accounting",
+            name: "Buxgalteriya hisobi",
+            classIcon: "fa-file-invoice-dollar",
+            location: true,
+            children: true,
+            // children : [
+            //     {
+            //         childId : 1,
+            //         to : "1",
+            //         childName: "Xo'jakent",
+            //         iconClazz : "fa-map-marker-alt"
+            //     },
+            //     {
+            //         childId : 2,
+            //         to : "2",
+            //         childName: "Gazalkent",
+            //         iconClazz : "fa-map-marker-alt"
+            //     },
+            //     {
+            //         childId : 3,
+            //         to : "3",
+            //         childName: "Chirchiq",
+            //         iconClazz : "fa-map-marker-alt"
+            //     },
+            //     {
+            //         childId : 4,
+            //         to : "4",
+            //         childName: "Sergeli",
+            //         iconClazz : "fa-map-marker-alt"
+            //     }
+            // ],
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Accountant]
+        },
+        {
+            to: "todoist",
+            name: "To do",
+            classIcon: "fa-circle-check",
+            location: true,
+            children: true,
+            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Teacher, ROLES.Editor, ROLES.Smm, ROLES.Accountant, ROLES.Zavxos, ROLES.User]
         },
 
-        {
-            to: "users",
-            name: "Userlar",
-            classIcon: "fa fa-users",
-            location: true,
-            children: true,
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer]
-        },
+        // {
+        //     to: "users",
+        //     name: "Userlar",
+        //     classIcon: "fa fa-users",
+        //     location: true,
+        //     children: true,
+        //     roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer]
+        // },
         // {
         //     to : "/registerTeacher",
         //     name: "O'qituvchi Registrarsiyasi",
@@ -177,22 +213,22 @@ export const requireMenuItems = (id) => {
         //     classIcon: "fa-edit",
         //     roles: [ROLES.Smm, ROLES.Director]
         // },
-        {
-            to: "lead",
-            name: "Lead",
-            classIcon: "fa-phone-alt",
-            location: true,
-            children: true,
-            roles: [ROLES.Admin, ROLES.Director]
-        },
-        {
-            to: "centreInfo",
-            name: "Centre info",
-            classIcon: "fa-info",
-            location: true,
-            children: true,
-            roles: [ROLES.Admin, ROLES.Director]
-        },
+        // {
+        //     to: "lead",
+        //     name: "Lead",
+        //     classIcon: "fa-phone-alt",
+        //     location: true,
+        //     children: true,
+        //     roles: [ROLES.Admin, ROLES.Director]
+        // },
+        // {
+        //     to: "centreInfo",
+        //     name: "Centre info",
+        //     classIcon: "fa-info",
+        //     location: true,
+        //     children: true,
+        //     roles: [ROLES.Admin, ROLES.Director]
+        // },
         // {
         //     to : "newStudents",
         //     name : "Yangi oq'uvchilar",
@@ -218,15 +254,15 @@ export const requireMenuItems = (id) => {
         //
         //     roles: [ROLES.Admin,ROLES.Director,ROLES.Programmer]
         // },
-        {
-            to: "groups",
-            name: "Guruhlar",
-            classIcon: "fa-users",
-            location: true,
-            children: true,
-
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer]
-        },
+        // {
+        //     to: "groups",
+        //     name: "Guruhlar",
+        //     classIcon: "fa-users",
+        //     location: true,
+        //     children: true,
+        //
+        //     roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer]
+        // },
         // {
         //     to : "teachers",
         //     name : "O'qituvchilar",
@@ -303,40 +339,7 @@ export const requireMenuItems = (id) => {
         //     // ],
         //     roles: [ROLES.Admin,ROLES.Director,ROLES.Programmer]
         // },
-        {
-            to: "accounting",
-            name: "Buxgalteriya hisobi",
-            classIcon: "fa-file-invoice-dollar",
-            location: true,
-            children: true,
-            // children : [
-            //     {
-            //         childId : 1,
-            //         to : "1",
-            //         childName: "Xo'jakent",
-            //         iconClazz : "fa-map-marker-alt"
-            //     },
-            //     {
-            //         childId : 2,
-            //         to : "2",
-            //         childName: "Gazalkent",
-            //         iconClazz : "fa-map-marker-alt"
-            //     },
-            //     {
-            //         childId : 3,
-            //         to : "3",
-            //         childName: "Chirchiq",
-            //         iconClazz : "fa-map-marker-alt"
-            //     },
-            //     {
-            //         childId : 4,
-            //         to : "4",
-            //         childName: "Sergeli",
-            //         iconClazz : "fa-map-marker-alt"
-            //     }
-            // ],
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Accountant]
-        },
+
         // {
         //     to : "books",
         //     name : "Kitoblar",
@@ -438,14 +441,14 @@ export const requireMenuItems = (id) => {
         //     classIcon: "fa-user-alt-slash",
         //     roles: [ROLES.Admin]
         // },
-        {
-            to: "capitalsCategory",
-            name: "Capital Category",
-            classIcon: "fa-coins",
-            location: true,
-            children: true,
-            roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Accountant]
-        },
+        // {
+        //     to: "capitalsCategory",
+        //     name: "Capital Category",
+        //     classIcon: "fa-coins",
+        //     location: true,
+        //     children: true,
+        //     roles: [ROLES.Admin, ROLES.Director, ROLES.Programmer, ROLES.Accountant]
+        // },
         {
             to: "teacherEquipments",
             name: "Zavxoz profil",

@@ -320,6 +320,12 @@ export const BranchStatistics = () => {
                 <div className={cls.date}>
                     <Button
                         extraClass={cls.date__navigate}
+                        onClickBtn={() => navigate(`../../centreInfo/${locationId}`)}
+                    >
+                        Center Info
+                    </Button>
+                    <Button
+                        extraClass={cls.date__navigate}
                         onClickBtn={() => navigate("dailyReport")}
                     >
                         Kunlik Hisobotlar
