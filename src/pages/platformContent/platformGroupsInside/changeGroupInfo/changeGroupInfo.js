@@ -93,8 +93,9 @@ const ChangeGroupInfo = () => {
             level_id: selectedLevel
         }
 
-
-
+        if (!newData.assistentSalary) {
+            delete newData.assistentSalary
+        }
 
         request(`${BackUrl}group_change/change_group_info/${groupId}`, "POST", JSON.stringify(newData), headers())
             .then(res => {
@@ -164,7 +165,6 @@ const ChangeGroupInfo = () => {
                             id="assistentSalary"
                             className="input-fields "
                             {...register("assistentSalary", {
-                                required: "Iltimos to'ldiring",
                                 pattern: {
                                     value: /^[0-9]+$/,
                                     message: " Gruppa narxi sonlar dan iborat bo'lishi kerak"
