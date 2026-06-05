@@ -4,6 +4,12 @@ import cls from "./percentageTests.module.sass";
 
 
 const PercentageTests = ({ data, assisData }) => {
+    const tests = Array.isArray(data) ? data : []
+    const assistantSalary = assisData?.assistentSalary?.value
+    const formattedAssistantSalary =
+        typeof assistantSalary === "number"
+            ? assistantSalary.toLocaleString()
+            : assistantSalary ?? ""
 
     return (
         <div className={cls.wrapper}>
@@ -13,9 +19,9 @@ const PercentageTests = ({ data, assisData }) => {
                 </div>
                 <div className={cls.information__container}>
                     {
-                        data.map(item => {
+                        tests.map(item => {
                             return (
-                                <div className={cls.information__item}>
+                                <div className={cls.information__item} key={item.id ?? item.level}>
                                     <span>{item.level}: </span>
                                     <span>{item.percentage}</span>
                                 </div>
@@ -25,7 +31,7 @@ const PercentageTests = ({ data, assisData }) => {
                 </div>
             </div>
             {
-                assisData.assistantName && (
+                assisData?.assistantName && (
                     <div className={classNames(cls.item, cls.information)}>
                         <div className={cls.information__header}>
                             <h1>Asistent ma'lumotlari</h1>
@@ -42,7 +48,7 @@ const PercentageTests = ({ data, assisData }) => {
                             </div>
                             <div className={cls.information__item}>
                                 <span>{assisData.assistentSalary.name.slice(9,14).toUpperCase()}: </span>
-                                <span>{assisData.assistentSalary.value.toLocaleString()} </span>
+                                <span>{formattedAssistantSalary} </span>
                             </div>
                         </div>
                     </div>

@@ -2,16 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import classNames from "classnames";
 
 import cls from "./platformGroupInside.module.sass"
-import { Link, Route, useNavigate, useParams, Routes, Navigate, NavLink, Outlet } from "react-router-dom";
+import { Link, Route, useParams, Routes, Navigate, NavLink, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGroup, setActiveBtn } from "slices/groupSlice";
 import Modal from "components/platform/platformUI/modal";
 import Confirm from "components/platform/platformModals/confirm/confirm";
 import CheckPassword from "components/platform/platformModals/checkPassword/CheckPassword";
 import RequireAuthChildren from "components/requireAuthChildren/requireAuthChildren";
-import { BackUrl, BackUrlForDoc, headers, ROLES } from "constants/global";
+import { BackUrl, headers, ROLES } from "constants/global";
 import { useHttp } from "hooks/http.hook";
-import user_img from "assets/user-interface/user_image.png";
 import BackButton from "../../../components/platform/platformUI/backButton/backButton";
 import ObserveTeacherLesson from "pages/platformContent/platformGroupsInside/observeTeacherLesson/ObserveTeacherLesson";
 import LessonPlan from "pages/platformContent/platformGroupsInside/lessonPlan/LessonPlan";
@@ -39,7 +38,7 @@ const PlatformGroupInside = () => {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(fetchGroup(groupId))
-    }, [groupId])
+    }, [dispatch, groupId])
 
     return (
         <Routes>
@@ -79,7 +78,6 @@ const GroupInfo = ({ groupId }) => {
         groupName,
         links,
         locationId,
-        fetchGroupStatus,
         isTime,
         msg
     } = useSelector(state => state.group)
@@ -90,11 +88,17 @@ const GroupInfo = ({ groupId }) => {
     const [activeChangeModalName, setActiveChangeModalName] = useState("")
     const [activeCheckPassword, setActiveCheckPassword] = useState(false)
 
+    const dispatch = useDispatch()
+
+    const activateBtn = useCallback((id) => {
+        dispatch(setActiveBtn({ id }))
+    }, [dispatch])
 
     const renderBtns = useCallback(() => {
         return btns.map(btn => {
             return (
                 <NavLink
+                    key={btn.id}
                     className={({ isActive }) =>
                         isActive ? `${cls.subheader__linksItem} ${cls.active}` : cls.subheader__linksItem
                     }
@@ -106,7 +110,7 @@ const GroupInfo = ({ groupId }) => {
                 </NavLink>
             )
         })
-    }, [btns])
+    }, [activateBtn, btns])
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,7 +134,7 @@ const GroupInfo = ({ groupId }) => {
         return links.map(link => {
             if (link.type === "link") {
                 return (
-                    <Link to={`../../../${link.link}/${locationId}/${groupId}`} className={cls.option}>
+                    <Link to={`../../../${link.link}/${locationId}/${groupId}`} className={cls.option} key={`${link.type}-${link.link}-${link.title}`}>
                         <span className={cls.icon}>
                             <i className={`fas ${link.iconClazz}`} />
                         </span>
@@ -148,6 +152,7 @@ const GroupInfo = ({ groupId }) => {
             if (link.type === "btn") {
                 return (
                     <div
+                        key={`${link.type}-${link.name}-${link.title}`}
                         onClick={() => changeModal(link.name)}
                         className={cls.option}
                     >
@@ -158,6 +163,7 @@ const GroupInfo = ({ groupId }) => {
                     </div>
                 )
             }
+            return null
         })
     }, [changeModal, groupId, links, locationId])
 
@@ -169,12 +175,6 @@ const GroupInfo = ({ groupId }) => {
                 .then(res => console.log(res))
         }
         setActiveChangeModal(false)
-    }
-
-    const dispatch = useDispatch()
-
-    const activateBtn = (id) => {
-        dispatch(setActiveBtn({ id }))
     }
 
     const renderedBtns = renderBtns()
@@ -221,7 +221,7 @@ const GroupInfo = ({ groupId }) => {
             <div className={cls.error}>
                 <h1>{!isTime ? "Guruhga dars jadvali belgilanmagan !" : null}</h1>
                 {msg && msg?.map(item => (
-                    <h1>{item}</h1>
+                    <h1 key={item}>{item}</h1>
                 ))}
 
             </div>
