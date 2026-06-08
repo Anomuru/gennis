@@ -170,7 +170,7 @@ const ChangeGroupInfo = () => {
                                     message: " Gruppa narxi sonlar dan iborat bo'lishi kerak"
                                 },
                             })}
-                        // defaultValue={data.information.assistentSalary.value}
+                        defaultValue={data.assistentSalary?.value}
                         />
                         {
                             errors?.assistentSalary &&
