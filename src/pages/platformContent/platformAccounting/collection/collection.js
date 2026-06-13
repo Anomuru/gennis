@@ -6,24 +6,10 @@ import AccountingTable from "components/platform/platformUI/tables/accountingTab
 import "./collection.sass"
 import Button from "components/platform/platformUI/button";
 import Table from "components/platform/platformUI/table";
-import DefaultLoaderSmall from "components/loader/defaultLoader/defaultLoaderSmall";
 import { useDispatch, useSelector } from "react-redux";
-import { useHttp } from "hooks/http.hook";
 import { fetchCollection } from "slices/accountingSlice";
 import { fetchDataToChange } from "slices/dataToChangeSlice";
-import { useAuth } from "hooks/useAuth";
-import { BackUrl, headers } from "constants/global";
 
-const now = new Date();
-const MONTHS = [
-    { value: 1, name: "Yanvar" }, { value: 2, name: "Fevral" },
-    { value: 3, name: "Mart" }, { value: 4, name: "Aprel" },
-    { value: 5, name: "May" }, { value: 6, name: "Iyun" },
-    { value: 7, name: "Iyul" }, { value: 8, name: "Avgust" },
-    { value: 9, name: "Sentyabr" }, { value: 10, name: "Oktyabr" },
-    { value: 11, name: "Noyabr" }, { value: 12, name: "Dekabr" },
-];
-const YEARS = Array.from({ length: 5 }, (_, i) => now.getFullYear() - 2 + i);
 
 const Collection = () => {
 
@@ -34,18 +20,11 @@ const Collection = () => {
     const [date, setDate] = useState({ ot: "", do: "" })
     const { locationId } = useParams()
 
-    // ── Branch transactions ──
-    const [txMonth, setTxMonth] = useState(now.getMonth() + 1);
-    const [txYear, setTxYear] = useState(now.getFullYear());
-    const [txs, setTxs] = useState([]);
-    const [txSummary, setTxSummary] = useState(null);
-    const [txLoading, setTxLoading] = useState(false);
 
 
     const { collection } = useSelector(state => state.accounting)
     const { dataToChange } = useSelector(state => state.dataToChange)
-
-
+    const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(fetchDataToChange(locationId))
@@ -220,43 +199,39 @@ const Collection = () => {
             )
         }
         if (activeRoute === "branchTransactions") {
+            const branchTx = collection?.data?.branchTransactions
+            const txList = branchTx?.list ?? []
             return (
                 <div className="branch-tx">
-                    {txSummary && (
-                        <div className="branch-tx__summary">
-                            <div className="branch-tx__card branch-tx__card--give"><span>Berildi</span><strong>{txSummary.total_given?.toLocaleString() ?? 0}</strong></div>
-                            <div className="branch-tx__card branch-tx__card--receive"><span>Qabul qilindi</span><strong>{txSummary.total_received?.toLocaleString() ?? 0}</strong></div>
-                            <div className={`branch-tx__card ${txSummary.net < 0 ? "branch-tx__card--give" : "branch-tx__card--receive"}`}><span>Saldo</span><strong>{txSummary.net?.toLocaleString() ?? 0}</strong></div>
-                        </div>
-                    )}
-                    {txLoading ? <DefaultLoaderSmall /> : (
-                        <Table>
-                            <thead><tr><th>#</th><th>Shaxs</th><th>Telefon</th><th>Miqdor</th><th>Yo'nalish</th><th>Sabab</th><th>To'lov turi</th><th>Sana</th></tr></thead>
-                            <tbody>
-                                {txs.length === 0 ? (
-                                    <tr><td colSpan={8} style={{ textAlign: "center", padding: "2rem", color: "#999" }}>Ma'lumot yo'q</td></tr>
-                                ) : txs.map((tx, i) => (
-                                    <tr key={tx.id}>
-                                        <td>{i + 1}</td>
-                                        <td>{tx.person ? `${tx.person.name} ${tx.person.surname}` : "—"}</td>
-                                        <td>{tx.person?.phone ?? "—"}</td>
-                                        <td>{tx.amount?.toLocaleString()}</td>
-                                        <td><span className={tx.is_give ? "tag-variable" : "tag-fixed"}>{tx.is_give ? "Berildi" : "Qabul qilindi"}</span></td>
-                                        <td>{tx.reason}</td>
-                                        <td>{tx.payment_type}</td>
-                                        <td>{tx.date}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    )}
+                    <div className="branch-tx__summary">
+                        <div className="branch-tx__card branch-tx__card--give"><span>Berildi</span><strong>{branchTx?.given?.toLocaleString() ?? 0}</strong></div>
+                        <div className="branch-tx__card branch-tx__card--receive"><span>Qabul qilindi</span><strong>{branchTx?.received?.toLocaleString() ?? 0}</strong></div>
+                        <div className={`branch-tx__card ${(branchTx?.net ?? 0) < 0 ? "branch-tx__card--give" : "branch-tx__card--receive"}`}><span>Saldo</span><strong>{branchTx?.net?.toLocaleString() ?? 0}</strong></div>
+                    </div>
+                    <Table>
+                        <thead><tr><th>#</th><th>Shaxs</th><th>Telefon</th><th>Miqdor</th><th>Yo'nalish</th><th>Sabab</th><th>To'lov turi</th><th>Sana</th></tr></thead>
+                        <tbody>
+                            {txList.length === 0 ? (
+                                <tr><td colSpan={8} style={{ textAlign: "center", padding: "2rem", color: "#999" }}>Ma'lumot yo'q</td></tr>
+                            ) : txList.map((tx, i) => (
+                                <tr key={tx.id}>
+                                    <td>{i + 1}</td>
+                                    <td>{tx.person ? `${tx.person.name} ${tx.person.surname}` : "—"}</td>
+                                    <td>{tx.person?.phone ?? "—"}</td>
+                                    <td>{tx.amount?.toLocaleString()}</td>
+                                    <td><span className={tx.is_give ? "tag-variable" : "tag-fixed"}>{tx.is_give ? "Berildi" : "Qabul qilindi"}</span></td>
+                                    <td>{tx.reason}</td>
+                                    <td>{tx.payment_type}</td>
+                                    <td>{tx.date}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </div>
             )
         }
-    }, [activeRoute, accountingData, txs, txSummary, txLoading, txMonth, txYear])
+    }, [activeRoute, accountingData, collection?.data?.branchTransactions])
 
-
-    const { request } = useHttp()
 
     useEffect(() => {
         const newData = { locationId, date, activeFilter }
@@ -265,17 +240,7 @@ const Collection = () => {
         }
     }, [activeFilter, date, locationId])
 
-    useEffect(() => {
-        if (activeRoute === "branchTransactions") fetchBranchTxs();
-    }, [activeRoute, locationId, txMonth, txYear])
 
-    const fetchBranchTxs = () => {
-        setTxLoading(true);
-        request(`${BackUrl}account/branch_transaction/${txMonth}/${txYear}?location_id=${locationId}`, "GET", null, headers())
-            .then(res => { if (res.success) { setTxs(res.data); setTxSummary(res.summary); } })
-            .catch(() => {})
-            .finally(() => setTxLoading(false));
-    };
 
 
     const renderTypes = useCallback(() => {
@@ -294,10 +259,6 @@ const Collection = () => {
         }
     }, [activeFilter, dataToChange])
 
-
-    const dispatch = useDispatch()
-
-
     return (
         <div className="collection">
             <header>
@@ -308,21 +269,10 @@ const Collection = () => {
                     </Link>
                 </div>
                 <div>
-                    {activeRoute === "branchTransactions" ? (
-                        <form className="changeDate">
-                            <select className="input-fields" value={txMonth} onChange={e => setTxMonth(Number(e.target.value))}>
-                                {MONTHS.map(m => <option key={m.value} value={m.value}>{m.name}</option>)}
-                            </select>
-                            <select className="input-fields" value={txYear} onChange={e => setTxYear(Number(e.target.value))}>
-                                {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                            </select>
-                        </form>
-                    ) : (
-                        <form className="changeDate">
-                            <input name="ot" type="date" className="input-fields" onChange={changeDate} value={date?.ot} />
-                            <input name="do" type="date" className="input-fields" onChange={changeDate} value={date?.do} />
-                        </form>
-                    )}
+                    <form className="changeDate">
+                        <input name="ot" type="date" className="input-fields" onChange={changeDate} value={date?.ot} />
+                        <input name="do" type="date" className="input-fields" onChange={changeDate} value={date?.do} />
+                    </form>
                 </div>
             </header>
             <div className="subheader">
