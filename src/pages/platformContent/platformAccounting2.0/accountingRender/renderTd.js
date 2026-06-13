@@ -153,7 +153,7 @@ export const RenderTd = ({ item, index, setConfirmModal, setItem, setChangeActiv
                 <td className={cls.muted}>{item?.date}</td>
                 <td>
                     <button className={cls.paymentType}>
-                        {item?.typePayment}
+                        {item?.payment_type}
                     </button>
                 </td>
                 <td>

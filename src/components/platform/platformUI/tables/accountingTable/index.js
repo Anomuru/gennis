@@ -474,6 +474,7 @@ const AccountingTable = React.memo(({
 
                         {activeRowsInTable.type ? <td>{item.type}</td> : null}
                         {activeRowsInTable.typePayment_new ? <td>{item.payment_type_name}</td> : null}
+                        {activeRowsInTable.payment_type ? <td>{item.payment_type}</td> : null}
                         {
                             activeRowsInTable.typePayment ?
                                 <td
@@ -657,7 +658,7 @@ const AccountingTable = React.memo(({
                                                     {activeRowsInTable.price ? <th>Narxi</th> : null}
                                                     {activeRowsInTable.payment ? <th>To'lov</th> : null}
                                                     {activeRowsInTable.date ? <th>Sana</th> : null}
-                                                    {(activeRowsInTable.typePayment || activeRowsInTable.typePayment_new) ? <th>To'lov turi</th> : null}
+                                                    {(activeRowsInTable.typePayment || activeRowsInTable.typePayment_new || activeRowsInTable.payment_type) ? <th>To'lov turi</th> : null}
                                                     {activeRowsInTable.type ? <th>Turi</th> : null}
                                                     {activeRowsInTable.delete ? <th>O'chirish</th> : null}
                                                     {activeRowsInTable.update ? <th>Yangilamoq</th> : null}

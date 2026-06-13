@@ -103,7 +103,7 @@ const Collection = () => {
 
     const activeRowsInTableInvestment = {
         name: true,
-        typePayment: true,
+        payment_type: true,
         payment: true,
         // date: true,
         // amount: true
