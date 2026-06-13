@@ -148,8 +148,8 @@ export const RenderTd = ({ item, index, setConfirmModal, setItem, setChangeActiv
         case "investments": {
             return <>
                 <td>{index + 1}</td>
-                <td>{item?.name}</td>
-                <td className={cls.mono}>{formatNumber(item?.price)}</td>
+                <td className={cls.mono}>{formatNumber(item?.amount)}</td>
+                <td>{item?.description}</td>
                 <td className={cls.muted}>{item?.date}</td>
                 <td>
                     <button className={cls.paymentType}>

@@ -61,11 +61,11 @@ export const RenderTh = () => {
         case "investments": {
             return <>
                 <th>#</th>
-                <th>Nomi</th>
-                <th>To‘lov</th>
+                <th>To’lov</th>
+                <th>Izoh</th>
                 <th>Sana</th>
-                <th>To‘lov turi</th>
-                <th>O‘chirish</th>
+                <th>To’lov turi</th>
+                <th>O’chirish</th>
             </>
         }
 
