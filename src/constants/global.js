@@ -213,14 +213,14 @@ export const requireMenuItems = (id) => {
         //     classIcon: "fa-edit",
         //     roles: [ROLES.Smm, ROLES.Director]
         // },
-        // {
-        //     to: "lead",
-        //     name: "Lead",
-        //     classIcon: "fa-phone-alt",
-        //     location: true,
-        //     children: true,
-        //     roles: [ROLES.Admin, ROLES.Director]
-        // },
+        {
+            to: "lead",
+            name: "Lead",
+            classIcon: "fa-phone-alt",
+            location: true,
+            children: true,
+            roles: [ROLES.Admin, ROLES.Director]
+        },
         // {
         //     to: "centreInfo",
         //     name: "Centre info",
