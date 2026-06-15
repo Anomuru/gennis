@@ -260,6 +260,7 @@ const PlatformContent = () => {
                     <Route path="myStudents/:id" element={<PlatformSchoolTeacherStudents />} />
                     <Route path="registeredSchoolStudents/:id" element={<PlatformSchoolStudentsRegister />} />
                     <Route path="users/:locationId/parentSection/:id" element={<PlatformParentSection />} />
+                    <Route path="students/:locationId/parentSection/:id" element={<PlatformParentSection />} />
                     <Route path="teacherEquipments/:id" element={<PlatformTeacherEquipments />} />
                     {/*<Route path="todoist/:id" element={<PlatformTodoist />} />*/}
 
