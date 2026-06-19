@@ -21,18 +21,14 @@ const AccountingProfileSalary = () => {
     const { locationId } = useParams()
 
     const { loading, data } = useSelector(state => state.accountingProfileSlice)
-    const getCurrentYear = new Date().getFullYear()
-    const getCurrentMonth = new Date().getMonth() + 1
-
     const [salaryType, setSalaryType] = useState("cash")
-    const [currentDate, setCurrentDate] = useState(null)
+    const [currentDate, setCurrentDate] = useState(() => {
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        return `${year}-${month}`
+    })
     const [activeCategory, setActiveCategory] = useState("teacher")
-
-
-    useEffect(() => {
-        if (getCurrentYear && getCurrentMonth)
-            setCurrentDate(`${getCurrentYear}-${getCurrentMonth}`)
-    }, [getCurrentYear, getCurrentMonth])
 
     useEffect(() => {
         if (currentDate && salaryType && locationId) {

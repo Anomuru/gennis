@@ -23,10 +23,12 @@ const AccountingProfileOverhead = () => {
     const { locationId } = useParams()
 
     const { loading, data } = useSelector(state => state.accountingProfileSlice)
-    const getCurrentYear = new Date().getFullYear()
-    const getCurrentMonth = new Date().getMonth() + 1
-
-    const [currentMonth, setCurrentMonth] = useState(null)
+    const [currentMonth, setCurrentMonth] = useState(() => {
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        return `${year}-${month}`
+    })
 
     const formatCurrency = (amount) => {
         if (typeof amount === "number") {
@@ -39,11 +41,6 @@ const AccountingProfileOverhead = () => {
         }
         return "0 UZS"
     }
-
-    useEffect(() => {
-        if (getCurrentYear && getCurrentMonth)
-            setCurrentMonth(`${getCurrentYear}-${getCurrentMonth}`)
-    }, [getCurrentYear, getCurrentMonth])
 
     useEffect(() => {
         if (currentMonth && locationId) {
@@ -85,7 +82,6 @@ const AccountingProfileOverhead = () => {
                             clazzLabel={styles.filterButtons__input}
                             onChange={setCurrentMonth}
                             value={currentMonth}
-                            defaultValue={`${getCurrentYear}-${getCurrentMonth}`}
                             type={"month"}
                         />
                     </div>

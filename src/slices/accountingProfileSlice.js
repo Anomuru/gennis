@@ -8,7 +8,9 @@ const initialState = {
     years: [],
     data: {},
     loading: false,
-    error: null
+    error: null,
+    discountsData: null,
+    discountsLoading: false,
 }
 
 // export const fetchAccountingProfileData = createAsyncThunk(
@@ -18,6 +20,14 @@ const initialState = {
 //         return request(`${BackUrl}`, "GET", null, headers())
 //     }
 // )
+
+export const fetchDiscountsData = createAsyncThunk(
+    "accountingProfileSlice/fetchDiscountsData",
+    ({ locationId, year, month }) => {
+        const { request } = useHttp()
+        return request(`${BackUrl}account/home/discounts/?location_id=${locationId}&month=${month}&year=${year}`, "GET", null, headers())
+    }
+)
 
 export const fetchAccountingProfileData = createAsyncThunk(
     "accountingProfileSlice/fetchAccountingProfileData",
@@ -52,6 +62,16 @@ const accountingProfileSlice = createSlice({
             .addCase(fetchAccountingProfileData.rejected, (state) => {
                 state.error = "Xatolik yuz berdi"
                 state.loading = false
+            })
+            .addCase(fetchDiscountsData.pending, (state) => {
+                state.discountsLoading = true
+            })
+            .addCase(fetchDiscountsData.fulfilled, (state, action) => {
+                state.discountsLoading = false
+                state.discountsData = action.payload
+            })
+            .addCase(fetchDiscountsData.rejected, (state) => {
+                state.discountsLoading = false
             })
     }
 })

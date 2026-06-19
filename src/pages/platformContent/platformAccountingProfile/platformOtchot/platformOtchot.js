@@ -81,6 +81,14 @@ const PlatformOtchot = () => {
                         </div>
                     </div>
 
+                    <div className={styles.categoryCard} onClick={() => navigate("discounts")}>
+                        <div className={styles.categoryCardHeader}>
+                            <h3 className={styles.categoryCardTitle}>Chegirmalar</h3>
+                        </div>
+                        <div className={styles.categoryCardContent}>
+                            <p>Davomat va qo'lda chegirmalarni ko'rish</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main >

@@ -7,6 +7,7 @@ import AccountingProfileOverhead from "./accountingProfileOverhead/accountingPro
 import AccountingProfileCategory from "./accountingProfileCategory/accountingProfileCategory";
 import AccountingProfileOverall from "./accountingProfileOverall/accountingProfileOverall";
 import AccountingProfileTransactions from "./accountingProfileTransactions/accountingProfileTransactions";
+import AccountingProfileDiscounts from "./accountingProfileDiscounts/accountingProfileDiscounts";
 
 const PlatformAccountingProfile = () => {
     return (
@@ -20,6 +21,7 @@ const PlatformAccountingProfile = () => {
                 <Route path="salary" element={<AccountingProfileSalary />} />
                 <Route path="students-debt" element={<AccountingProfileStudentsDebt />} />
                 <Route path="transactions" element={<AccountingProfileTransactions />} />
+                <Route path="discounts" element={<AccountingProfileDiscounts />} />
                 <Route path="overhead">
                     <Route index element={<AccountingProfileOverhead />} />
                     <Route path=":categoryId/:date" element={<AccountingProfileCategory />} />
