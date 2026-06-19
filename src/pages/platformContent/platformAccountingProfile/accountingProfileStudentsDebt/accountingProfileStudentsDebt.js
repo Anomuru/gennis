@@ -17,16 +17,12 @@ const AccountingProfileStudentsDebt = () => {
     const { locationId } = useParams()
 
     const { loading, data } = useSelector(state => state.accountingProfileSlice)
-    const getCurrentYear = new Date().getFullYear()
-    const getCurrentMonth = new Date().getMonth() + 1
-
-    const [currentMonth, setCurrentMonth] = useState(null)
-
-
-    useEffect(() => {
-        if (getCurrentYear && getCurrentMonth)
-            setCurrentMonth(`${getCurrentYear}-${getCurrentMonth}`)
-    }, [getCurrentYear, getCurrentMonth])
+    const [currentMonth, setCurrentMonth] = useState(() => {
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        return `${year}-${month}`
+    })
 
     useEffect(() => {
         if (currentMonth && locationId) {
@@ -225,7 +221,21 @@ const AccountingProfileStudentsDebt = () => {
                                         : `${data?.student_list?.length || 0}  ( ${data?.student_list?.filter(item => item.is_deleted)?.length} 🚫 )`
                                 }
                             </p>
-                            {/* <p className={styles.cardDescription}>Total Debtors</p> */}
+                        </div>
+                    </div>
+
+                    <div className={`${styles.card} ${styles.cardAccent}`}>
+                        <div className={styles.cardHeader}>
+                            <h3 className={styles.cardLabel}>Umumiy Chegirma</h3>
+                        </div>
+                        <div className={styles.cardContent}>
+                            <p className={styles.cardValue}>
+                                {
+                                    loading
+                                        ? <DefaultLoaderSmall />
+                                        : formatCurrency(data?.total_discount)
+                                }
+                            </p>
                         </div>
                     </div>
                 </div>
