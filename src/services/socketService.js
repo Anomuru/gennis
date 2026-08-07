@@ -33,7 +33,7 @@ class SocketService {
 
         this.isConnecting = true;
 
-        this.socket = io('https://admin.gennis.uz', {
+        this.socket = io(url, {
             path: '/socket.io/',
             transports: ['websocket', 'polling'],
             upgrade: true,
@@ -48,6 +48,7 @@ class SocketService {
         this.socket.on('connect', () => {
             console.log('✅ Socket connected');
             this.isConnecting = false;
+            this.hasWebSocketError = false;
         });
 
         this.socket.on('connection_response', (data) => {
@@ -82,6 +83,7 @@ class SocketService {
             console.error('🔴 Connection error:', error.message);
             this.isConnecting = false;
             this.room = null;
+            this.hasWebSocketError = true;
         });
 
         this.socket.on('join_response', (data) => {
